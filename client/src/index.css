@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Poppins";
+  src: url("./assets/fonts/Poppins/Poppins-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("./assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("./assets/fonts/Poppins/Poppins-Light.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poiret One";
+  src: url("./assets/fonts/Poiret_One/PoiretOne-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root {
+  --color-background: #ffffff;
+  --color-background-secondary: #f2f2f2;
+  --color-foreground: #070707;
+  --color-primary: #f58147;
+  --color-complementary: #96a3a2;
+  /* --color-primary-active: #af835b; */
+  --font-sans: "Poppins", system-ui, sans-serif;
+  --shadow-light: 0 2px 8px -1px hsla(0, 0%, 100%, 0.08);
+  --shadow-dark: 0 4px 12px -2px hsla(0, 0%, 0%, 0.25);
+}
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-background-secondary: var(--color-background-secondary);
+  --color-foreground: var(--color-foreground);
+  --color-primary: var(--color-primary);
+  --color-complementary: var(--color-complementary);
+
+  --font-sans: var(--font-sans);
+
+  --ease-kinetic: cubic-bezier(0.43, 0.24, 0.45, 1.06);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: Poppins, Helvetica, sans-serif;
+  font-weight: 300;
+}
+
+@theme {
+  --font-poppins: "Poppins", sans-serif;
+  --font-poiret: "Poiret One", sans-serif;
+}
+
+@layer utilities {
+  @keyframes appear {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInFromTop {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInFromBottom {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+  }
+
+  .appear {
+    animation: appear 200ms var(--ease-kinetic) forwards;
+  }
+
+  .fade-in-top {
+    animation: fadeInFromTop 300ms var(--ease-kinetic) forwards;
+  }
+
+  .fade-in-bottom {
+    animation: fadeInFromBottom 300ms var(--ease-kinetic) forwards;
+  }
+
+  .fade-out {
+    animation: fadeOut 300ms var(--ease-kinetic) forwards;
+  }
+
+  .center {
+    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+  }
+}
+
+@layer components {
+  .button {
+    @apply bg-primary shadow-sm px-4 py-2 font-semibold text-white transition duration-300 ease-in-out rounded-xs;
+  }
+  .button:hover {
+    @apply brightness-115 shadow-md;
+  }
+
+  .link {
+    @apply text-foreground bg-transparent transition duration-300 ease-in-out px-3 py-2 block cursor-pointer rounded-xs shadow-none font-light text-nowrap;
+  }
+  .link:hover {
+    @apply cursor-pointer brightness-115 shadow-none;
+  }
+
+  .icon {
+    @apply w-6 h-6 inline-block align-middle select-none transition duration-200 ease-in-out text-foreground;
+  }
+  .icon:hover {
+    @apply brightness-110;
+  }
+}

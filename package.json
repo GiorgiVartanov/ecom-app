@@ -1,0 +1,21 @@
+{
+  "name": "ecom-app",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "concurrently": "^9.1.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"bun server\" \"bun client\"",
+    "client": "cd client && bun dev",
+    "server": "cd server && bun dev"
+  },
+  "type": "module",
+  "dependencies": {
+    "eslint": "^9.28.0"
+  }
+}
