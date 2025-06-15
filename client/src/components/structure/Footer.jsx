@@ -147,7 +147,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 pt-4 border-t border-complementary/50 text-center w-full text-sm text-complementary/70">
+        <div className="mt-8 pt-4 border-t border-complementary/50 text-center w-full text-xs text-complementary/70">
           &copy; {new Date().getFullYear()} Build This Way. All rights reserved.
         </div>
       </div>

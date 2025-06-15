@@ -1,7 +1,7 @@
 import prisma from "../config/db"
 
-const addItemToCart = (req, res) => {}
+export const addItemToCart = (req, res) => {}
 
-const removeItemFromCart = (req, res) => {}
+export const removeItemFromCart = (req, res) => {}
 
-const editCartItem = (req, res) => {}
+export const editCartItem = (req, res) => {}

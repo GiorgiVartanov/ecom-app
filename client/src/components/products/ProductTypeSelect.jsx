@@ -1,10 +1,13 @@
 import { Link } from "react-router"
+import { useQueryClient } from "@tanstack/react-query"
+
+import { getProducts } from "../../api/products.api"
 
 const ProductTypeSelect = ({ items, className }) => {
   return (
     <div className="relative w-fit mx-auto">
       <div
-        className={`grid grid-cols-1 md:grid-cols-6 grid-rows-4 gap-4 overflow-hidden ${className}`}
+        className={`grid grid-cols-1 md:grid-cols-6 grid-rows-4 gap-4 overflow-hidden rounded-sm ${className}`}
       >
         {items.map((item, index) => (
           <ProductPanel
@@ -15,12 +18,13 @@ const ProductTypeSelect = ({ items, className }) => {
                 ? "col-span-1 md:aspect-40/31 aspect-21/6 md:row-span-2 md:col-span-3"
                 : "col-span-1 md:aspect-16/9 aspect-21/6 md:col-span-2"
             }
-            to={`/search?type=${item.id}`}
+            to={`/search?category=${item.id}`}
           />
         ))}
       </div>
       <Link
         to="/search"
+        prefetch="intent"
         className="absolute -bottom-6 right-0 hover:underline font-semibold text-primary"
       >
         see all
@@ -34,11 +38,27 @@ export default ProductTypeSelect
 const ProductPanel = ({ item, to, className }) => {
   const { title, image } = item
 
+  const queryClient = useQueryClient()
+
+  const handlePrefetch = () => {
+    const filters = { type: item.id }
+
+    queryClient.prefetchQuery({
+      queryKey: [
+        "search",
+        Object.entries(filters)
+          .map(([key, value]) => `${key}-${value}`)
+          .join("_"),
+      ],
+      queryFn: () => getProducts(filters),
+    })
+  }
+
   return (
     <Link
       to={to}
       className={`relative overflow-hidden scale-[1.01] group ${className}`}
-      prefetch="intent"
+      onMouseEnter={handlePrefetch}
     >
       {/* Using scale-[1.01] to fix weird wobble, fix latter */}
       <img

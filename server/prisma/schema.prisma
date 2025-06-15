@@ -56,7 +56,7 @@ model Product {
   wishlistedBy             User[]                       @relation("UserWishlist")
 
   tags                     Tag[]
-  selectableOptions        ProductSelectableOption[]
+  // selectableOptions        ProductSelectableOption[]
   images                   ProductImage[]
   // image                    String?
   cartItems                CartItem[]
@@ -77,20 +77,20 @@ model Tag {
   products                 Product[]
 }
 
-model ProductSelectableOption {
-  id                       String                       @id @default(uuid())
-  product                  Product                      @relation(fields: [productId], references: [id])
-  productId                String
-  key                      String
-  value                    String
+// model ProductSelectableOption {
+//   id                       String                       @id @default(uuid())
+//   product                  Product                      @relation(fields: [productId], references: [id])
+//   productId                String
+//   key                      String
+//   value                    String
 
-  // images                   ProductImage[]               @relation("OptionImages")
-  // image                    String
-  selectedCartItems        SelectedCartItemOption[]
-  selectedOrderItems       SelectedOrderItemOption[]
+//   // images                   ProductImage[]               @relation("OptionImages")
+//   // image                    String
+//   selectedCartItems        SelectedCartItemOption[]
+//   selectedOrderItems       SelectedOrderItemOption[]
 
-  @@index([productId])
-}
+//   @@index([productId])
+// }
 
 model ProductImage {
   id                       String                       @id @default(uuid())
@@ -104,27 +104,27 @@ model ProductImage {
   @@index([productId])
 }
 
-model SelectedCartItemOption {
-  id                       String                       @id @default(uuid())
-  cartItem                 CartItem                     @relation(fields: [cartItemId], references: [id])
-  cartItemId               String
-  option                   ProductSelectableOption      @relation(fields: [optionId], references: [id])
-  optionId                 String
+// model SelectedCartItemOption {
+//   id                       String                       @id @default(uuid())
+//   cartItem                 CartItem                     @relation(fields: [cartItemId], references: [id])
+//   cartItemId               String
+//   option                   ProductSelectableOption      @relation(fields: [optionId], references: [id])
+//   optionId                 String
 
-  @@index([cartItemId])
-  @@index([optionId])
-}
+//   @@index([cartItemId])
+//   @@index([optionId])
+// }
 
-model SelectedOrderItemOption {
-  id                       String                       @id @default(uuid())
-  orderItem                OrderItem                    @relation(fields: [orderItemId], references: [id])
-  orderItemId              String
-  option                   ProductSelectableOption      @relation(fields: [optionId], references: [id])
-  optionId                 String
+// model SelectedOrderItemOption {
+//   id                       String                       @id @default(uuid())
+//   orderItem                OrderItem                    @relation(fields: [orderItemId], references: [id])
+//   orderItemId              String
+//   option                   ProductSelectableOption      @relation(fields: [optionId], references: [id])
+//   optionId                 String
 
-  @@index([orderItemId])
-  @@index([optionId])
-}
+//   @@index([orderItemId])
+//   @@index([optionId])
+// }
 
 model CartItem {
   id                       String                       @id @default(uuid())
@@ -133,7 +133,7 @@ model CartItem {
   product                  Product                      @relation(fields: [productId], references: [id])
   productId                String
   quantity                 Int
-  selectedOptions          SelectedCartItemOption[]
+  // selectedOptions          SelectedCartItemOption[]
 }
 
 model Order {
@@ -161,7 +161,7 @@ model OrderItem {
   productId                String
   quantity                 Int
   price                    Decimal                      @db.Decimal(10, 2)
-  selectedOptions          SelectedOrderItemOption[]
+  // selectedOptions          SelectedOrderItemOption[]
 }
 
 model Sale {

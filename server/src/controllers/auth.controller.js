@@ -18,17 +18,17 @@ export const register = async (req, res) => {
       return res.status(400).json({ error: "email, password, and name are required" })
     }
 
-    // checking if email is already in use
+    // checks if email is already in use
     const existingUser = await prisma.user.findUnique({ where: { email } })
 
     if (existingUser) {
       return res.status(409).json({ error: "account with this email already exists" })
     }
 
-    // hashing password
+    // hashes password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // creating user
+    // creates user
     const user = await prisma.user.create({
       data: {
         email,
@@ -66,19 +66,19 @@ export const login = async (req, res) => {
       return res.status(400).json({ error: "email and password are required" })
     }
 
-    // finding user by email
+    // finds user by email
     const user = await prisma.user.findUnique({ where: { email } })
     if (!user) {
       return res.status(401).json({ error: "invalid credentials" })
     }
 
-    // comparing password
+    // compares password
     const validPassword = await bcrypt.compare(password, user.password)
     if (!validPassword) {
       return res.status(401).json({ error: "invalid credentials" })
     }
 
-    // checking if user was suspended
+    // checks if user was suspended
     if (user.isSuspended) {
       return res.status(403).json({ error: "account is suspended" })
     }

@@ -3,8 +3,8 @@ import cloudinary from "../config/cloudinary"
 const uploadImage = async (image, directory, productId) => {
   // setting upload options
   const options = {
-    folder: `ecom-app-${directory}`,
-    public_id: productId,
+    folder: `ecom-app/${directory}-${productId}`,
+    // public_id: productId,
     resource_type: "image",
   }
 

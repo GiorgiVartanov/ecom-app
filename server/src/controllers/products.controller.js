@@ -29,6 +29,17 @@ export const getProduct = async (req, res) => {
             key: true,
             value: true,
           },
+          orderBy: [{ key: "asc" }, { value: "asc" }],
+        },
+        images: {
+          orderBy: {
+            position: "asc",
+          },
+          select: {
+            id: true,
+            imageURL: true,
+            position: true,
+          },
         },
         sale: true,
       },
@@ -38,7 +49,7 @@ export const getProduct = async (req, res) => {
       return res.status(404).json({ error: "product not found" })
     }
 
-    res.json(product)
+    res.status(200).json(product)
   } catch (error) {
     console.error("product fetch error:", error)
     res.status(500).json({ error: "failed to fetch product" })
@@ -47,17 +58,44 @@ export const getProduct = async (req, res) => {
 
 export const getProducts = async (req, res) => {
   try {
-    const { sale, priceFrom, priceTo, minScore, sortBy } = req.query
+    const { query, sale, priceFrom, priceTo, minScore, sortBy, limit, page } = req.query
 
     const where = {}
 
+    // filters tags (category, brand, etc)
+    const reserved = [
+      "query",
+      "sale",
+      "priceFrom",
+      "priceTo",
+      "minScore",
+      "sortBy",
+      "limit",
+      "page",
+    ]
+    const dynamicTagFilters = Object.entries(req.query)
+      .filter(([key]) => !reserved.includes(key))
+      .map(([key, value]) => ({
+        tags: {
+          some: {
+            key,
+            value: String(value),
+          },
+        },
+      }))
+
+    if (dynamicTagFilters.length) {
+      where.AND = (where.AND || []).concat(dynamicTagFilters)
+    }
+
+    // filters by price
     if (priceFrom || priceTo) {
       where.price = {}
-
       if (priceFrom) where.price.gte = Number(priceFrom)
       if (priceTo) where.price.lte = Number(priceTo)
     }
 
+    // filters by score
     if (minScore) {
       where.reviews = {
         some: {
@@ -66,15 +104,24 @@ export const getProducts = async (req, res) => {
       }
     }
 
-    if (sale !== undefined) {
+    // filters by sale presence
+    if (sale) {
       where.sale = {
         isNot: null,
-        AND: [
-          { sale: { startsAt: { lte: new Date() } } },
-          { sale: { endsAt: { gte: new Date() } } },
-        ],
       }
     }
+
+    // filters by search query
+    if (query) {
+      where.OR = [
+        { name: { contains: query, mode: "insensitive" } },
+        { description: { contains: query, mode: "insensitive" } },
+        { tags: { some: { key: { contains: query, mode: "insensitive" } } } },
+        { tags: { some: { value: { contains: query, mode: "insensitive" } } } },
+      ]
+    }
+
+    where.status = "ACTIVE"
 
     const products = await prisma.product.findMany({
       where,
@@ -87,8 +134,17 @@ export const getProducts = async (req, res) => {
             value: true,
           },
         },
-        reviews: false,
+        images: {
+          where: { position: 0 },
+          take: 1,
+          select: {
+            id: true,
+            imageURL: true,
+            position: true,
+          },
+        },
       },
+      ...(sortBy && { orderBy: { [sortBy]: "asc" } }),
     })
 
     res.json(products)
@@ -102,9 +158,9 @@ export const writeReview = async (req, res) => {}
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, stock = 0, tagIds = [], images = [] } = req.body
+    const { name, description, price, stock = 0, tags = [], images = [] } = req.body
 
-    if (!name || price === undefined) {
+    if (!name || !price) {
       return res.status(400).json({ message: "name and price are required" })
     }
 
@@ -116,7 +172,35 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ message: "stock must be a non-negative number" })
     }
 
-    // preparing create payload
+    const existingTags = await prisma.tag.findMany({
+      where: {
+        OR: tags.map((tag) => ({
+          key: tag.key,
+          value: tag.value,
+        })),
+      },
+    })
+
+    const existingMap = new Map(existingTags.map((tag) => [`${tag.key}:${tag.value}`, tag]))
+    const newTags = tags.filter((tag) => !existingMap.has(`${tag.key}:${tag.value}`))
+
+    const newTagData = newTags.map((tag) => ({
+      key: tag.key,
+      value: tag.value,
+    }))
+
+    await prisma.tag.createMany({
+      data: newTagData,
+      skipDuplicates: true, // in case of race conditions
+    })
+
+    const allTags = await prisma.tag.findMany({
+      where: {
+        OR: tags.map((tag) => ({ key: tag.key, value: tag.value })),
+      },
+    })
+
+    // prepares create payload
     const newProduct = await prisma.product.create({
       data: {
         name,
@@ -124,26 +208,31 @@ export const createProduct = async (req, res) => {
         price: Number(price),
         stock: Number(stock),
         tags: {
-          connect: tagIds.map((id) => ({ id })),
+          connect: allTags.map((tag) => ({ id: tag.id })),
         },
       },
     })
 
     if (images?.length > 0) {
       const uploadedImages = await Promise.all(
-        images.map((img) => uploadImage(img, "product", newProduct.id))
+        images.map((image) => uploadImage(image.base64, "product", newProduct.id))
       )
 
-      const imageData = uploadedImages.map((img, index) => ({
-        imageURL: img.secure_url,
+      const imagesToSave = uploadedImages.map((image, index) => ({
+        imageURL: image.secure_url,
         position: index,
         productId: newProduct.id,
       }))
 
-      await prisma.productImage.createMany({ data: imageData })
+      await prisma.productImage.createMany({ data: imagesToSave })
     }
 
-    return res.status(201).json(newProduct)
+    const fullProductData = await prisma.product.findUnique({
+      where: { id: newProduct.id },
+      include: { tags: true, images: true },
+    })
+
+    return res.status(201).json(fullProductData)
   } catch (error) {
     console.error(error)
     return res.status(500).json({ message: "failed to create product" })
@@ -153,7 +242,16 @@ export const createProduct = async (req, res) => {
 export const editProduct = async (req, res) => {
   try {
     const { id } = req.params
-    const { name, description, price, stock, tagIds = [], images = [] } = req.body
+    const {
+      name,
+      description,
+      price,
+      stock,
+      tags = [],
+      deletedTagIds = [],
+      images = [],
+      deletedImageIds = [],
+    } = req.body
 
     if (price !== undefined && (isNaN(price) || Number(price) <= 0)) {
       return res.status(400).json({ message: "price must be a positive number" })
@@ -163,7 +261,7 @@ export const editProduct = async (req, res) => {
       return res.status(400).json({ message: "stock must be a non-negative number" })
     }
 
-    // fetching existing product with images and tags
+    // fetches existing product with images and tags
     const existingProduct = await prisma.product.findUnique({
       where: { id },
       include: { images: true, tags: true },
@@ -173,60 +271,111 @@ export const editProduct = async (req, res) => {
       return res.status(404).json({ message: "product not found" })
     }
 
-    // prepare image update and create lists
-    const existingIds = new existingProduct.images.map((img) => img.id)
-    const updatedImagesPromises = []
-    const imagesToCreate = []
+    const newImages = []
+    const oldImages = []
 
-    // categorize images by existing vs new
-    images.forEach((image, index) => {
-      if (image.id && existingIds.has(image.id)) {
-        // scheduling position update for existing image
-        updatedImagesPromises.push(
-          prisma.productImage.update({
-            where: { id: image.id },
-            data: { position: image.position ?? index },
-          })
-        )
+    // filters images as old and new
+    images.forEach(async (image, index) => {
+      // console.log(image)
+
+      if (image?.url?.includes("https://") || image?.imageURL?.includes("https://")) {
+        // oldImages.push({ url: image, position: index })
+        oldImages.push({ ...image, position: index })
       } else {
-        // queueing new image for upload/create
-        imagesToCreate.push({ file: image, position: image.position ?? index })
+        newImages.push({ ...image, position: index })
       }
     })
 
-    await Promise.all(updatedImagesPromises)
+    // updates existing images
+    if (oldImages?.length > 0) {
+      // console.log(oldImages)
 
-    // uploads all new images and saves them to db
-    if (imagesToCreate.length) {
-      const uploads = await Promise.all(
-        imagesToCreate.map(({ file }) => uploadImage(file, "product", id))
+      oldImages.forEach(async (image) => {
+        await prisma.productImage.update({
+          where: { id: image.id },
+          data: {
+            position: image.position,
+          },
+        })
+      })
+    }
+
+    // deletes images
+    if (deletedImageIds.length > 0) {
+      await prisma.productImage.deleteMany({
+        where: {
+          id: {
+            in: deletedImageIds,
+          },
+        },
+      })
+    }
+
+    // adds new images
+    if (newImages?.length > 0) {
+      // console.log(newImages)
+
+      const uploadedImages = await Promise.all(
+        newImages.map((image) => uploadImage(image.base64, "product", id))
       )
 
-      const createData = uploads.map((image, index) => ({
-        imageURL: image.secure_url,
-        position: imagesToCreate[index].position,
+      const images = uploadedImages.map((img, index) => ({
+        imageURL: img.secure_url,
+        position: newImages[index].position,
         productId: id,
       }))
 
-      await prisma.productImage.createMany({ data: createData })
+      await prisma.productImage.createMany({ data: images })
     }
 
-    // update payload
-    const data = {}
+    // finds existing combination of each key value
+    const existingTags = await prisma.tag.findMany({
+      where: {
+        OR: tags.map((tag) => ({
+          key: tag.key,
+          value: tag.value,
+        })),
+      },
+    })
+
+    const existingMap = new Map(existingTags.map((tag) => [`${tag.key}:${tag.value}`, tag]))
+    const tagsToCreate = tags.filter((tag) => !existingMap.has(`${tag.key}:${tag.value}`))
+
+    const createdNewTags = await Promise.all(
+      tagsToCreate.map(({ key, value }) =>
+        prisma.tag.create({
+          data: { key, value },
+        })
+      )
+    )
+
+    const data = {
+      tags: {},
+    }
+
+    if ([...existingTags, ...createdNewTags].length > 0) {
+      data.tags.connect = [...existingTags, ...createdNewTags].map((tag) => ({ id: tag.id }))
+    }
+
+    console.log(deletedTagIds)
+
+    if (deletedTagIds?.length > 0) {
+      data.tags.disconnect = deletedTagIds.map((id) => ({ id }))
+    }
+
     if (name) data.name = name
     if (description) data.description = description
     if (price !== undefined) data.price = Number(price)
     if (stock !== undefined) data.stock = Number(stock)
 
-    // add new tags
-    data.tags = {
-      set: tagIds.map((tagId) => ({ id: tagId })),
-    }
+    console.log(data)
+    console.dir(data, { depth: null })
 
+    // update product record
     const updatedProduct = await prisma.product.update({
       where: { id },
       data,
-      include: { tags: true },
+      include: { tags: true, images: true },
     })
 
     return res.status(200).json(updatedProduct)

@@ -1,16 +1,15 @@
-const Input = (
-  { label, className, itemClassName, type = "text", error, disableSuggestions = true, ...rest },
+const Textarea = (
+  { label, className, itemClassName, error, disableSuggestions = true, ...rest },
   ref
 ) => (
   <div className={`flex flex-col ${className}`}>
     {label ? <label className="mb-1 text-sm font-medium text-gray-700">{label}</label> : ""}
-    <input
+    <textarea
       ref={ref}
-      type={type}
       autoComplete={disableSuggestions ? "off" : rest.autoComplete}
       autoCorrect={disableSuggestions ? "off" : rest.autoCorrect}
       spellCheck={disableSuggestions ? false : rest.spellCheck}
-      className={`border w-full rounded block pl-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary transition-colors ${
+      className={`border w-full rounded block px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary transition-colors resize-none ${
         error ? "border-red focus:ring-red" : "border-gray-300"
       } ${itemClassName}`}
       {...rest}
@@ -19,4 +18,4 @@ const Input = (
   </div>
 )
 
-export default Input
+export default Textarea

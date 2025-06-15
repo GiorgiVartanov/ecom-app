@@ -6,6 +6,7 @@ import useAuthStore from "../../store/useAuthStore"
 import Button from "../common/Button"
 import SearchBar from "../common/SearchBar"
 import AuthModal from "../user/AuthModal"
+import ProfileDropdownMenu from "../user/ProfileDropdownMenu"
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -26,7 +27,7 @@ const Header = () => {
     return (
       <>
         <Link
-          className="link"
+          className="button link"
           to="/search?sortby=popular"
         >
           Popular
@@ -62,24 +63,35 @@ const Header = () => {
         >
           Sale
         </Link>
-        <Button
-          onClick={handleOpen}
-          className="link"
+        <ProfileDropdownMenu
+          username={user.name}
+          icon={user.icon}
         >
-          Whish List
-        </Button>
-        <Button
-          onClick={handleOpen}
-          className="link"
-        >
-          Cart
-        </Button>
-        <Button
-          onClick={logOut}
-          className="link"
-        >
-          Log Out
-        </Button>
+          <Link
+            to={`/profile/${user.id}`}
+            className="link ml-auto"
+          >
+            Profile
+          </Link>
+          <Button
+            onClick={handleOpen}
+            className="link ml-auto"
+          >
+            Whish List
+          </Button>
+          <Button
+            onClick={handleOpen}
+            className="link ml-auto"
+          >
+            Cart
+          </Button>
+          <Button
+            onClick={logOut}
+            className="link ml-auto"
+          >
+            Log Out
+          </Button>
+        </ProfileDropdownMenu>
       </>
     )
   }
@@ -87,18 +99,35 @@ const Header = () => {
   const renderAdminLinks = () => {
     return (
       <>
-        <Link
-          to="/dashboard"
-          className="link"
+        <ProfileDropdownMenu
+          username={user.name}
+          icon={user.icon}
         >
-          Dashboard
-        </Link>
-        <Button
-          onClick={logOut}
-          className="link"
-        >
-          Log Out
-        </Button>
+          <Link
+            to={`/profile/${user.id}`}
+            className="link"
+          >
+            Profile
+          </Link>
+          <Link
+            to="/dashboard"
+            className="link"
+          >
+            Admin
+          </Link>
+          <Button
+            onClick={() => {}}
+            className="link"
+          >
+            Settings
+          </Button>
+          <Button
+            onClick={logOut}
+            className="link"
+          >
+            Log Out
+          </Button>
+        </ProfileDropdownMenu>
       </>
     )
   }

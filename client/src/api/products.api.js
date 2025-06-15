@@ -1,10 +1,17 @@
 import axios from "./axiosConfig"
 
-export const getProducts = (params) => axios.get("/products", { params })
+export const getProducts = async (filters) => {
+  const res = await axios.get("/products", { params: filters })
+  return res.data
+}
 
-export const getProduct = (id) => axios.get(`/products/${id}`)
+export const getProduct = async (id) => {
+  const res = await axios.get(`/products/${id}`)
 
-export const createProduct = ({ name, description, price, stock, tags, images }, token) =>
+  return res.data
+}
+
+export const createProduct = async ({ name, description, price, stock, tags, images }, token) =>
   axios.post(
     "/products",
     {
@@ -22,24 +29,28 @@ export const createProduct = ({ name, description, price, stock, tags, images },
     }
   )
 
-export const updateProduct = (
+export const updateProduct = async (
   id,
-  { name, description, price, stock, status, tags, selectableOptions, images },
+  { name, description, price, stock, tags, deletedTagIds, images, deletedImageIds },
   token
-) =>
-  axios.patch(
+) => {
+  console.log({ deletedTagIds })
+
+  return await axios.patch(
     `/products/${id}`,
-    { name, description, price, stock, status, tags, selectableOptions, images },
+    { name, description, price, stock, tags, deletedTagIds, images, deletedImageIds },
     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     }
   )
+}
 
-export const delistProduct = (id, token) =>
-  axios.delete(`/products/${id}`, {
+export const delistProduct = async (id, token) => {
+  return await axios.delete(`/products/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   })
+}

@@ -13,11 +13,11 @@ const PORT = process.env.PORT || 8000
 
 app.use(cors())
 
-// Body parser middleware
+// middleware
 app.use(express.json({ limit: "25mb" }))
 app.use(express.urlencoded({ extended: true, limit: "25mb" }))
 
-// Routes
+// routes
 app.use("/api/auth", authRoutes)
 app.use("/api/cart", cartRoutes)
 app.use("/api/order", orderRoutes)

@@ -1,5 +1,5 @@
 import prisma from "../config/db"
 
-const makeOrder = (req, res) => {}
+export const makeOrder = (req, res) => {}
 
-const updateOrder = (req, res) => {}
+export const updateOrder = (req, res) => {}

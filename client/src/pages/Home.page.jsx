@@ -5,32 +5,28 @@ const pcParts = [
   {
     id: "gpu",
     title: "GPU",
-    image:
-      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1748952487/images/f3bxccfn0tjjbszaulhj.webp",
+    image: "/images/gpu.png",
   },
   {
     id: "cpu",
     title: "CPU",
-    image:
-      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1748952487/images/f3bxccfn0tjjbszaulhj.webp",
+    image: "/images/cpu.png",
   },
   {
     id: "motherboard",
     title: "Motherboard",
-    image:
-      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1748952487/images/f3bxccfn0tjjbszaulhj.webp",
+    image: "/images/motherboard.png",
   },
   {
-    id: "ram",
-    title: "RAM",
-    image:
-      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1748952487/images/f3bxccfn0tjjbszaulhj.webp",
+    id: "memory",
+    title: "Memory",
+    image: "/images/memory.png",
   },
   {
     id: "storage",
     title: "Storage",
     image:
-      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1748952487/images/f3bxccfn0tjjbszaulhj.webp",
+      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1750004294/ecom-app/product-163cbf2b-4423-4d0d-b30b-7e88b84c5571/htlsu777qpsautz2op55.jpg",
   },
   {
     id: "psu",

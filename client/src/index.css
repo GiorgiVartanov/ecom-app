@@ -32,10 +32,15 @@
   --color-background: #ffffff;
   --color-background-secondary: #f2f2f2;
   --color-foreground: #070707;
-  --color-primary: #f58147;
+  /* --color-primary: #f58147; */
+  --color-primary: #47ccf5;
   --color-complementary: #96a3a2;
+  --color-red: #f04242;
+  --color-green: #47f547;
   /* --color-primary-active: #af835b; */
+
   --font-sans: "Poppins", system-ui, sans-serif;
+
   --shadow-light: 0 2px 8px -1px hsla(0, 0%, 100%, 0.08);
   --shadow-dark: 0 4px 12px -2px hsla(0, 0%, 0%, 0.25);
 }
@@ -46,10 +51,17 @@
   --color-foreground: var(--color-foreground);
   --color-primary: var(--color-primary);
   --color-complementary: var(--color-complementary);
+  --color-red: var(--color-red);
+  --color-green: var(--color-green);
 
   --font-sans: var(--font-sans);
 
   --ease-kinetic: cubic-bezier(0.43, 0.24, 0.45, 1.06);
+
+  --breakpoint-xs: 24rem;
+
+  --breakpoint-6xl: 75rem;
+  --breakpoint-7xl: 85rem;
 }
 
 body {
@@ -74,10 +86,23 @@ body {
     }
   }
 
+  @keyframes searchBarAppear {
+    from {
+      opacity: 0;
+      transform: translateY(-1rem);
+      width: 24rem;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-1rem);
+      width: 100%;
+    }
+  }
+
   @keyframes fadeInFromTop {
     from {
       opacity: 0;
-      transform: translateY(-30px);
+      transform: translateY(-1rem);
     }
     to {
       opacity: 1;
@@ -88,7 +113,7 @@ body {
   @keyframes fadeInFromBottom {
     from {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(1rem);
     }
     to {
       opacity: 1;
@@ -103,7 +128,7 @@ body {
     }
     to {
       opacity: 0;
-      transform: translateY(-30px);
+      transform: translateY(-1rem);
     }
   }
 
@@ -111,16 +136,20 @@ body {
     animation: appear 200ms var(--ease-kinetic) forwards;
   }
 
+  .search-bar-appear {
+    animation: searchBarAppear 200ms var(--ease-kinetic) forwards;
+  }
+
   .fade-in-top {
-    animation: fadeInFromTop 300ms var(--ease-kinetic) forwards;
+    animation: fadeInFromTop 200ms var(--ease-kinetic) forwards;
   }
 
   .fade-in-bottom {
-    animation: fadeInFromBottom 300ms var(--ease-kinetic) forwards;
+    animation: fadeInFromBottom 200ms var(--ease-kinetic) forwards;
   }
 
   .fade-out {
-    animation: fadeOut 300ms var(--ease-kinetic) forwards;
+    animation: fadeOut 200ms var(--ease-kinetic) forwards;
   }
 
   .center {
@@ -134,6 +163,9 @@ body {
   }
   .button:hover {
     @apply brightness-115 shadow-md;
+  }
+  .button:disabled {
+    @apply opacity-50 hover:brightness-100 hover:shadow-sm;
   }
 
   .link {
