@@ -1,39 +1,52 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { delistProduct } from "../../api/products.api"
+import { addItemToCart, removeItemFromCart } from "../../api/cart.api"
 import useAuthStore from "../../store/useAuthStore"
 
 import ProductCard from "./ProductCard"
 
 const ProductGrid = ({ data, singleRow, title }) => {
-  const userRole = useAuthStore((state) => state.user.role)
+  const user = useAuthStore((state) => state.user)
   const token = useAuthStore((state) => state.token)
 
   const queryClient = useQueryClient()
 
-  const mutation = useMutation({
+  const deleteMutation = useMutation({
     mutationFn: (id) => delistProduct(id, token),
     onMutate: async (id) => {
       await queryClient.cancelQueries(["products"])
       const previous = queryClient.getQueryData(["products"])
       // optimistically removes delisted product from the cache
 
-      queryClient.setQueryData(["products"], (old) => old?.filter((p) => p.id !== id))
+      queryClient.setQueryData(["products"], (prev) => prev?.filter((product) => product.id !== id))
 
       return { previous }
     },
-    onError: (err, id, context) => {
+    onError: (error, id, context) => {
       // rolls back cache after error
       if (context?.previous) {
         queryClient.setQueryData(["products"], context.previous)
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        predicate: ({ queryKey }) =>
-          queryKey.some((k) => typeof k === "string" && k.includes("search")),
-        refetchType: "all",
-      })
+      queryClient.invalidateQueries({ queryKey: ["products"], refetchType: "all" })
+    },
+  })
+
+  const addItemToCartMutation = useMutation({
+    mutationFn: (id) => addItemToCart(id, token),
+    onSettled: (id) => {
+      queryClient.invalidateQueries(["product", id, token ? "logged-in" : "not-logged-in"])
+      queryClient.invalidateQueries(["cart", user])
+    },
+  })
+
+  const removeItemFromCartMutation = useMutation({
+    mutationFn: (id) => removeItemFromCart(id, token),
+    onSettled: (id) => {
+      queryClient.invalidateQueries(["product", id, token ? "logged-in" : "not-logged-in"])
+      queryClient.invalidateQueries(["cart", user])
     },
   })
 
@@ -43,9 +56,17 @@ const ProductGrid = ({ data, singleRow, title }) => {
         <ProductCard
           key={product.id}
           data={product}
-          isAdmin={userRole === "ADMIN"}
+          userRole={user?.role}
+          canAddToCart={product.stock > 0}
+          isInCart={product.isInCart}
+          addToCart={() => {
+            addItemToCartMutation.mutate(product.id)
+          }}
+          removeFromCart={() => {
+            removeItemFromCartMutation.mutate(product.id)
+          }}
           deleteItem={() => {
-            mutation.mutate(product.id)
+            deleteMutation.mutate(product.id)
           }}
         />
       ))}

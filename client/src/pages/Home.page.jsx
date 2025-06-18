@@ -1,5 +1,4 @@
 import ProductTypeSelect from "../components/products/ProductTypeSelect"
-import Modal from "../components/common/Modal"
 
 const pcParts = [
   {
@@ -25,26 +24,22 @@ const pcParts = [
   {
     id: "storage",
     title: "Storage",
-    image:
-      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1750004294/ecom-app/product-163cbf2b-4423-4d0d-b30b-7e88b84c5571/htlsu777qpsautz2op55.jpg",
+    image: "/images/storage.png",
   },
   {
     id: "psu",
     title: "PSU",
-    image:
-      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1748952487/images/f3bxccfn0tjjbszaulhj.webp",
+    image: "/images/psu.png",
   },
   {
     id: "case",
     title: "Case",
-    image:
-      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1748952487/images/f3bxccfn0tjjbszaulhj.webp",
+    image: "/images/case.png",
   },
   {
     id: "cooler",
     title: "Cooler",
-    image:
-      "https://res.cloudinary.com/dfac5lkeh/image/upload/v1748952487/images/f3bxccfn0tjjbszaulhj.webp",
+    image: "/images/cooler.png",
   },
 ]
 

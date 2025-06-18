@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router"
 
+import FilterIcon from "../../assets/icons/filter.svg?react"
+
+import Button from "../common/Button"
+import SearchSettingsModal from "../products/SearchSettingsModal"
+
 const SearchBar = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
   const params = new URLSearchParams(location.search)
   const initialQuery = params.get("query") || ""
+
   const [searchTerm, setSearchTerm] = useState(initialQuery)
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false)
 
   // updating the URL with debounce
   useEffect(() => {
@@ -44,44 +51,70 @@ const SearchBar = () => {
     }
   }
 
+  const handleOpenFilterMenu = () => {
+    setIsFilterMenuOpen(true)
+  }
+
+  const handleCloseFilterMenu = () => {
+    setIsFilterMenuOpen(false)
+  }
+
   // render search bar in header (compact, inline)
-  const renderInHeader = () => (
-    <div className="ml-auto mr-[2vw]">
-      <form onSubmit={(e) => e.preventDefault()}>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchTermChange}
-          onKeyDown={handleKeyPress}
-          placeholder="Search..."
-          className="border-2 border-gray-100 rounded-sm block w-full px-2 py-0.5 focus:border-primary outline-none transition-colors duration-200"
-        />
-      </form>
-    </div>
-  )
+  const renderInHeader = () => {
+    return (
+      <div className="ml-auto mr-[2vw]">
+        <form onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchTermChange}
+            onKeyDown={handleKeyPress}
+            placeholder="Search..."
+            className="border-2 border-gray-100 rounded-sm block w-full px-2 py-0.5 focus:border-primary outline-none transition-colors duration-200"
+          />
+        </form>
+      </div>
+    )
+  }
 
   // render search bar on dedicated page (centered, larger)
-  const renderOnPage = () => (
-    <div className="ml-auto mr-[2vw] absolute top-24 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-96 text-center fade-in-top">
-      <form
-        onSubmit={(e) => e.preventDefault()}
-        className="w-full"
-      >
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchTermChange}
-          onKeyDown={handleKeyPress}
-          placeholder="Search..."
-          className="border-2 border-gray-100 rounded-sm block w-full px-2 py-0.5 text-center focus:border-primary outline-none transition-colors duration-200"
-        />
-      </form>
-    </div>
-  )
+  const renderOnPage = () => {
+    return (
+      <div className="ml-auto mr-[2vw] absolute top-24 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-96 text-center fade-in-top flex gap-2">
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="w-full"
+        >
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchTermChange}
+            onKeyDown={handleKeyPress}
+            placeholder="Search..."
+            className="border-2 border-gray-100 rounded-sm block w-full px-2 py-1.5 text-center focus:border-primary outline-none transition-colors duration-200"
+          />
+        </form>
+        <Button
+          onClick={handleOpenFilterMenu}
+          className="bg-transparent hover:opacity-70 rounded-sm py-1.5 shadow-none border-2 border-gray-100 hover brightness-100"
+        >
+          <FilterIcon className="icon h-5 w-5" />
+        </Button>
+      </div>
+    )
+  }
 
-  return location.pathname === "/search" || location.pathname === "/dashboard/products"
-    ? renderOnPage()
-    : renderInHeader()
+  return (
+    <>
+      {location.pathname === "/search" || location.pathname === "/dashboard/products"
+        ? renderOnPage()
+        : renderInHeader()}
+      <SearchSettingsModal
+        isOpen={isFilterMenuOpen}
+        onClose={handleCloseFilterMenu}
+      />
+    </>
+  )
 }
 
 export default SearchBar

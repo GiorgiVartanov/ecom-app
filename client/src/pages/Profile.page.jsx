@@ -3,8 +3,6 @@ import { useQuery } from "@tanstack/react-query"
 
 import { getUser } from "../api/user.api"
 
-import useAuthStore from "../store/useAuthStore"
-
 const createQuery = (id) => ({
   queryKey: ["user", id],
   queryFn: async () => getUser(id),
@@ -19,8 +17,6 @@ export const loader =
 
 const Profile = () => {
   const { id } = useParams()
-
-  const currentUser = useAuthStore((state) => state.user)
 
   const { data: user, isLoading, error } = useQuery(createQuery(id))
 

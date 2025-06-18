@@ -95,7 +95,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
       <Button
         disabled={isLoading}
         type="submit"
-        className="w-full mt-4"
+        className="w-full mt-4 gradient-bg"
       >
         {isLoading ? "Loading..." : "Sign In"}
       </Button>
@@ -146,7 +146,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
       <Button
         disabled={isLoading}
         type="submit"
-        className="w-full mt-4"
+        className="w-full mt-4 gradient-bg"
       >
         {isLoading ? "Loading..." : "Sign Up"}
       </Button>

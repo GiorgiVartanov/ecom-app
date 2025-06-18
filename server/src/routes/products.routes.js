@@ -1,6 +1,6 @@
 import express from "express"
 
-import { protect, protectAdmin } from "../middleware/authMiddleware"
+import { optionalAuth, protect, protectAdmin } from "../middleware/authMiddleware"
 
 import {
   getProduct,
@@ -15,11 +15,11 @@ const router = express.Router()
 
 // Get single product
 // PUBLIC
-router.get("/:id", getProduct)
+router.get("/:id", optionalAuth, getProduct)
 
 // Get list of products
 // PUBLIC
-router.get("/", getProducts)
+router.get("/", optionalAuth, getProducts)
 
 // post a review
 // PROTECTED [USER]

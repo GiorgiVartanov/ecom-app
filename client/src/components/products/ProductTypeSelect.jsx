@@ -15,8 +15,8 @@ const ProductTypeSelect = ({ items, className }) => {
             item={item}
             className={
               index < 2
-                ? "col-span-1 md:aspect-40/31 aspect-21/6 md:row-span-2 md:col-span-3"
-                : "col-span-1 md:aspect-16/9 aspect-21/6 md:col-span-2"
+                ? "col-span-1 md:aspect-40/31 aspect-21/6 md:row-span-2 md:col-span-3 w-full h-full"
+                : "col-span-1 md:aspect-16/9 aspect-21/6 md:col-span-2 w-full h-full"
             }
             to={`/search?category=${item.id}`}
           />
@@ -57,16 +57,18 @@ const ProductPanel = ({ item, to, className }) => {
   return (
     <Link
       to={to}
-      className={`relative overflow-hidden scale-[1.01] group ${className}`}
+      className={`relative group ${className}`}
       onMouseEnter={handlePrefetch}
     >
-      {/* Using scale-[1.01] to fix weird wobble, fix latter */}
-      <img
-        src={image}
-        alt={title}
-        className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 ease-in-out transform-gpu will-change-transform backface-hidden "
-      />
-      <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-background text-center pointer-events-none bg-foreground/40 backdrop-blur-xsm px-2.5 py-1.5 leading-6 font-thin group-hover:bg-foreground/60 group-hover:text-primary transition-colors duration-300 ease-in-out">
+      <div className="w-full gradient-bg h-full object-contain p-8 backface-hidden rounded-xl">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-contain hover:scale-110 transition-transform duration-300 ease-in-out transform-gpu will-change-transform backface-hidden rounded-xl"
+        />
+      </div>
+
+      <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-background text-center pointer-events-none bg-foreground/40 backdrop-blur-xsm px-2.5 rounded-sm py-1.5 leading-6 font-thin group-hover:bg-foreground/60 group-hover:text-primary transition-colors duration-300 ease-in-out">
         {title}
       </h2>
     </Link>

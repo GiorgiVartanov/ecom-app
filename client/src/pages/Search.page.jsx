@@ -2,13 +2,15 @@ import { useSearchParams } from "react-router"
 import { useQuery } from "@tanstack/react-query"
 
 import { getProducts } from "../api/products.api"
+import useAuthStore from "../store/useAuthStore"
 
 import ProductGrid from "../components/products/ProductGrid"
 
-const createQuery = (filters) => ({
-  queryFn: () => getProducts(filters),
+const createQuery = (filters, token) => ({
+  queryFn: () => getProducts(filters, token),
   queryKey: [
     "search",
+    token ? "logged-in" : "not-logged-in",
     Object.entries(filters)
       .map(([key, value]) => `${key}-${value}`)
       .join("_"),
@@ -23,10 +25,14 @@ export const loader =
   }
 
 const Search = () => {
+  const token = useAuthStore((state) => state.token)
+
   const [searchParams] = useSearchParams()
   const filters = Object.fromEntries(searchParams.entries())
 
-  const { data, isLoading, error } = useQuery(createQuery(filters))
+  const { data, isLoading, error } = useQuery(createQuery(filters, token))
+
+  console.log(data?.[0]?.isInCart)
 
   if (isLoading) return <div>Loading...</div>
 

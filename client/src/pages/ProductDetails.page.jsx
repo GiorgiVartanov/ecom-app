@@ -1,15 +1,20 @@
 import { useState } from "react"
 import { useParams } from "react-router"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { getProduct } from "../api/products.api"
+import { addItemToCart, removeItemFromCart } from "../api/cart.api"
+import useAuthStore from "../store/useAuthStore"
+
 import ArrowIcon from "../assets/icons/arrow.svg?react"
+
 import ProductImageSelect from "../components/products/ProductImageSelect"
 import TagList from "../components/products/TagList"
+import Button from "../components/common/Button"
 
-const createQuery = (id) => ({
-  queryKey: ["product", id],
-  queryFn: async () => getProduct(id),
+const createQuery = (id, token) => ({
+  queryFn: async () => getProduct(id, token),
+  queryKey: ["product", id, token ? "logged-in" : "not-logged-in"],
 })
 
 export const loader =
@@ -23,7 +28,12 @@ const Product = () => {
   const { id } = useParams()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  const { data: product, isLoading, error } = useQuery(createQuery(id))
+  const token = useAuthStore((state) => state.token)
+  const user = useAuthStore((state) => state.id)
+
+  const { data: product, isLoading, error } = useQuery(createQuery(id, token))
+
+  const queryClient = useQueryClient()
 
   const handleNextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1 >= product.images?.length ? 0 : prev + 1))
@@ -36,6 +46,22 @@ const Product = () => {
   const handleSelectImage = (index) => {
     setCurrentImageIndex(index)
   }
+
+  const addItemMutation = useMutation({
+    mutationFn: () => addItemToCart(id, token),
+    onSettled: () => {
+      queryClient.invalidateQueries(createQuery(id, token).queryKey)
+      queryClient.invalidateQueries(["cart", user])
+    },
+  })
+
+  const removeItemMutation = useMutation({
+    mutationFn: () => removeItemFromCart(id, token),
+    onSettled: () => {
+      queryClient.invalidateQueries(createQuery(id, token).queryKey)
+      queryClient.invalidateQueries(["cart", user])
+    },
+  })
 
   const renderImage = () => {
     if (!product) return null
@@ -81,14 +107,52 @@ const Product = () => {
   const renderInfo = () => {
     if (!product) return null
 
-    const { name, description, price, stock, tags } = product
+    const { name, description, price, stock, tags, isInCart } = product
+
+    const renderCartButtons = () => {
+      return (
+        <>
+          {isInCart ? (
+            <Button
+              onClick={removeItemMutation.mutate}
+              className="w-fit text-sm gradient-bg"
+            >
+              Remove From Cart
+            </Button>
+          ) : (
+            <Button
+              onClick={addItemMutation.mutate}
+              className="w-fit text-sm gradient-bg"
+              disabled={stock <= 0}
+            >
+              Add To Cart
+            </Button>
+          )}
+          <Button
+            onClick={addItemMutation.mutate}
+            className="w-fit text-sm gradient-bg"
+          >
+            Add To Wishlist
+          </Button>
+        </>
+      )
+    }
 
     return (
       <div className="flex flex-col space-y-4">
-        <h1 className="text-2xl font-semibold">{name}</h1>
-        <p className="text-xl font-bold">{price}$</p>
-        <p className="text-sm text-gray-600">{stock > 0 ? `in stock: ${stock}` : "out of stock"}</p>
-        {description && <p className="text-gray-700 text-sm">{description}</p>}
+        <h1 className="w-full text-justify text-gray-800 text-lg last:whitespace-pre-wrap leading-normal break-keep !overflow-x-hidden h-fit max-h-96 overflow-y-auto pr-2 font-semibold">
+          {name}
+        </h1>
+        <p className="text-xl font-bold text-gray-800">{price}$</p>
+        <p className="text-sm text-gray-600">{stock > 0 ? `stock: ${stock}` : "out of stock"}</p>
+        {token ? <div className="flex gap-2">{renderCartButtons()}</div> : ""}
+        {description ? (
+          <p className="w-full text-justify text-gray-700 text-sm last:whitespace-pre-wrap border-t border-black pt-2 leading-normal break-keep !overflow-x-hidden h-fit max-h-96 overflow-y-auto pr-2">
+            {description}
+          </p>
+        ) : (
+          <p className="text-gray-700 text-sm">no description provided</p>
+        )}
         <TagList tags={tags} />
       </div>
     )

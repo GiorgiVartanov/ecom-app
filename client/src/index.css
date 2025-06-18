@@ -39,7 +39,7 @@
   --color-green: #47f547;
   /* --color-primary-active: #af835b; */
 
-  --font-sans: "Poppins", system-ui, sans-serif;
+  /* --font-sans: "Poppins", system-ui, sans-serif; */
 
   --shadow-light: 0 2px 8px -1px hsla(0, 0%, 100%, 0.08);
   --shadow-dark: 0 4px 12px -2px hsla(0, 0%, 0%, 0.25);
@@ -162,7 +162,7 @@ body {
     @apply bg-primary shadow-sm px-4 py-2 font-semibold text-white transition duration-300 ease-in-out rounded-xs;
   }
   .button:hover {
-    @apply brightness-115 shadow-md;
+    @apply brightness-105 shadow-md;
   }
   .button:disabled {
     @apply opacity-50 hover:brightness-100 hover:shadow-sm;
@@ -172,13 +172,14 @@ body {
     @apply text-foreground bg-transparent transition duration-300 ease-in-out px-3 py-2 block cursor-pointer rounded-xs shadow-none font-light text-nowrap;
   }
   .link:hover {
-    @apply cursor-pointer brightness-115 shadow-none;
+    @apply cursor-pointer opacity-80 shadow-none;
   }
 
   .icon {
     @apply w-6 h-6 inline-block align-middle select-none transition duration-200 ease-in-out text-foreground;
   }
-  .icon:hover {
-    @apply brightness-110;
+
+  .gradient-bg {
+    @apply bg-gradient-to-tr from-primary via-blue-300 to-primary;
   }
 }

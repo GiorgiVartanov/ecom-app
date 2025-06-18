@@ -1,13 +1,21 @@
 import axios from "./axiosConfig"
 
-export const getProducts = async (filters) => {
-  const res = await axios.get("/products", { params: filters })
+export const getProducts = async (filters, token) => {
+  const res = await axios.get("/products", {
+    params: filters,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
   return res.data
 }
 
-export const getProduct = async (id) => {
-  const res = await axios.get(`/products/${id}`)
-
+export const getProduct = async (id, token) => {
+  const res = await axios.get(`/products/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
   return res.data
 }
 

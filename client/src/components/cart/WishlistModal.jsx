@@ -1,6 +1,6 @@
 import Modal from "../common/Modal"
 
-const SearchSettingsModal = ({ title, isOpen, onClose, className }) => {
+const WishListModal = ({ title, isOpen, onClose, className }) => {
   return (
     <Modal
       title={title}
@@ -8,9 +8,9 @@ const SearchSettingsModal = ({ title, isOpen, onClose, className }) => {
       onClose={onClose}
       className={`${className}`}
     >
-      SearchSettingsModal
+      WishListModal
     </Modal>
   )
 }
 
-export default SearchSettingsModal
+export default WishListModal

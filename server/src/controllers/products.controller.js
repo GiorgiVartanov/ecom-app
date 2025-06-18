@@ -6,6 +6,8 @@ export const getProduct = async (req, res) => {
   try {
     const { id } = req.params
 
+    const userId = req.user?.id
+
     if (!id) {
       return res.status(400).json({ error: "product id is required" })
     }
@@ -49,7 +51,19 @@ export const getProduct = async (req, res) => {
       return res.status(404).json({ error: "product not found" })
     }
 
-    res.status(200).json(product)
+    let isInCart = false
+
+    if (userId) {
+      const cartItem = await prisma.cartItem.findFirst({
+        where: {
+          userId,
+          productId: id,
+        },
+      })
+      isInCart = !!cartItem
+    }
+
+    res.status(200).json({ ...product, isInCart })
   } catch (error) {
     console.error("product fetch error:", error)
     res.status(500).json({ error: "failed to fetch product" })
@@ -59,6 +73,8 @@ export const getProduct = async (req, res) => {
 export const getProducts = async (req, res) => {
   try {
     const { query, sale, priceFrom, priceTo, minScore, sortBy, limit, page } = req.query
+
+    const userId = req.user?.id
 
     const where = {}
 
@@ -121,6 +137,7 @@ export const getProducts = async (req, res) => {
       ]
     }
 
+    // deleted products have status delisted
     where.status = "ACTIVE"
 
     const products = await prisma.product.findMany({
@@ -147,7 +164,25 @@ export const getProducts = async (req, res) => {
       ...(sortBy && { orderBy: { [sortBy]: "asc" } }),
     })
 
-    res.json(products)
+    // if user is logged in, adds fields isInCart to each product
+    let inCartIds = []
+    if (userId) {
+      const cartItems = await prisma.cartItem.findMany({
+        where: {
+          userId,
+          productId: { in: products.map((product) => product.id) },
+        },
+        select: { productId: true },
+      })
+      inCartIds = cartItems.map((item) => item.productId)
+    }
+
+    res.json(
+      products.map((product) => ({
+        ...product,
+        isInCart: userId ? inCartIds.includes(product.id) : false,
+      }))
+    )
   } catch (error) {
     console.error("product fetch error:", error)
     res.status(500).json({ error: "failed to fetch products" })

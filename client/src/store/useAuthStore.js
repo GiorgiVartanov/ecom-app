@@ -21,6 +21,24 @@ const useAuthStore = create(
           token: null,
           isLoggedIn: false,
         }),
+
+      // optimistically updates cart
+      optimisticallyAddItemToCart: (item) =>
+        set((state) => ({
+          cartItems: [...state.cartItems, item],
+        })),
+
+      // changes optimistically added item to the new item from cart
+      confirmAddItemToCart: (newItem) =>
+        set((state) => ({
+          cartItems: state.cartItems.map((i) => (i.tempId === newItem.tempId ? newItem : i)),
+        })),
+
+      // removes item locally
+      removeItemFromCart: (id) =>
+        set((state) => ({
+          cartItems: state.cartItems.filter((i) => i.id !== id),
+        })),
     }),
     {
       name: "auth-storage",

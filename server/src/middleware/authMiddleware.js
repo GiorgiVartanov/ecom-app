@@ -1,6 +1,32 @@
 import jwt from "jsonwebtoken"
 import prisma from "../config/db"
 
+export const optionalAuth = async (req, res, next) => {
+  let token
+
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    try {
+      token = req.headers.authorization.split(" ")[1]
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.userId },
+        select: { id: true, name: true, email: true, role: true },
+      })
+
+      if (user) {
+        req.user = user
+      }
+    } catch (error) {
+      // invalid token, skip attaching user
+      // console.error("optionalAuth:", error)
+    }
+  }
+
+  next()
+}
+
 export const protect = async (req, res, next) => {
   let token
 
