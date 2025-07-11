@@ -1,12 +1,16 @@
+import { useState } from "react"
 import { useSearchParams } from "react-router"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { getProducts } from "../api/products.api"
 import useAuthStore from "../store/useAuthStore"
 
 import ProductGrid from "../components/products/ProductGrid"
+import SearchBar from "../components/common/SearchBar"
+import Loading from "../components/common/Loading"
+import PageSelector from "../components/common/PageSelector"
 
-const createQuery = (filters, token) => ({
+export const createQuery = (filters, token) => ({
   queryFn: () => getProducts(filters, token),
   queryKey: [
     "search",
@@ -17,30 +21,87 @@ const createQuery = (filters, token) => ({
   ],
 })
 
-export const loader =
-  (queryClient) =>
-  async ({ params }) => {
-    const query = createQuery(params)
-    return queryClient.getQueryData(query.queryKey) ?? (await queryClient.fetchQuery(query))
-  }
+const LIMIT_PER_PAGE = 20
 
 const Search = () => {
   const token = useAuthStore((state) => state.token)
+  const queryClient = useQueryClient()
 
-  const [searchParams] = useSearchParams()
-  const filters = Object.fromEntries(searchParams.entries())
+  // const [currentPage, setCurrentPage] = useState(1)
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const [inputValue, setInputValue] = useState(searchParams.get("query") || "")
+
+  const filters = {
+    ...Object.fromEntries(searchParams.entries()),
+    limit: LIMIT_PER_PAGE,
+  }
 
   const { data, isLoading, error } = useQuery(createQuery(filters, token))
 
-  console.log(data?.[0]?.isInCart)
+  const prefetchPage = (page) => {
+    const newFilters = { ...filters, page: page.toString(), query: "" }
 
-  if (isLoading) return <div>Loading...</div>
+    queryClient.prefetchQuery(createQuery(newFilters, token))
+  }
 
-  if (error) return <div>error</div>
+  const resetFilters = () => {
+    setInputValue("")
+
+    setSearchParams({}, { replace: true })
+  }
+
+  const goToPage = (page) => {
+    // setCurrentPage(page)
+    setSearchParams({ page: page.toString(), query: "" }, { replace: true })
+  }
+
+  const renderSearchBar = () => {
+    return (
+      <SearchBar
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+      />
+    )
+  }
+
+  const renderProductGrid = () => {
+    if (isLoading) return <Loading />
+
+    if (error) return <div>error</div>
+
+    return (
+      <ProductGrid
+        resetFilters={resetFilters}
+        data={data?.products}
+        className="mt-12 mb-auto"
+      />
+    )
+  }
+
+  const renderPageSelector = () => {
+    const totalPages = data?.totalPages
+
+    return (
+      <PageSelector
+        currentPage={searchParams.get("page") || 1}
+        totalPages={totalPages}
+        maximumPages={10}
+        prefetchPage={prefetchPage}
+        goToPage={goToPage}
+        className="mt-12"
+      />
+    )
+  }
 
   return (
-    <div className="mt-20">
-      <ProductGrid data={data} />
+    <div className="mt-6 flex flex-col justify-between min-h-[calc(100vh-4rem)]">
+      {renderSearchBar()}
+      {renderProductGrid()}
+      {renderPageSelector()}
     </div>
   )
 }

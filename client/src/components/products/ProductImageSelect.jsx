@@ -2,6 +2,9 @@ import { useState, useEffect } from "react"
 
 import ArrowIcon from "../../assets/icons/arrow.svg?react"
 
+import Image from "../common/Image"
+
+// renders a carousel of images that can be selected (they are selected by hovering over them), selected image is set as image on a product description page. if image is clicked its opened in a full screen
 const ProductImageSelect = ({
   images,
   handleSelectImage,
@@ -42,16 +45,17 @@ const ProductImageSelect = ({
     return images.slice(slideIndex, slideIndex + maxSimultaneousImages).map((image, index) => (
       <button
         key={index}
-        onClick={() => handleSelectImage(index + slideIndex)}
-        className={`rounded-sm overflow-hidden border-2 p-1 shadow bg-gray-50 ${
+        // onClick={() => handleSelectImage(index + slideIndex)}
+        onMouseEnter={() => handleSelectImage(index + slideIndex)}
+        className={`rounded overflow-hidden border-2 p-1 shadow ${
           index + slideIndex === currentIndex ? "border-primary" : "border-transparent"
         }`}
       >
         {image ? (
-          <img
+          <Image
             src={image}
             alt=""
-            className="h-16 w-16 object-contain rounded-sm"
+            className="h-16 w-16 object-contain rounded"
           />
         ) : (
           <div className="flex items-center justify-center h-16 w-16 text-gray-400">

@@ -1,5 +1,7 @@
 import prisma from "../config/db"
 
+// starts sale
+// PROTECTED [ADMIN]
 export const startSale = async (req, res) => {
   try {
     const { productIds, discount } = req.body
@@ -27,6 +29,8 @@ export const startSale = async (req, res) => {
   }
 }
 
+// ends sale
+// PROTECTED [ADMIN]
 export const endSale = async (req, res) => {
   try {
     const { saleId } = req.params

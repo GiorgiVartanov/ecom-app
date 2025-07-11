@@ -1,4 +1,153 @@
-const PageSelector = () => {
-  return <div>PageSelector</div>
+import { useState, useEffect } from "react"
+
+import ArrowIcon from "../../assets/icons/arrow.svg?react"
+
+import Button from "./Button"
+
+const PageSelector = ({
+  currentPage,
+  totalPages, // total amount of pages on a server
+  maximumPages, // maximum amount of page buttons that can be shown at the same time
+  goToPage, // function to go to a specific page
+  prefetchPage, // function to prefetch data for a specific page
+  className,
+}) => {
+  const [pageNumbers, setPageNumbers] = useState([])
+
+  const goToNextPage = () => {
+    goToPage(Number(currentPage) + 1)
+  }
+
+  const goToPreviousPage = () => {
+    goToPage(Math.max(Number(currentPage) - 1, 1))
+  }
+
+  const goToFirstPage = () => {
+    goToPage(1)
+  }
+
+  const goToLastPage = () => {
+    goToPage(totalPages)
+  }
+
+  // prefetches data for the specified page
+  const handlePrefetch = (pageNumber) => {
+    if (prefetchPage) {
+      prefetchPage(pageNumber)
+    }
+  }
+
+  useEffect(() => {
+    const startPage = Math.max(
+      1,
+      Math.min(Number(currentPage) - Math.floor(maximumPages / 2), totalPages - maximumPages + 1)
+    )
+    const endPage = Math.min(totalPages, startPage + maximumPages - 1)
+
+    const newPageNumbers = []
+    for (let pageIndex = startPage; pageIndex <= endPage; pageIndex++) {
+      newPageNumbers.push(pageIndex)
+    }
+    setPageNumbers(newPageNumbers)
+  }, [currentPage, totalPages, maximumPages])
+
+  if (totalPages === 1) {
+    return ""
+  }
+
+  const renderGoToFirstPageButton = () => {
+    return (
+      <Button
+        className={`flex flex-row items-center justify-center h-8 w-9 p-0 ${
+          Number(currentPage) === 1 ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        onClick={goToFirstPage}
+        onMouseEnter={() => handlePrefetch(1)}
+        disabled={Number(currentPage) === 1}
+        aria-label="First page"
+      >
+        <ArrowIcon className="w-4 h-4 rotate-270" />
+        <ArrowIcon className="w-4 h-4 rotate-270 -ml-1" />
+      </Button>
+    )
+  }
+
+  const renderGoToPreviousPageButton = () => {
+    return (
+      <Button
+        className={`flex flex-row items-center justify-center h-8 w-9 p-0 ${
+          Number(currentPage) === 1 ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        onClick={goToPreviousPage}
+        onMouseEnter={() => handlePrefetch(Math.max(Number(currentPage) - 1, 1))}
+        disabled={Number(currentPage) === 1}
+        aria-label="Previous page"
+      >
+        <ArrowIcon className="w-4 h-4 rotate-270" />
+      </Button>
+    )
+  }
+
+  const renderPageNumbers = () => {
+    return pageNumbers.map((pageNumber) => (
+      <Button
+        key={pageNumber}
+        className={`flex flex-row items-center justify-center h-8 w-9 p-0 ${
+          pageNumber === Number(currentPage)
+            ? "bg-primary-gradient text-white font-bold"
+            : "bg-white"
+        }`}
+        onClick={() => goToPage(pageNumber)}
+        onMouseEnter={() => handlePrefetch(pageNumber)}
+        aria-current={pageNumber === Number(currentPage) ? "page" : undefined}
+      >
+        {pageNumber}
+      </Button>
+    ))
+  }
+
+  const renderGoToNextPageButton = () => {
+    return (
+      <Button
+        className={`flex flex-row items-center justify-center h-8 w-9 p-0 ${
+          totalPages <= Number(currentPage) ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        onClick={goToNextPage}
+        onMouseEnter={() => handlePrefetch(Number(currentPage) + 1)}
+        disabled={totalPages <= Number(currentPage)}
+        aria-label="Next page"
+      >
+        <ArrowIcon className="w-4 h-4 rotate-90" />
+      </Button>
+    )
+  }
+
+  const renderGoToLastPageButton = () => {
+    return (
+      <Button
+        className={`flex flex-row items-center justify-center h-8 w-9 p-0 ${
+          totalPages === Number(currentPage) ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        onClick={goToLastPage}
+        onMouseEnter={() => handlePrefetch(totalPages)}
+        disabled={totalPages === Number(currentPage)}
+        aria-label="Last page"
+      >
+        <ArrowIcon className="w-4 h-4 -mr-1 rotate-90" />
+        <ArrowIcon className="w-4 h-4 rotate-90" />
+      </Button>
+    )
+  }
+
+  return (
+    <div className={`flex gap-3 justify-center items-center ${className}`}>
+      {renderGoToFirstPageButton()}
+      {renderGoToPreviousPageButton()}
+      {renderPageNumbers()}
+      {renderGoToNextPageButton()}
+      {renderGoToLastPageButton()}
+    </div>
+  )
 }
+
 export default PageSelector

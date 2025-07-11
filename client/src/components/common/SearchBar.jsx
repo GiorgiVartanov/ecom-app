@@ -1,119 +1,81 @@
 import { useState, useEffect } from "react"
-import { useLocation, useNavigate } from "react-router"
 
 import FilterIcon from "../../assets/icons/filter.svg?react"
 
-import Button from "../common/Button"
-import SearchSettingsModal from "../products/SearchSettingsModal"
+import Button from "./Button"
+import SearchFilterModal from "../products/SearchFilterModal"
 
-const SearchBar = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
+// renders search bar with debounced search and filter modal
+const SearchBar = ({ inputValue, setInputValue, searchParams, setSearchParams }) => {
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
 
-  const params = new URLSearchParams(location.search)
-  const initialQuery = params.get("query") || ""
+  const handleOpenFilterModal = () => {
+    setIsFilterModalOpen(true)
+  }
 
-  const [searchTerm, setSearchTerm] = useState(initialQuery)
-  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false)
+  const handleCloseFilterModal = () => {
+    setIsFilterModalOpen(false)
+  }
 
-  // updating the URL with debounce
+  const handleResetSearchParams = () => {
+    const query = searchParams.get("query") || ""
+    const page = searchParams.get("page") || "1"
+    const limit = searchParams.get("limit") || "20"
+
+    setSearchParams({ query: query, page: page, limit: limit })
+  }
+
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      const currentParams = new URLSearchParams(location.search)
+    const handler = setTimeout(() => {
+      setSearchParams(
+        (params) => {
+          params.set("query", inputValue)
+          return params
+        },
+        { replace: true }
+      )
+    }, 300)
 
-      if (searchTerm.trim()) {
-        currentParams.set("query", searchTerm.trim())
-      } else {
-        currentParams.delete("query")
-      }
+    return () => clearTimeout(handler)
+  }, [inputValue, setSearchParams])
 
-      navigate(`${location.pathname}?${currentParams.toString()}`, { replace: true })
-    }, 1000)
+  const entries = Array.from(searchParams.entries())
 
-    return () => clearTimeout(timeout)
-  }, [searchTerm, navigate, location.pathname, location.search])
-
-  const handleSearchTermChange = (e) => {
-    setSearchTerm(e.target.value)
-  }
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      const currentParams = new URLSearchParams(location.search)
-
-      if (searchTerm.trim()) {
-        currentParams.set("query", searchTerm.trim())
-      } else {
-        currentParams.delete("query")
-      }
-
-      navigate(`search/?${currentParams.toString()}`, { replace: true })
-    }
-  }
-
-  const handleOpenFilterMenu = () => {
-    setIsFilterMenuOpen(true)
-  }
-
-  const handleCloseFilterMenu = () => {
-    setIsFilterMenuOpen(false)
-  }
-
-  // render search bar in header (compact, inline)
-  const renderInHeader = () => {
-    return (
-      <div className="ml-auto mr-[2vw]">
-        <form onSubmit={(e) => e.preventDefault()}>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchTermChange}
-            onKeyDown={handleKeyPress}
-            placeholder="Search..."
-            className="border-2 border-gray-100 rounded-sm block w-full px-2 py-0.5 focus:border-primary outline-none transition-colors duration-200"
-          />
-        </form>
-      </div>
-    )
-  }
-
-  // render search bar on dedicated page (centered, larger)
-  const renderOnPage = () => {
-    return (
-      <div className="ml-auto mr-[2vw] absolute top-24 left-1/2 transform -translate-x-1/2 -translate-y-1/2 min-w-96 text-center fade-in-top flex gap-2">
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="w-full"
-        >
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchTermChange}
-            onKeyDown={handleKeyPress}
-            placeholder="Search..."
-            className="border-2 border-gray-100 rounded-sm block w-full px-2 py-1.5 text-center focus:border-primary outline-none transition-colors duration-200"
-          />
-        </form>
-        <Button
-          onClick={handleOpenFilterMenu}
-          className="bg-transparent hover:opacity-70 rounded-sm py-1.5 shadow-none border-2 border-gray-100 hover brightness-100"
-        >
-          <FilterIcon className="icon h-5 w-5" />
-        </Button>
-      </div>
-    )
-  }
+  // checks if there are parameters other than query, page, and limit
+  const showResetButton = entries.some(
+    ([key]) => key !== "query" && key !== "page" && key !== "limit"
+  )
 
   return (
-    <>
-      {location.pathname === "/search" || location.pathname === "/dashboard/products"
-        ? renderOnPage()
-        : renderInHeader()}
-      <SearchSettingsModal
-        isOpen={isFilterMenuOpen}
-        onClose={handleCloseFilterMenu}
+    <div>
+      <div className="mx-auto flex items-center gap-3 mb-7 max-w-full w-md relative">
+        <input
+          type="search"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="Search products…"
+          className="px-2 py-1.5 mx-auto w-full rounded outline-gray-100 outline-2 focus:outline-primary block transition-colors duration-200 ease-in-out"
+        />
+        <button
+          onClick={handleOpenFilterModal}
+          className="h-8 hover:opacity-70 transition-opacity duration-200 ease-in-out"
+        >
+          {<FilterIcon className="icon h-8" />}
+        </button>
+        <button
+          className={`absolute -bottom-6.5 text-gray-400 transition-opacity hover:opacity-70 duration-200 ease-in-out ${
+            !showResetButton ? "invisible" : ""
+          }`}
+          onClick={handleResetSearchParams}
+        >
+          reset filters
+        </button>
+      </div>
+      <SearchFilterModal
+        isOpen={isFilterModalOpen}
+        onClose={handleCloseFilterModal}
       />
-    </>
+    </div>
   )
 }
 

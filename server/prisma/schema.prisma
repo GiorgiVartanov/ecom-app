@@ -40,6 +40,7 @@ model SearchHistoryItem {
   createdAt                DateTime                     @default(now())
   updatedAt                DateTime                     @updatedAt
 
+
   @@index([userId])
 }
 
@@ -63,15 +64,37 @@ model Product {
   createdAt                DateTime                     @default(now())
   updatedAt                DateTime                     @updatedAt
 
+
   @@index([status])
   @@index([name])
 }
 
+model TagKey {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  isSearchable  Boolean  @default(false)
+
+  tags          Tag[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 model Tag {
-  id                       String                       @id @default(uuid())
-  key                      String
-  value                    String
-  products                 Product[]
+  id        String   @id @default(uuid())
+  keyId     String
+  value     String
+
+  tagKey    TagKey   @relation(fields: [keyId], references: [id])
+  products  Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  @@unique([keyId, value])
+
+  @@index([keyId])
 }
 
 model ProductImage {
@@ -80,6 +103,10 @@ model ProductImage {
   position                 Int
   product                  Product                      @relation(fields: [productId], references: [id])
   productId                String
+
+  createdAt                DateTime                     @default(now())
+  updatedAt                DateTime                     @updatedAt
+
 
   @@index([productId])
 }
@@ -91,6 +118,10 @@ model CartItem {
   product                  Product                      @relation(fields: [productId], references: [id])
   productId                String
   quantity                 Int
+
+  createdAt                DateTime                     @default(now())
+  updatedAt                DateTime                     @updatedAt
+
 
   @@unique([userId, productId])
 }
@@ -120,6 +151,9 @@ model OrderItem {
   productId                String
   quantity                 Int
   price                    Decimal                      @db.Decimal(10, 2)
+
+  createdAt                DateTime                     @default(now())
+  updatedAt                DateTime                     @updatedAt
 }
 
 model Sale {
@@ -128,6 +162,9 @@ model Sale {
 
   discount                 Float                        @default(0)
   products                 Product[]
+
+  createdAt                DateTime                     @default(now())
+  updatedAt                DateTime                     @updatedAt
 }
 
 model Review {
@@ -136,18 +173,16 @@ model Review {
   userId                   String
   product                  Product                      @relation(fields: [productId], references: [id])
   productId                String
-  score                    Int                          
+  score                    Float                          
   text                     String?
   
   createdAt                DateTime                     @default(now())
   updatedAt                DateTime                     @updatedAt
 }
 
-
-
 enum OrderStatus {
   PENDING
-  PAID
+  PROCESSING
   SHIPPED
   DELIVERED
   CANCELED

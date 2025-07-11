@@ -7,6 +7,7 @@ export const getProducts = async (filters, token) => {
       Authorization: `Bearer ${token}`,
     },
   })
+
   return res.data
 }
 
@@ -16,11 +17,15 @@ export const getProduct = async (id, token) => {
       Authorization: `Bearer ${token}`,
     },
   })
+
   return res.data
 }
 
-export const createProduct = async ({ name, description, price, stock, tags, images }, token) =>
-  axios.post(
+export const createProduct = async (
+  { name, description, price, stock, tags, images, searchTagIds, removedSearchTagIds },
+  token
+) => {
+  return await axios.post(
     "/products",
     {
       name,
@@ -29,6 +34,8 @@ export const createProduct = async ({ name, description, price, stock, tags, ima
       stock,
       tags,
       images,
+      searchTagIds,
+      removedSearchTagIds,
     },
     {
       headers: {
@@ -36,17 +43,38 @@ export const createProduct = async ({ name, description, price, stock, tags, ima
       },
     }
   )
+}
 
 export const updateProduct = async (
   id,
-  { name, description, price, stock, tags, deletedTagIds, images, deletedImageIds },
+  {
+    name,
+    description,
+    price,
+    stock,
+    tags,
+    deletedTagIds,
+    images,
+    deletedImageIds,
+    searchTagIds,
+    removedSearchTagIds,
+  },
   token
 ) => {
-  console.log({ deletedTagIds })
-
   return await axios.patch(
     `/products/${id}`,
-    { name, description, price, stock, tags, deletedTagIds, images, deletedImageIds },
+    {
+      name,
+      description,
+      price,
+      stock,
+      tags,
+      deletedTagIds,
+      images,
+      deletedImageIds,
+      searchTagIds,
+      removedSearchTagIds,
+    },
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -61,4 +89,24 @@ export const delistProduct = async (id, token) => {
       Authorization: `Bearer ${token}`,
     },
   })
+}
+
+export const writeReview = async (id, { rating, comment, reviewId }, token) => {
+  const res = axios.post(
+    `/products/${id}/reviews`,
+    { rating, comment, reviewId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+
+  return res.data
+}
+
+export const getSearchTags = async () => {
+  const res = await axios.get("/products/tags")
+
+  return res.data
 }

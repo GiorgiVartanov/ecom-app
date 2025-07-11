@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 import useAuthStore from "../../store/useAuthStore"
 
@@ -9,10 +11,49 @@ import Modal from "../common/Modal"
 import Input from "../common/Input"
 import Button from "../common/Button"
 
+// Famous tech people for placeholder
+const famousNames = [
+  "Alan Turing",
+  "Grace Hopper",
+  "Linus Torvalds",
+  "Bill Gates",
+  "Steve Wozniak",
+  "Steve Jobs",
+  "Mark Zuckerberg",
+  "John Doe",
+]
+
+// zod schemas for validation
+const signInSchema = z.object({
+  email: z.string().nonempty("Email is required").email("Invalid email address"),
+  password: z.string().nonempty("Password is required"),
+})
+
+const signUpSchema = z
+  .object({
+    name: z
+      .string()
+      .nonempty("Name is required")
+      .min(3, { message: "Name must be at least 3 characters" })
+      .max(20, { message: "Name must be at most 20 characters" }),
+    email: z.string().nonempty("Email is required").email("Invalid email address"),
+    password: z
+      .string()
+      .nonempty("Password is required")
+      .min(8, { message: "Password must be at least 8 characters" })
+      .max(50, { message: "Password must be at most 50 characters" }),
+    confirmPassword: z.string().nonempty("Password Confirmation is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  })
+
 const AuthModal = ({ title, isOpen, onClose, className }) => {
   const [selectedTab, setSelectedTab] = useState("signUp")
 
-  const [isLoading, setIsLoading] = useState(false)
+  // const [isLoading, setIsLoading] = useState(false)
+  const randomName = famousNames[Math.floor(Math.random() * famousNames.length)]
 
   const setAuth = useAuthStore((state) => state.setAuth)
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
@@ -21,19 +62,27 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
     register: registerSignIn,
     handleSubmit: handleSubmitSignIn,
     reset: resetSignIn,
-    formState: { errors: errorsSignIn },
-  } = useForm()
+    setError: setSignInError,
+    formState: { errors: signInError, isSubmitting: isSignInSubmitting },
+  } = useForm({
+    resolver: zodResolver(signInSchema),
+    mode: "onSubmit",
+    criteriaMode: "all",
+  })
 
   const {
     register: registerSignUp,
     handleSubmit: handleSubmitSignUp,
     reset: resetSignUp,
-    formState: { errors: errorsSignUp },
-  } = useForm()
+    setError: setSignUpError,
+    formState: { errors: signUpError, isSubmitting: isSignUpSubmitting },
+  } = useForm({
+    resolver: zodResolver(signUpSchema),
+    mode: "onSubmit",
+    criteriaMode: "all",
+  })
 
   const onSignInSubmit = async (data) => {
-    setIsLoading(true)
-
     try {
       const response = await signIn(data)
       const { token, user } = response.data
@@ -48,13 +97,12 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
       onClose()
     } catch (error) {
       console.error("Sign In failed:", error)
-    } finally {
-      setIsLoading(false)
+      setSignInError("root", { message: error?.response?.data?.error || "sign in failed" })
     }
   }
 
   const onSignUpSubmit = async (data) => {
-    setIsLoading(true)
+    // setIsLoading(true)
 
     try {
       const response = await signUp(data)
@@ -70,34 +118,47 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
       onClose()
     } catch (error) {
       console.error("Sign Up failed:", error)
-    } finally {
-      setIsLoading(false)
+      setSignUpError("root", { message: error?.response?.data?.error || "sign up failed" })
+      // } finally {
+      // setIsLoading(false)
     }
   }
 
   const renderSignIn = () => (
     <form
       onSubmit={handleSubmitSignIn(onSignInSubmit)}
-      className="space-y-4 h-full flex flex-col"
+      className="gap-4 h-full flex flex-col"
+      noValidate // removes browser's native validation, so validation will be more consistent
+      key="signInForm"
     >
       <Input
         label="Email"
         type="email"
-        {...registerSignIn("email", { required: "Email is required" })}
-        error={errorsSignIn.email?.message}
+        placeholder="example@email.com"
+        {...registerSignIn("email")}
+        error={signInError.email?.message}
       />
       <Input
         label="Password"
         type="password"
-        {...registerSignIn("password", { required: "Password is required" })}
-        error={errorsSignIn.password?.message}
+        placeholder="password"
+        {...registerSignIn("password")}
+        error={signInError.password?.message}
       />
+
+      {signInError.root?.message ? (
+        <span className="mt-1 text-xs text-red">{signInError.root.message}</span>
+      ) : (
+        ""
+      )}
+
       <Button
-        disabled={isLoading}
+        isPending={isSignInSubmitting}
         type="submit"
-        className="w-full mt-4 gradient-bg"
+        variant="primary"
+        className="w-full mt-4"
       >
-        {isLoading ? "Loading..." : "Sign In"}
+        Sign In
       </Button>
     </form>
   )
@@ -105,53 +166,93 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
   const renderSignUp = () => (
     <form
       onSubmit={handleSubmitSignUp(onSignUpSubmit)}
-      className="space-y-4 h-full flex flex-col"
+      className="gap-4 h-full flex flex-col"
+      noValidate
+      key="signUpForm"
     >
       <Input
         label="Name"
         type="text"
+        placeholder={randomName}
         maxLength={20}
-        {...registerSignUp("name", {
-          required: "Name is required",
-          maxLength: { value: 20, message: "Name must be at most 20 characters" },
-        })}
-        error={errorsSignUp.name?.message}
+        {...registerSignUp("name")}
+        error={signUpError.name?.message}
       />
       <Input
         label="Email"
         type="email"
-        {...registerSignUp("email", {
-          required: "Email is required",
-        })}
-        error={errorsSignUp.email?.message}
+        placeholder="example@email.com"
+        {...registerSignUp("email")}
+        error={signUpError.email?.message}
       />
       <Input
         label="Password"
         type="password"
+        placeholder="password"
         maxLength={50}
-        {...registerSignUp("password", {
-          required: "Password is required",
-          minLength: { value: 8, message: "Password must be at least 8 characters" },
-          maxLength: { value: 50, message: "Password must be at most 50 characters" },
-        })}
-        error={errorsSignUp.password?.message}
+        {...registerSignUp("password")}
+        error={signUpError.password?.message}
       />
       <Input
         label="Confirm Password"
         type="password"
+        placeholder="password"
         maxLength={50}
-        {...registerSignUp("confirmPassword", { required: "Password Confirmation is required" })}
-        error={errorsSignUp.confirmPassword?.message}
+        {...registerSignUp("confirmPassword")}
+        error={signUpError.confirmPassword?.message}
       />
+      {signUpError.root?.message ? (
+        <span className="mt-1 text-xs text-red">{signUpError.root.message}</span>
+      ) : (
+        ""
+      )}
       <Button
-        disabled={isLoading}
+        isPending={isSignUpSubmitting}
         type="submit"
-        className="w-full mt-4 gradient-bg"
+        variant="primary"
+        className="w-full mt-4"
       >
-        {isLoading ? "Loading..." : "Sign Up"}
+        Sign Up
       </Button>
     </form>
   )
+
+  const renderTabButtons = () => {
+    return (
+      <div className="flex">
+        <Button
+          disabled={isSignUpSubmitting || isSignUpSubmitting}
+          onClick={() => {
+            setSelectedTab("signUp")
+          }}
+          variant="empty"
+          wrapperClassName={`w-full flex-1/2`}
+          className={`link transition-smooth py-4 w-full flex-1/2 border-t-2 rounded-none rounded-tl ${
+            selectedTab === "signUp"
+              ? "text-primary-gradient border-t-primary border-r-primary"
+              : "border-t-transparent border-r-transparent"
+          }`}
+        >
+          Sign Up
+        </Button>
+        <Button
+          disabled={isSignUpSubmitting || isSignUpSubmitting}
+          onClick={() => {
+            setSelectedTab("signIn")
+          }}
+          variant="empty"
+          wrapperClassName={`w-full flex-1/2`}
+          className={`link transition-smooth py-4 w-full flex-1/2 border-t-2 rounded-none rounded-tr ${
+            selectedTab === "signIn"
+              ? "text-primary-gradient border-t-primary border-l-primary"
+              : "border-t-transparent border-l-transparent"
+          }`}
+        >
+          Sign In
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <Modal
@@ -160,34 +261,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
       onClose={onClose}
       className={className}
     >
-      <div className="flex">
-        <Button
-          disabled={isLoading}
-          onClick={() => {
-            setSelectedTab("signUp")
-          }}
-          className={`link w-full py-4 border-t-2 transition-colors duration-300 ease-in-out ${
-            selectedTab === "signUp"
-              ? "text-primary border-t-primary border-r-primary"
-              : "border-t-transparent border-r-transparent"
-          }`}
-        >
-          Sign Up
-        </Button>
-        <Button
-          disabled={isLoading}
-          onClick={() => {
-            setSelectedTab("signIn")
-          }}
-          className={`link w-full py-4 border-t-2 transition-colors duration-300 ease-in-out ${
-            selectedTab === "signIn"
-              ? "text-primary border-t-primary border-l-primary"
-              : "border-t-transparent border-l-transparent"
-          }`}
-        >
-          Sign In
-        </Button>
-      </div>
+      {renderTabButtons()}
       <div className="p-4 flex-1">{selectedTab === "signUp" ? renderSignUp() : renderSignIn()}</div>
     </Modal>
   )

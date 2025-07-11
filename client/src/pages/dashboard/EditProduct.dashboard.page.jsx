@@ -4,27 +4,19 @@ import { useQuery } from "@tanstack/react-query"
 import { getProduct } from "../../api/products.api"
 
 import UploadProduct from "../../components/products/UploadProduct"
+import Loading from "../../components/common/Loading"
 
 const createQuery = (id) => ({
-  queryKey: ["product", "admin", id],
+  queryKey: ["product", id],
   queryFn: async () => getProduct(id),
 })
-
-export const loader =
-  (queryClient) =>
-  async ({ params }) => {
-    const query = createQuery(params.id)
-    return queryClient.getQueryData(query.queryKey) ?? (await queryClient.fetchQuery(query))
-  }
 
 const EditProductsDashboardPage = () => {
   const { id } = useParams()
 
   const { data, isLoading, error } = useQuery(createQuery(id))
 
-  // console.log(data)
-
-  if (isLoading) return <div>loading...</div>
+  if (isLoading) return <Loading />
 
   if (error) return <div>something went wrong</div>
 

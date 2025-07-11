@@ -1,7 +1,9 @@
+import { Link } from "react-router"
+
 const Footer = () => {
   return (
-    <footer className="mt-auto">
-      <div className="bg-foreground text-background flex flex-col items-center p-6 mt-16">
+    <footer className="pt-12">
+      <div className="bg-foreground text-background flex flex-col items-center p-6 mt-2">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-around w-full max-w-6xl py-8 px-4 md:px-0">
           {/* Contact Us Section */}
           <div className="mb-8 md:mb-0 text-center md:text-left w-full md:w-auto">
@@ -48,28 +50,28 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
-                  href="/about-us"
+                <Link
+                  to="/about"
                   className="hover:text-primary transition-colors duration-200"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/privacy-policy"
+                <Link
+                  to="/privacy"
                   className="hover:text-primary transition-colors duration-200"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/terms-of-service"
+                <Link
+                  to="/tos"
                   className="hover:text-primary transition-colors duration-200"
                 >
                   Terms of Service
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -81,28 +83,28 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
-                  href="/faq"
+                <Link
+                  to="/faq"
                   className="hover:text-primary transition-colors duration-200"
                 >
                   FAQ
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/shipping-returns"
+                <Link
+                  to="/shipping-returns"
                   className="hover:text-primary transition-colors duration-200"
                 >
                   Shipping & Returns
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/size-guide"
+                <Link
+                  to="/support"
                   className="hover:text-primary transition-colors duration-200"
                 >
-                  Size Guide
-                </a>
+                  Contact support
+                </Link>
               </li>
             </ul>
           </div>

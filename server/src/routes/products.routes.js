@@ -9,31 +9,36 @@ import {
   createProduct,
   editProduct,
   delistProduct,
+  getSearchTags,
 } from "../controllers/products.controller"
 
 const router = express.Router()
 
-// Get single product
+// gets search tags
+// PUBLIC
+router.get("/tags", getSearchTags)
+
+// gets single product
 // PUBLIC
 router.get("/:id", optionalAuth, getProduct)
 
-// Get list of products
+// gets list of products
 // PUBLIC
 router.get("/", optionalAuth, getProducts)
 
-// post a review
+// posts review
 // PROTECTED [USER]
 router.post("/:id/reviews", protect, writeReview)
 
-// Add product
+// adds product
 // PROTECTED [ADMIN]
 router.post("/", protectAdmin, createProduct)
 
-// Edit product
+// edits product
 // PROTECTED [ADMIN]
 router.patch("/:id", protectAdmin, editProduct)
 
-// Delist product
+// deletes product
 // PROTECTED [ADMIN]
 router.delete("/:id", protect, delistProduct)
 

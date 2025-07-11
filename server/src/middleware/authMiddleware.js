@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
 import prisma from "../config/db"
 
+// attaches user to request if token is valid, otherwise continues without user
 export const optionalAuth = async (req, res, next) => {
   let token
 
@@ -19,7 +20,7 @@ export const optionalAuth = async (req, res, next) => {
         req.user = user
       }
     } catch (error) {
-      // invalid token, skip attaching user
+      // invalid token, so it won't attach user
       // console.error("optionalAuth:", error)
     }
   }
@@ -27,6 +28,7 @@ export const optionalAuth = async (req, res, next) => {
   next()
 }
 
+// verifies token and attaches user to request, blocks if not authorized
 export const protect = async (req, res, next) => {
   let token
 
@@ -59,6 +61,7 @@ export const protect = async (req, res, next) => {
   return res.status(401).json({ message: "not authorized, no token" })
 }
 
+// verifies token and user is admin, blocks if not admin
 export const protectAdmin = async (req, res, next) => {
   await protect(req, res, async () => {
     if (req.user.role !== "ADMIN") {

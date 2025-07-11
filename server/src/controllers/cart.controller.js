@@ -1,5 +1,7 @@
 import prisma from "../config/db"
 
+// adds item to cart
+// PROTECTED [USER]
 export const addItemToCart = async (req, res) => {
   try {
     const { id: productId } = req.params
@@ -33,14 +35,17 @@ export const addItemToCart = async (req, res) => {
   }
 }
 
+// gets cart items
+// PROTECTED [USER]
 export const getCart = async (req, res) => {
   try {
     const { id } = req.user
 
-    const fetchedUser = await prisma.user.findUnique({
+    const currentUser = await prisma.user.findUnique({
       where: { id },
       include: {
         cartItems: {
+          orderBy: { createdAt: "asc" },
           select: {
             id: true,
             quantity: true,
@@ -48,6 +53,7 @@ export const getCart = async (req, res) => {
               select: {
                 id: true,
                 name: true,
+                description: true,
                 price: true,
                 stock: true,
                 images: {
@@ -62,13 +68,15 @@ export const getCart = async (req, res) => {
       },
     })
 
-    return res.status(201).json(fetchedUser.cartItems)
+    return res.status(201).json(currentUser.cartItems)
   } catch (error) {
     console.error("failed to fetch cart:", error.message)
     res.status(500).json({ message: "failed to fetch cart" })
   }
 }
 
+// deletes item from cart
+// PROTECTED [USER]
 export const removeItemFromCart = async (req, res) => {
   try {
     const { id: productId } = req.params
@@ -92,7 +100,8 @@ export const removeItemFromCart = async (req, res) => {
   }
 }
 
-// will add other features to it later
+// edits cart item quantity or deletes if quantity is zero
+// PROTECTED [USER]
 export const editCartItem = async (req, res) => {
   try {
     const { id } = req.params

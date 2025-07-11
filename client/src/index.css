@@ -31,18 +31,27 @@
 :root {
   --color-background: #ffffff;
   --color-background-secondary: #f2f2f2;
-  --color-foreground: #070707;
-  /* --color-primary: #f58147; */
+  --color-foreground: #101011;
+
   --color-primary: #47ccf5;
   --color-complementary: #96a3a2;
-  --color-red: #f04242;
-  --color-green: #47f547;
-  /* --color-primary-active: #af835b; */
 
-  /* --font-sans: "Poppins", system-ui, sans-serif; */
+  --color-red: #df6255;
+  --color-red-hover: #e23724;
+  --color-red-disabled: #f5c6cb;
 
-  --shadow-light: 0 2px 8px -1px hsla(0, 0%, 100%, 0.08);
-  --shadow-dark: 0 4px 12px -2px hsla(0, 0%, 0%, 0.25);
+  --color-green: #38c974;
+  --color-green-hover: rgb(38, 197, 104);
+  --color-green-disabled: rgb(75, 196, 125);
+
+  --color-success-text: #155724;
+
+  --color-error-text: #78281f;
+
+  /* --shadow-light: 0 2px 8px -1px hsla(0, 0%, 100%, 0.08);
+  --shadow-dark: 0 4px 12px -2px hsla(0, 0%, 0%, 0.25); */
+
+  --toastify-toast-bd-radius: 0.25rem;
 }
 
 @theme inline {
@@ -51,8 +60,15 @@
   --color-foreground: var(--color-foreground);
   --color-primary: var(--color-primary);
   --color-complementary: var(--color-complementary);
+
   --color-red: var(--color-red);
+  --color-red-hover: var(--color-red-hover);
+  --color-red-disabled: var(--color-red-disabled);
+  --color-error-text: var(--color-error-text);
+
   --color-green: var(--color-green);
+  --color-green-hover: var(--color-green-hover);
+  --color-green-disabled: var(--color-green-disabled);
 
   --font-sans: var(--font-sans);
 
@@ -82,6 +98,18 @@ body {
       opacity: 0;
     }
     to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes loading-bar-appear {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
       opacity: 1;
     }
   }
@@ -132,8 +160,25 @@ body {
     }
   }
 
+  .bg-red {
+    @apply bg-red;
+    @apply hover:bg-red-hover;
+    @apply disabled:bg-red-disabled;
+    @apply disabled:text-error-text;
+  }
+
+  .bg-green {
+    @apply bg-green;
+    @apply hover:bg-green-hover;
+    @apply disabled:bg-green-disabled;
+  }
+
   .appear {
     animation: appear 200ms var(--ease-kinetic) forwards;
+  }
+
+  .appear-slow {
+    animation: loading-bar-appear 400ms var(--ease-kinetic) forwards;
   }
 
   .search-bar-appear {
@@ -158,18 +203,46 @@ body {
 }
 
 @layer components {
+  .text-primary-gradient {
+    @apply bg-gradient-to-tr from-primary via-blue-300 to-primary bg-clip-text text-transparent!;
+  }
+  .hover\:text-primary-gradient:hover {
+    @apply bg-gradient-to-tr from-primary via-blue-300 to-primary bg-clip-text text-transparent!;
+  }
+
+  .transition-smooth {
+    @apply transition duration-200 ease-in-out;
+  }
+
   .button {
-    @apply bg-primary shadow-sm px-4 py-2 font-semibold text-white transition duration-300 ease-in-out rounded-xs;
+    @apply bg-gray-50 shadow-sm px-4 py-2 font-semibold text-gray-700 transition duration-300 ease-in-out rounded;
   }
   .button:hover {
-    @apply brightness-105 shadow-md;
+    @apply bg-gray-100;
   }
   .button:disabled {
-    @apply opacity-50 hover:brightness-100 hover:shadow-sm;
+    @apply opacity-75 hover:brightness-100 hover:shadow-sm;
+  }
+
+  .button-primary {
+    @apply bg-gradient-to-tr from-primary via-blue-300 to-primary shadow-sm px-4 py-2 font-semibold text-white transition duration-300 ease-in-out rounded;
+  }
+  .button-primary:hover {
+    @apply brightness-105;
+  }
+  .button-primary:disabled {
+    @apply opacity-75 hover:brightness-100 hover:shadow-sm;
+  }
+
+  .text-link {
+    @apply text-blue-400 transition duration-300 ease-in-out;
+  }
+  .text-link:hover {
+    @apply text-blue-300;
   }
 
   .link {
-    @apply text-foreground bg-transparent transition duration-300 ease-in-out px-3 py-2 block cursor-pointer rounded-xs shadow-none font-light text-nowrap;
+    @apply text-foreground bg-transparent transition duration-300 ease-in-out px-3 py-2 block cursor-pointer rounded shadow-none font-light text-nowrap;
   }
   .link:hover {
     @apply cursor-pointer opacity-80 shadow-none;
@@ -179,7 +252,45 @@ body {
     @apply w-6 h-6 inline-block align-middle select-none transition duration-200 ease-in-out text-foreground;
   }
 
-  .gradient-bg {
+  .icon-small {
+    @apply w-4.5 h-4.5 inline-block align-middle select-none transition duration-200 ease-in-out text-foreground;
+  }
+
+  .bg-primary-gradient {
     @apply bg-gradient-to-tr from-primary via-blue-300 to-primary;
   }
+}
+
+@keyframes fastSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fastSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.fastSlideIn {
+  animation-name: fastSlideIn;
+  animation-duration: 200ms;
+  animation-fill-mode: both;
+}
+
+.fastSlideOut {
+  animation-name: fastSlideOut;
+  animation-duration: 200ms;
+  animation-fill-mode: both;
 }

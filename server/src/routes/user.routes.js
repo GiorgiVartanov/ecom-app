@@ -6,7 +6,8 @@ import { getUser } from "../controllers/user.controller"
 
 const router = express.Router()
 
-// Get user
+// gets user
+// PUBLIC
 router.get("/:id", getUser)
 
 export default router

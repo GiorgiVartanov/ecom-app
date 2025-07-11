@@ -10,6 +10,8 @@ function generateToken(user) {
   return jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET) // add expiresIn and logic for refreshToken latter
 }
 
+// registers user
+// PUBLIC
 export const register = async (req, res) => {
   try {
     const { email, password, name } = req.body
@@ -58,6 +60,8 @@ export const register = async (req, res) => {
   }
 }
 
+// logs in user
+// PUBLIC
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body

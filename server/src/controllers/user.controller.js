@@ -1,5 +1,7 @@
 import prisma from "../config/db"
 
+// gets single user
+// PROTECTED [USER]
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params
@@ -46,6 +48,10 @@ export const getUser = async (req, res) => {
   }
 }
 
+// edits user profile
+// PROTECTED [USER]
 export const editProfile = async (req, res) => {}
 
+// disables user account
+// PROTECTED [USER]
 export const disableAccount = async (req, res) => {}

@@ -4,10 +4,12 @@ import { register, login } from "../controllers/auth.controller"
 
 const router = express.Router()
 
-// Register a new user
+// registers user
+// PUBLIC
 router.post("/signup", register)
 
-// Login an existing user
+// logs in user
+// PUBLIC
 router.post("/signin", login)
 
 export default router

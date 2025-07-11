@@ -6,11 +6,11 @@ import { startSale, endSale } from "../controllers/sale.controller"
 
 const router = express.Router()
 
-// Start sale
+// starts sale
 // PROTECTED [ADMIN]
 router.post("/:id/sale/start", protectAdmin, startSale)
 
-// End sale
+// ends sale
 // PROTECTED [ADMIN]
 router.post("/:id/sale/end", protectAdmin, endSale)
 
