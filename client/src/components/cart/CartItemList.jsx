@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router"
 
-import useModal from "../../context/ModalContext"
+import useModalStore from "../../store/useModalStore"
+import useConfirmModalStore from "../../store/useConfirmModalStore"
 
 import CartItem from "./CartItem"
 
@@ -12,7 +13,8 @@ const CartItemList = ({ cartItemList, editItems, isEditable = true }) => {
 
   const scrollRef = useRef(null)
 
-  const { onClose } = useModal()
+  const onClose = useModalStore((state) => state.onClose)
+  const { createConfirmationPanel } = useConfirmModalStore()
 
   const handleQuantityIncrease = (e, itemId, quantity, stock) => {
     e.preventDefault()
@@ -26,6 +28,18 @@ const CartItemList = ({ cartItemList, editItems, isEditable = true }) => {
   const handleQuantityDecrease = (e, itemId, quantity) => {
     e.preventDefault()
     e.stopPropagation()
+
+    if (quantity === 1) {
+      // shows confirmation dialog when trying to remove the last item
+      createConfirmationPanel(
+        "Are you sure you want to remove this item from your cart?",
+        () => editItems({ id: itemId, newQuantity: 0 }),
+        "Remove",
+        "Keep",
+        "danger"
+      )
+      return
+    }
 
     editItems({ id: itemId, newQuantity: quantity - 1 })
   }

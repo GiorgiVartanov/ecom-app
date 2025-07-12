@@ -1,4 +1,4 @@
-import { StrictMode } from "react"
+import { StrictMode, useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter, Routes, Route } from "react-router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
@@ -112,8 +112,42 @@ const renderRoutes = () => {
   )
 }
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
+const App = () => {
+  const [showDevtools, setShowDevtools] = useState(import.meta.env.DEV)
+
+  useEffect(() => {
+    // sets up the toggle function and keyboard shortcut only once
+    window.toggleDevtools = () => {
+      setShowDevtools((prev) => {
+        const newState = !prev
+        return newState
+      })
+
+      // returns the current state after toggle
+      return `React Query Devtools ${!showDevtools ? "enabled" : "disabled"}`
+    }
+
+    const handleKeyDown = (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "D") {
+        event.preventDefault()
+        window.toggleDevtools()
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown)
+
+    if (import.meta.env.DEV) {
+      console.log("Portfolio Project - Try these commands:")
+      console.log("  • toggleDevtools() - Toggle React Query Devtools")
+      console.log("  • Ctrl/Cmd + Shift + D - Keyboard shortcut for devtools")
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [])
+
+  return (
     <QueryClientProvider client={queryClient}>
       {renderRoutes()}
 
@@ -129,10 +163,9 @@ createRoot(document.getElementById("root")).render(
         closeOnClick
         pauseOnHover
         draggable
-        // limit={3}
       />
 
-      {import.meta.env.DEV ? (
+      {showDevtools ? (
         <ReactQueryDevtools
           initialIsOpen
           buttonPosition="bottom-left"
@@ -143,5 +176,11 @@ createRoot(document.getElementById("root")).render(
         ""
       )}
     </QueryClientProvider>
+  )
+}
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
   </StrictMode>
 )

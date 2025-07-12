@@ -6,6 +6,7 @@ import cartRoutes from "./routes/cart.routes"
 import orderRoutes from "./routes/order.routes"
 import productRoutes from "./routes/products.routes"
 import userRoutes from "./routes/user.routes"
+import saleRoutes from "./routes/sale.routes"
 import wishlistRoutes from "./routes/wishlist.routes"
 
 const app = express()
@@ -25,6 +26,7 @@ app.use("/api/order", orderRoutes)
 app.use("/api/products", productRoutes)
 app.use("/api/user", userRoutes)
 app.use("/api/wishlist", wishlistRoutes)
+app.use("/api/sale", saleRoutes)
 
 app.get("/", (req, res) => {
   res.json({ status: "ok", message: "server is running" })

@@ -14,19 +14,19 @@ const COMPONENTS = [
   {
     id: "gpu",
     title: "GPU",
-    image: "/images/component-images/gpu.jpg",
+    image: "/images/component-images/gpu.webp",
     search: { category: "gpu" },
   },
   {
     id: "cpu",
     title: "CPU",
-    image: "/images/component-images/cpu.jpg",
+    image: "/images/component-images/cpu.webp",
     search: { category: "cpu" },
   },
   {
     id: "motherboard",
     title: "Motherboard",
-    image: "/images/component-images/motherboard.jpg",
+    image: "/images/component-images/motherboard.webp",
     search: { category: "motherboard" },
   },
   {
@@ -38,13 +38,13 @@ const COMPONENTS = [
   {
     id: "storage",
     title: "Storage",
-    image: "/images/component-images/storage.jpg",
+    image: "/images/component-images/storage.webp",
     search: { category: "storage" },
   },
   {
     id: "psu",
     title: "PSU",
-    image: "/images/component-images/psu.jpg",
+    image: "/images/component-images/psu.webp",
     search: { category: "psu" },
   },
   {
@@ -116,7 +116,7 @@ const PERIPHERALS = [
   {
     id: "mouse",
     title: "Mouse",
-    image: "/images/peripheral-images/mouse.jpg",
+    image: "/images/peripheral-images/mouse.webp",
     search: { category: "mouse" },
   },
   {
@@ -128,7 +128,7 @@ const PERIPHERALS = [
   {
     id: "headset",
     title: "Headset",
-    image: "/images/peripheral-images/headset.jpg",
+    image: "/images/peripheral-images/headset.webp",
     search: { category: "headset" },
   },
   {
@@ -170,7 +170,7 @@ const PERIPHERALS = [
   {
     id: "scanner",
     title: "Scanner",
-    image: "/images/noImage.png",
+    image: "/images/noImage.webp",
     search: { category: "scanner" },
   },
   {

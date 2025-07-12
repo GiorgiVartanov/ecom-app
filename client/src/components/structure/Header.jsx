@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import useAuthStore from "../../store/useAuthStore"
+import useModalStore from "../../store/useModalStore"
 import { getCart } from "../../api/cart.api"
 import { createQuery } from "../../pages/Search.page"
 
@@ -16,21 +17,20 @@ import WishListModal from "../cart/WishlistModal"
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [openedModal, setOpenedModal] = useState(null)
 
   const user = useAuthStore((state) => state.user)
   const token = useAuthStore((state) => state.token)
   const logOut = useAuthStore((state) => state.logout)
 
+  const openedModal = useModalStore((state) => state.openedModal)
+  const openModal = useModalStore((state) => state.openModal)
+  const closeModal = useModalStore((state) => state.closeModal)
+
   const navigate = useNavigate()
 
   const queryClient = useQueryClient()
 
-  const {
-    data: cartItemList,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: cartItemList } = useQuery({
     queryKey: ["cart", user?.id],
     queryFn: () => getCart(token),
     enabled: !!user?.id,
@@ -58,25 +58,22 @@ const Header = () => {
   }
 
   const handleModalClose = () => {
-    setOpenedModal(null)
+    closeModal()
   }
 
   const handleAuthModalOpen = () => {
     setIsMenuOpen(false)
-
-    setOpenedModal("auth")
+    openModal("auth")
   }
 
   const handleCartModalOpen = () => {
     setIsMenuOpen(false)
-
-    setOpenedModal("cart")
+    openModal("cart")
   }
 
   const handleWishlistModalOpen = () => {
     setIsMenuOpen(false)
-
-    setOpenedModal("wishlist")
+    openModal("wishlist")
   }
 
   const renderGuestLinks = () => {
@@ -109,6 +106,12 @@ const Header = () => {
   const renderUserLinks = () => {
     return (
       <>
+        <NavLink
+          to="/about"
+          className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
+        >
+          About Us
+        </NavLink>
         <Button
           onClick={handleCartModalOpen}
           className="link ml-auto relative"
@@ -125,6 +128,13 @@ const Header = () => {
           onClose={handleCloseDropdownMenu}
           isOpen={isMenuOpen}
         >
+          <NavLink
+            to="/search?query="
+            onMouseEnter={handlePrefetchEverything}
+            className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
+          >
+            Search
+          </NavLink>
           <NavLink
             to="/orders"
             className={({ isActive }) => `link ${isActive ? "text-primary" : ""}`}

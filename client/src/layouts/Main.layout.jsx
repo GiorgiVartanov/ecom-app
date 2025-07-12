@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router"
 
 import Header from "../components/structure/Header"
 import Footer from "../components/structure/Footer"
+import ConfirmPanel from "../components/common/ConfirmPanel"
 
 const Layout = () => {
   return (
@@ -13,6 +14,7 @@ const Layout = () => {
         <Outlet />
       </main>
       <Footer />
+      <ConfirmPanel />
     </div>
   )
 }

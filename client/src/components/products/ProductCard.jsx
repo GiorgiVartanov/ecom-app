@@ -1,8 +1,8 @@
+import { useRef, useCallback } from "react"
 import { Link, useNavigate } from "react-router"
 import { useQueryClient } from "@tanstack/react-query"
 
-import { useRef, useCallback } from "react"
-
+import useConfirmModalStore from "../../store/useConfirmModalStore"
 import { createQuery } from "../../pages/ProductDetails.page"
 
 import XMark from "../../assets/icons/xmark.svg?react"
@@ -25,6 +25,8 @@ const ProductCard = ({
   deleteItem,
 }) => {
   const navigate = useNavigate()
+
+  const { createConfirmationPanel } = useConfirmModalStore()
 
   const queryClient = useQueryClient()
 
@@ -59,7 +61,13 @@ const ProductCard = ({
     e.preventDefault()
     e.stopPropagation()
 
-    deleteItem()
+    createConfirmationPanel(
+      "Are you sure you want to **delist** this product? (you can re-list it later) (not yet though)",
+      () => deleteItem(),
+      "Delist",
+      "Cancel",
+      "danger"
+    )
   }
 
   const handleAddToCart = (e) => {

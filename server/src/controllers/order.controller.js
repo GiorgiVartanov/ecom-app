@@ -168,8 +168,6 @@ export const updateOrderStatus = async (req, res) => {
 
   const availableStatuses = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELED"]
 
-  // console.log("status:", status, "orderId:", orderId)
-
   try {
     if (!availableStatuses.includes(status)) {
       return res.status(400).json({ error: "Invalid status" })

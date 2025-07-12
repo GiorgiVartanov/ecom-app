@@ -2,7 +2,7 @@ import { Link } from "react-router"
 import { useQueryClient } from "@tanstack/react-query"
 
 import { getProduct } from "../../api/products.api"
-import useModal from "../../context/ModalContext"
+import useModalStore from "../../store/useModalStore"
 
 import Button from "../common/Button"
 
@@ -16,7 +16,7 @@ const CartItem = ({
 }) => {
   const { id: productId, images, name, price, description, stock } = product
 
-  const { onClose } = useModal()
+  const onClose = useModalStore((state) => state.onClose)
 
   const queryClient = useQueryClient()
 

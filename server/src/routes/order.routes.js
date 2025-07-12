@@ -29,7 +29,7 @@ router.get("/:orderId", protect, getOrder)
 // PROTECTED [USER]
 router.get("/", protect, getOrderList)
 
-// gets user order list (admin)
+// gets user order list
 // PROTECTED [ADMIN]
 router.get("/:userId/admin", protectAdmin, getUserOrderList)
 

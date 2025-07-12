@@ -5,7 +5,7 @@ import FilterIcon from "../../assets/icons/filter.svg?react"
 import Button from "./Button"
 import SearchFilterModal from "../products/SearchFilterModal"
 
-// renders search bar with debounced search and filter modal
+// renders search bar with debounce on search and filter modal
 const SearchBar = ({ inputValue, setInputValue, searchParams, setSearchParams }) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
 

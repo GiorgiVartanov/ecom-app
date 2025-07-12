@@ -3,6 +3,8 @@ import Loading from "../common/Loading"
 const buttonVariants = {
   primary: { wrapper: "", button: "button-primary" },
   secondary: { wrapper: "", button: "button" },
+  danger: { wrapper: "", button: "button bg-red-500 hover:bg-red-400 text-white" },
+  warning: { wrapper: "", button: "button bg-yellow-600 hover:bg-yellow-700 text-white" },
   text: {
     wrapper: "inline",
     button: "cursor-pointer underline transition-smooth hover:opacity-70",

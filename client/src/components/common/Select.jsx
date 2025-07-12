@@ -12,7 +12,7 @@ const Select = ({
   onChange,
   tooltip,
   tooltipPosition = "bottom",
-  isControlled = false, // whether the select is controlled (has value and onChange) or uncontrolled (does not have value and onChange)
+  isControlled = true, // whether the select is controlled (has value and onChange) or uncontrolled (does not have value and onChange)
   disabled,
   disabledTooltip,
   showLabel = true,
@@ -49,7 +49,7 @@ const Select = ({
             key={option}
             value={option}
           >
-            {option}
+            {option.charAt(0).toUpperCase() + option.slice(1).toLowerCase()}
           </option>
         ))}
       </select>

@@ -8,10 +8,10 @@ const router = express.Router()
 
 // starts sale
 // PROTECTED [ADMIN]
-router.post("/:id/sale/start", protectAdmin, startSale)
+router.put("/sale/start", protectAdmin, startSale)
 
 // ends sale
 // PROTECTED [ADMIN]
-router.post("/:id/sale/end", protectAdmin, endSale)
+router.put("/sale/end", protectAdmin, endSale)
 
 export default router

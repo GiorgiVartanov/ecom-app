@@ -28,7 +28,7 @@ const Search = () => {
   const token = useAuthStore((state) => state.token)
   const queryClient = useQueryClient()
 
-  const [limit, setLimit] = useState(20)
+  // const [limit, setLimit] = useState(20)
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -36,7 +36,9 @@ const Search = () => {
 
   const filters = {
     ...Object.fromEntries(searchParams.entries()),
-    limit: limit,
+    query: searchParams.get("query") || "",
+    page: searchParams.get("page") || 1,
+    limit: searchParams.get("limit") || 20,
   }
 
   const { data, isLoading, error } = useQuery(createQuery(filters, token))
@@ -56,6 +58,10 @@ const Search = () => {
   const goToPage = (page) => {
     // setCurrentPage(page)
     setSearchParams({ page: page.toString(), query: "" }, { replace: true })
+  }
+
+  const handleSetLimit = (limit) => {
+    setSearchParams({ limit: limit.toString(), query: "" }, { replace: true })
   }
 
   const renderSearchBar = () => {
@@ -94,8 +100,8 @@ const Search = () => {
         prefetchPage={prefetchPage}
         goToPage={goToPage}
         className="mt-12"
-        limit={limit}
-        setLimit={setLimit}
+        limit={searchParams.get("limit") || 20}
+        setLimit={handleSetLimit}
       />
     )
   }

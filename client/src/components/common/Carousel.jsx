@@ -1,7 +1,7 @@
 import useEmblaCarousel from "embla-carousel-react"
 import Autoplay from "embla-carousel-autoplay"
 
-import { PrevButton, NextButton, usePrevNextButtons } from "./EmblaCarouselArrowButtons"
+import { PrevButton, NextButton, usePrevNextButtons } from "./CarouselButtons"
 
 // renders carousel with autoplay and arrow buttons
 const Carousel = ({ title, children, options = {}, className = "" }) => {

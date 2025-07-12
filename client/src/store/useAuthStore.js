@@ -14,7 +14,6 @@ const useAuthStore = create(
           token,
           isLoggedIn: true,
         }),
-
       logout: () =>
         set({
           user: null,

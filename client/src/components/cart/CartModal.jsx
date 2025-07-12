@@ -59,6 +59,7 @@ const CartModal = ({ title, isOpen, onClose, className }) => {
       title={title || "Your Cart"}
       isOpen={isOpen}
       onClose={onClose}
+      modalId="cart-modal"
       className={`max-w-[920px] flex flex-col gap-2 p-2 ${className}`}
     >
       <CartItemList

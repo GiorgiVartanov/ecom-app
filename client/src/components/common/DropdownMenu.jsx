@@ -39,24 +39,33 @@ const DropdownMenu = ({ isOpen, openMenu, onClose, children }) => {
   return (
     <div
       ref={ref}
-      className="flex align-center relative z-100"
+      className="flex place-items-center relative z-100"
     >
       <Button
         onClick={handleToggle}
         variant="secondary"
         className="link cursor-pointer flex flex-row items-center"
       >
-        Menu
-        <div
-          className={`transition-transform duration-200 ease-in-out ml-1 ${
-            isOpen ? "rotate-180" : "rotate-0"
-          }`}
-        >
-          ▼
+        <div className="flex flex-col gap-1">
+          <div
+            className={`bg-gray-800 rounded-sm h-1 w-6 transition-smooth ${
+              isOpen ? "rotate-45 translate-y-2" : ""
+            }`}
+          ></div>
+          <div
+            className={`bg-gray-800 rounded-sm h-1 w-6 transition-smooth ${
+              isOpen ? "opacity-0" : ""
+            }`}
+          ></div>
+          <div
+            className={`bg-gray-800 rounded-sm h-1 w-6 transition-smooth ${
+              isOpen ? "rotate-135 -translate-y-2" : ""
+            }`}
+          ></div>
         </div>
       </Button>
       <div
-        className={`absolute bg-background fade-in-top mt-15 min-w-28 w-[calc(100vw-2rem)] sm:w-auto right-0 shadow-sm flex flex-col gap-1 rounded ${
+        className={`absolute top-0 bg-background fade-in-top mt-15 min-w-28 w-[calc(100vw-2rem)] sm:w-auto right-0 shadow-sm flex flex-col gap-1 rounded ${
           isOpen ? "visible" : "hidden"
         } `}
       >

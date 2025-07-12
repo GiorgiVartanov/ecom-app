@@ -6,6 +6,7 @@ import {
   getProduct,
   getProducts,
   writeReview,
+  deleteReview,
   createProduct,
   editProduct,
   delistProduct,
@@ -29,6 +30,10 @@ router.get("/", optionalAuth, getProducts)
 // posts review
 // PROTECTED [USER]
 router.post("/:id/reviews", protect, writeReview)
+
+// deletes review
+// PROTECTED [USER]
+router.delete("/:id/reviews/:reviewId", protect, deleteReview)
 
 // adds product
 // PROTECTED [ADMIN]

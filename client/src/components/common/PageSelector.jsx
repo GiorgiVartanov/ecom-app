@@ -13,7 +13,7 @@ const PageSelector = ({
   prefetchPage, // function to prefetch data for a specific page
   showLimitSelector = true, // whether to show the limit selector
   limit, // current limit
-  setLimit, // function to set the limit
+  handleSetLimit, // function to set the limit
   className,
 }) => {
   const [pageNumbers, setPageNumbers] = useState([])
@@ -97,9 +97,7 @@ const PageSelector = ({
       <Button
         key={pageNumber}
         className={`flex flex-row items-center justify-center h-8 w-9 p-0 ${
-          pageNumber === Number(currentPage)
-            ? "bg-primary-gradient text-white font-bold"
-            : "bg-white"
+          pageNumber === Number(currentPage) ? "bg-primary-gradient font-bold text-white" : ""
         }`}
         onClick={() => goToPage(pageNumber)}
         onMouseEnter={() => handlePrefetch(pageNumber)}
@@ -149,8 +147,7 @@ const PageSelector = ({
         <Select
           options={["10", "20", "30", "40", "50"]}
           value={limit}
-          onChange={(e) => setLimit(e.target.value)}
-          isControlled={true}
+          onChange={(e) => handleSetLimit(e.target.value)}
           tooltip="Number of items per page"
           includeDefaultOption={false}
           showLabel={false}

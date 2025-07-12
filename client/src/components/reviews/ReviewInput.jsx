@@ -4,8 +4,9 @@ import { toast } from "react-toastify"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 
-import { writeReview } from "../../api/products.api"
+import { writeReview, deleteReview } from "../../api/products.api"
 import useAuthStore from "../../store/useAuthStore"
+import useConfirmModalStore from "../../store/useConfirmModalStore"
 
 import TextArea from "../common/TextArea"
 import Button from "../common/Button"
@@ -20,6 +21,8 @@ const ReviewInput = ({ productId, defaultComment = "", defaultRating = 5, review
   const user = useAuthStore((state) => state.user)
   const token = useAuthStore((state) => state.token)
 
+  const { createConfirmationPanel } = useConfirmModalStore()
+
   const queryClient = useQueryClient()
 
   // define the correct query key matching useQuery
@@ -29,13 +32,14 @@ const ReviewInput = ({ productId, defaultComment = "", defaultRating = 5, review
     control,
     register,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = useForm({
     resolver: zodResolver(reviewSchema),
     defaultValues: { rating: defaultRating, comment: defaultComment },
   })
 
-  const reviewMutation = useMutation({
+  const postReviewMutation = useMutation({
     mutationFn: ({ rating, comment }) =>
       writeReview(productId, { rating, comment, reviewId }, token),
     onMutate: async ({ rating, comment }) => {
@@ -97,10 +101,45 @@ const ReviewInput = ({ productId, defaultComment = "", defaultRating = 5, review
     },
   })
 
+  const deleteReviewMutation = useMutation({
+    mutationFn: () => deleteReview(productId, reviewId, token),
+    onMutate: async () => {
+      await queryClient.cancelQueries(productQueryKey)
+
+      const previousData = queryClient.getQueryData(productQueryKey)
+
+      // optimistically removes the review from the cache
+      queryClient.setQueryData(productQueryKey, (prev) => {
+        if (!prev) return prev
+        return {
+          ...prev,
+          reviews: (prev.reviews || []).filter((review) => review.id !== reviewId),
+        }
+      })
+
+      // returns context for potential rollback
+      return { previousData }
+    },
+    onError: (error, variables, context) => {
+      // rolls back to previous snapshot on error
+      if (context?.previousData) {
+        queryClient.setQueryData(productQueryKey, context.previousData)
+      }
+
+      toast.error("Review deletion failed")
+      console.error("Review deletion failed", error)
+    },
+    onSuccess: () => {
+      toast.success("Successfully deleted review")
+      // resets form to default values after successful deletion
+      reset({ rating: defaultRating, comment: defaultComment })
+    },
+  })
+
   if (!user || !token) return
 
   const onSubmit = (data) => {
-    reviewMutation.mutate(data)
+    postReviewMutation.mutate(data)
   }
 
   return (
@@ -127,20 +166,42 @@ const ReviewInput = ({ productId, defaultComment = "", defaultRating = 5, review
             />
           )}
         />
-        <Button
-          type="submit"
-          variant="primary"
-          isPending={isSubmitting}
-          // disabled={isSubmitting}
-          className="px-5 py-2"
-        >
-          {reviewId ? "update" : "Submit review"}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            type="submit"
+            variant="primary"
+            isPending={isSubmitting}
+            className="px-5 py-2"
+          >
+            {reviewId ? "Update" : "Submit review"}
+          </Button>
+          {reviewId ? (
+            <Button
+              type="button"
+              variant="danger"
+              isPending={isSubmitting}
+              onClick={() => {
+                createConfirmationPanel(
+                  "Are you sure you want to **delete** this review? This action cannot be **undone**.",
+                  () => deleteReviewMutation.mutate(),
+                  "Delete",
+                  "Cancel",
+                  "danger"
+                )
+              }}
+              className="px-5 py-2"
+            >
+              Delete review
+            </Button>
+          ) : (
+            ""
+          )}
+        </div>
       </div>
 
-      {reviewMutation.isError && (
+      {postReviewMutation.isError && (
         <p className="text-red-500 mt-1">
-          {reviewMutation.error?.message || "failed to submit review"}
+          {postReviewMutation.error?.message || "failed to submit review"}
         </p>
       )}
     </form>

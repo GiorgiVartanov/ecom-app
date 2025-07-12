@@ -105,6 +105,14 @@ export const writeReview = async (id, { rating, comment, reviewId }, token) => {
   return res.data
 }
 
+export const deleteReview = async (id, reviewId, token) => {
+  return await axios.delete(`/products/${id}/reviews/${reviewId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
 export const getSearchTags = async () => {
   const res = await axios.get("/products/tags")
 

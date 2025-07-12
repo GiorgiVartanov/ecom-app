@@ -358,6 +358,38 @@ export const writeReview = async (req, res) => {
   }
 }
 
+// deletes a review
+// PROTECTED [USER]
+export const deleteReview = async (req, res) => {
+  try {
+    const { id: productId, reviewId } = req.params
+    const { id: userId } = req.user
+
+    if (!userId) {
+      return res.status(401).json({ error: "unauthorized" })
+    }
+
+    // const review = await prisma.review.findFirst({
+    //   where: { id: reviewId, productId, userId },
+    // })
+
+    const review = await prisma.review.findFirst({
+      where: { productId, userId },
+    })
+
+    if (!review) {
+      return res.status(404).json({ error: "review not found" })
+    }
+
+    await prisma.review.delete({ where: { id: review.id } })
+
+    res.status(200).json({ message: "review deleted" })
+  } catch (error) {
+    console.error("review deletion error:", error)
+    res.status(500).json({ error: "failed to delete review" })
+  }
+}
+
 // adds product
 // PROTECTED [ADMIN]
 export const createProduct = async (req, res) => {

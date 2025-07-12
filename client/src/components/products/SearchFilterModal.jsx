@@ -168,6 +168,7 @@ const TagList = ({ tags, selectedTags }) => {
             key={tag.key}
             name={tag.key}
             options={tag.values}
+            isControlled={false}
             value={selectedTags?.[tag.key] || ""}
           />
         ))}
