@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import ArrowIcon from "../../assets/icons/arrow.svg?react"
 
 import Button from "./Button"
+import Select from "./Select"
 
 const PageSelector = ({
   currentPage,
@@ -10,6 +11,9 @@ const PageSelector = ({
   maximumPages, // maximum amount of page buttons that can be shown at the same time
   goToPage, // function to go to a specific page
   prefetchPage, // function to prefetch data for a specific page
+  showLimitSelector = true, // whether to show the limit selector
+  limit, // current limit
+  setLimit, // function to set the limit
   className,
 }) => {
   const [pageNumbers, setPageNumbers] = useState([])
@@ -51,9 +55,9 @@ const PageSelector = ({
     setPageNumbers(newPageNumbers)
   }, [currentPage, totalPages, maximumPages])
 
-  if (totalPages === 1) {
-    return ""
-  }
+  // if (totalPages === 1) {
+  //   return ""
+  // }
 
   const renderGoToFirstPageButton = () => {
     return (
@@ -139,13 +143,38 @@ const PageSelector = ({
     )
   }
 
+  const renderLimitSelector = () => {
+    return (
+      <div className="absolute -right-20 h-fit">
+        <Select
+          options={["10", "20", "30", "40", "50"]}
+          value={limit}
+          onChange={(e) => setLimit(e.target.value)}
+          isControlled={true}
+          tooltip="Number of items per page"
+          includeDefaultOption={false}
+          showLabel={false}
+          tooltipPosition="top"
+          className="button outline-none border-none py-0! font-normal h-8 px-2 rounded shadow-sm"
+        />
+      </div>
+    )
+  }
+
   return (
-    <div className={`flex gap-3 justify-center items-center ${className}`}>
-      {renderGoToFirstPageButton()}
-      {renderGoToPreviousPageButton()}
-      {renderPageNumbers()}
-      {renderGoToNextPageButton()}
-      {renderGoToLastPageButton()}
+    <div className={`flex gap-3 relative justify-center items-center w-fit mx-auto ${className}`}>
+      {totalPages > 1 ? (
+        <>
+          {renderGoToFirstPageButton()}
+          {renderGoToPreviousPageButton()}
+          {renderPageNumbers()}
+          {renderGoToNextPageButton()}
+          {renderGoToLastPageButton()}
+        </>
+      ) : (
+        ""
+      )}
+      {showLimitSelector ? renderLimitSelector() : ""}
     </div>
   )
 }

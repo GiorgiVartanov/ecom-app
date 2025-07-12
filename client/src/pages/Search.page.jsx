@@ -21,13 +21,11 @@ export const createQuery = (filters, token) => ({
   ],
 })
 
-const LIMIT_PER_PAGE = 20
-
 const Search = () => {
   const token = useAuthStore((state) => state.token)
   const queryClient = useQueryClient()
 
-  // const [currentPage, setCurrentPage] = useState(1)
+  const [limit, setLimit] = useState(20)
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -35,7 +33,7 @@ const Search = () => {
 
   const filters = {
     ...Object.fromEntries(searchParams.entries()),
-    limit: LIMIT_PER_PAGE,
+    limit: limit,
   }
 
   const { data, isLoading, error } = useQuery(createQuery(filters, token))
@@ -77,7 +75,7 @@ const Search = () => {
       <ProductGrid
         resetFilters={resetFilters}
         data={data?.products}
-        className="mt-12 mb-auto"
+        className="flex-1 mt-6"
       />
     )
   }
@@ -93,6 +91,8 @@ const Search = () => {
         prefetchPage={prefetchPage}
         goToPage={goToPage}
         className="mt-12"
+        limit={limit}
+        setLimit={setLimit}
       />
     )
   }

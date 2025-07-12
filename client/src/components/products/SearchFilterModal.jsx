@@ -167,8 +167,8 @@ const TagList = ({ tags, selectedTags }) => {
           <Select
             key={tag.key}
             name={tag.key}
-            values={tag.values}
-            defaultValue={selectedTags?.[tag.key] || ""}
+            options={tag.values}
+            value={selectedTags?.[tag.key] || ""}
           />
         ))}
       </div>
