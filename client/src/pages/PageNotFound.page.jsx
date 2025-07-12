@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router"
 
 import Button from "../components/common/Button"
+import { useDocumentTitle } from "../hooks/useDocumentTitle"
 
 const PageNotFound = () => {
+  useDocumentTitle("404 Page Not Found - PcPal")
+
   const navigate = useNavigate()
 
   const handleGoBack = () => {

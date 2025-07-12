@@ -1,6 +1,10 @@
 import { Link } from "react-router"
 
+import { useDocumentTitle } from "../hooks/useDocumentTitle"
+
 const Dashboard = () => {
+  useDocumentTitle("Dashboard - PcPal")
+
   return (
     <div className="grid place-content-center h-[calc(100vh-8rem)]">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:grid-rows-2">

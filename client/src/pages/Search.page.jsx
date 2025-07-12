@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { getProducts } from "../api/products.api"
 import useAuthStore from "../store/useAuthStore"
+import { useDocumentTitle } from "../hooks/useDocumentTitle"
 
 import ProductGrid from "../components/products/ProductGrid"
 import SearchBar from "../components/common/SearchBar"
@@ -22,6 +23,8 @@ export const createQuery = (filters, token) => ({
 })
 
 const Search = () => {
+  useDocumentTitle("Search - PcPal")
+
   const token = useAuthStore((state) => state.token)
   const queryClient = useQueryClient()
 

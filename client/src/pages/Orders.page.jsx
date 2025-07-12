@@ -4,12 +4,15 @@ import { Link } from "react-router"
 import { getOrderList } from "../api/orders.api"
 import { createQuery } from "../pages/Search.page"
 import useAuthStore from "../store/useAuthStore"
+import { useDocumentTitle } from "../hooks/useDocumentTitle"
 
 import CartItem from "../components/cart/CartItem"
 import OrderCard from "../components/orders/OrderCard"
 import Loading from "../components/common/Loading"
 
 const Orders = () => {
+  useDocumentTitle("Orders - PcPal")
+
   const user = useAuthStore((store) => store.user)
   const token = useAuthStore((store) => store.token)
 

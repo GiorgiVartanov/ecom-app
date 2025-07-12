@@ -5,6 +5,7 @@ import { useRef } from "react"
 import useAuthStore from "../store/useAuthStore"
 import ArrowIcon from "../assets/icons/arrow.svg?react"
 import { createQuery } from "../pages/Search.page"
+import { useDocumentTitle } from "../hooks/useDocumentTitle"
 
 import Carousel from "../components/common/Carousel"
 import CarouselItem from "../components/common/CarouselItem"
@@ -187,6 +188,8 @@ const PERIPHERALS = [
 ]
 
 const Home = () => {
+  useDocumentTitle("PcPal - Build a PC that will perform")
+
   const navigate = useNavigate()
 
   const token = useAuthStore((state) => state.token)

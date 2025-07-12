@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-// changes document's (page's) title on passed value
+// changes document's (page's) title to the passed value
 export const useDocumentTitle = (title = "PCPal") => {
   const [documentTitle, setDocumentTitle] = useState(title)
 

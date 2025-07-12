@@ -5,12 +5,15 @@ import { getCart, editCartItem } from "../api/cart.api"
 import { createOrder } from "../api/orders.api"
 import { createQuery } from "../pages/Search.page"
 import useAuthStore from "../store/useAuthStore"
+import { useDocumentTitle } from "../hooks/useDocumentTitle"
 
 import CartItem from "../components/cart/CartItem"
 import Button from "../components/common/Button"
 import Loading from "../components/common/Loading"
 
 const Checkout = () => {
+  useDocumentTitle("Checkout - PcPal")
+
   const user = useAuthStore((store) => store.user)
   const token = useAuthStore((store) => store.token)
 

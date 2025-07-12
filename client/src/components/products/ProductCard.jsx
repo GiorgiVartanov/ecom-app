@@ -100,7 +100,7 @@ const ProductCard = ({
             tooltip="edit product"
             className="cursor-default w-8 h-7 grid place-content-center"
           >
-            <Pen className="icon h-4 w-4 transition-smooth text-blue-500 group-hover:text-blue-500/80" />
+            <Pen className="icon h-4 w-4 transition-smooth text-blue-500 group-hover:text-blue-500" />
           </Button>
           <Button
             onClick={handleDelist}

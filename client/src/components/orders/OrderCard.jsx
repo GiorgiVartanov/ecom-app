@@ -3,10 +3,10 @@ import CartItem from "../cart/CartItem"
 const statuses = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED"]
 
 const borderColors = {
-  PENDING: "border-blue-200 bg-blue-100/50",
-  PROCESSING: "border-blue-300 bg-blue-100/50",
-  SHIPPED: "border-blue-400 bg-blue-100/50",
-  DELIVERED: "border-green-400 bg-green-100/50",
+  PENDING: "border-blue-200 shadow-[inset_0_0_8px_2px_rgba(59,130,246,0.15)]",
+  PROCESSING: "border-blue-300 shadow-[inset_0_0_8px_2px_rgba(59,130,246,0.25)]",
+  SHIPPED: "border-blue-400 shadow-[inset_0_0_8px_2px_rgba(59,130,246,0.35)]",
+  DELIVERED: "border-green-400 shadow-[inset_0_0_8px_2px_rgba(34,197,94,0.25)]",
 }
 
 const backgroundColors = {

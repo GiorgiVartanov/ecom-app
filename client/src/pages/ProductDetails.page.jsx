@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
@@ -6,6 +6,7 @@ import { getProduct } from "../api/products.api"
 import { addItemToCart, removeItemFromCart } from "../api/cart.api"
 import { addItemToWishlist, removeItemFromWishList } from "../api/wishlist.api"
 import useAuthStore from "../store/useAuthStore"
+import { useDocumentTitle } from "../hooks/useDocumentTitle"
 
 import ArrowIcon from "../assets/icons/arrow.svg?react"
 import CartIcon from "../assets/icons/cart.svg?react"
@@ -26,6 +27,8 @@ export const createQuery = (id, token) => ({
 })
 
 const Product = () => {
+  const [, setDocumentTitle] = useDocumentTitle("Product Details")
+
   const { id } = useParams()
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -36,6 +39,13 @@ const Product = () => {
   const user = useAuthStore((state) => state.id)
 
   const { data: product, isLoading, error } = useQuery(createQuery(id, token))
+
+  useEffect(() => {
+    if (product?.name) {
+      // after product is fetched from a backend - sets page's title to its name
+      setDocumentTitle(`${product.name} - PcPal`)
+    }
+  }, [product?.name, setDocumentTitle])
 
   const queryClient = useQueryClient()
 
