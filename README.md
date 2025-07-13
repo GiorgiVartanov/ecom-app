@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="">
-    <img src="https://img.shields.io/badge/Live%20Demo-View%20App-blue?style=for-the-badge&logo=netlify" alt="Live Demo [WIP]">
+  <a href="https://main.d20nyzyalgus55.amplifyapp.com/">
+   Demo
   </a>
 </p>
 
@@ -23,11 +23,12 @@
 - [Features](#features)
 - [Technologies](#technologies)
 - [Setup](#setup)
+- [Deployment](#deployment)
 - [API Endpoints](#api-endpoints)
 - [Project Structure](#project-structure)
 - [Key Features](#key-features)
 - [Possible Improvements](#possible-improvements)
-<!-- - [Known Bugs](#known-bugs) -->
+- [Known Bugs](#known-bugs)
 
 ## Features
 
@@ -35,19 +36,24 @@
 
 - **Product Browsing**: Browse and search PC parts by category, brand, price, and other attributes
 - **Product Details**: Detailed product pages with images, descriptions, attributes, and user reviews
-- **Review System**: Review and rate products
-- **Shopping Cart**: Add/remove items, update amount
+- **Review System**: Review and rate products <span style="opacity: 0.6;">(reviews can only be written if it is in a user's order list, and has its status set to DELIVERED, status can be set by admin from dashboard)</span>
+- **Shopping Cart**: Add/remove items, update product quantity
 - **Checkout Process**: Checkout with order confirmation
 - **User Management**: Registration, login, and order history
 - **Wishlist**: Mark products as favorites
 
 ### Admin Features
 
-- **Dashboard**: Admin dashboard with ability to start a discount[WIP] and review user's orders
+- **Dashboard**: Admin dashboard with ability to start a discount[WIP] and review <span style="opacity: 0.6;">(see/change status)</span> user's orders
 - **Product Management**: Add, edit, and manage products
 - **Order Management**: Update order statuses, and track fulfillment
 - **User Management**: View and manage customer accounts
 - **Sales Analytics**: Track sales performance and revenue
+
+## Other features
+
+- **Dynamic page title** Page title changes with a useDocumentTitle hook
+- **Rate limiting** Rate limiting with express-rate-limit (150 requests per 20 minutes per IP, 15 auth attempts per 20 minutes per IP)
 
 ## Technologies
 
@@ -55,8 +61,8 @@
 
 - **[React 19](https://react.dev/)** - The library for web user interfaces
 - **[React Router v7](https://reactrouter.com/)** - Routing <span style="opacity: 0.6;">(using Declarative mode, not newer Data mode or FrameWork mode)</span>
-- **[TanStack Query](https://tanstack.com/query/latest)** - Data-fetching library <span style="opacity: 0.6;">(DevTools available with Ctrl/Cmd + Shift + D or by using toggleDevtools() function in the browser console)</span>
-- **[React Hook Form](https://react-hook-form.com/)**
+- **[TanStack Query](https://tanstack.com/query/latest)** - Data-fetching library
+- **[React Hook Form](https://react-hook-form.com/)** - Form library
 - **[Zod](https://zod.dev/)** - Schema validation
 - **[Zustand](https://zustand-demo.pmnd.rs/)** - Lightweight state management
 - **[Axios](https://axios-http.com/)** - Promise based HTTP client for the browser and node.js
@@ -69,6 +75,7 @@
 - **[Prisma](https://www.prisma.io/)** - Database ORM
 - **[PostgreSQL](https://www.postgresql.org/)** - Relational database
 - **[JWT](https://jwt.io/)** - JSON Web Token authentication
+- **[Zod](https://zod.dev/)** - Schema validation
 - **[Cloudinary](https://cloudinary.com/)** - Cloud image storage
 
 ### Development Tools
@@ -148,6 +155,35 @@ The application will be available at:
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8000
 
+## Deployment
+
+amplify build settings:
+
+```bash
+version: 1
+applications:
+    -
+        frontend:
+            phases:
+                preBuild:
+                    commands:
+                        - curl -fsSL https://bun.sh/install | bash
+                        - export PATH="$HOME/.bun/bin:$PATH"
+                        - bun install
+                build:
+                    commands:
+                        - export PATH="$HOME/.bun/bin:$PATH"
+                        - bun run build
+            artifacts:
+                baseDirectory: dist
+                files:
+                    - '**/*'
+            cache:
+                paths:
+                    - '.bun/**/*'
+        appRoot: client
+```
+
 ## API Endpoints
 
 ### Authentication
@@ -193,149 +229,6 @@ The application will be available at:
 - `DELETE /api/wishlist/:id` - Remove item from wishlist <span style="opacity: 0.6;">(user)</span>
 - `GET /api/wishlist/end` - Get wishlist <span style="opacity: 0.6;">(user)</span>
 
-## Project Structure
-
-```
-ecom-app/
-├── client/                                         # React frontend
-│   ├── src/
-│   │   ├── api/                                    # API service functions
-│   │   │   ├── axiosConfig.js
-│   │   │   ├── auth.api.js
-│   │   │   ├── cart.api.js
-│   │   │   ├── orders.api.js
-│   │   │   ├── products.api.js
-│   │   │   ├── user.api.js
-│   │   │   └── wishlist.api.js
-│   │   │
-│   │   ├── assets/                                 # Static assets (fonts, icons, images)
-│   │   │   ├── fonts/                              # fonts
-│   │   │   └── icons/                              # SVG icons
-│   │   │
-│   │   ├── components/                             # UI components
-│   │   │   ├── cart/                               # Cart-related components
-│   │   │   │   ├── CartItem.jsx
-│   │   │   │   ├── CartItemList.jsx
-│   │   │   │   ├── CartModal.jsx
-│   │   │   │   └── WishlistModal.jsx
-│   │   │   │
-│   │   │   ├── common/                             # Reusable UI components
-│   │   │   │   ├── Button.jsx
-│   │   │   │   ├── Carousel.jsx
-│   │   │   │   ├── ConfirmPanel.jsx
-│   │   │   │   ├── DropdownMenu.jsx
-│   │   │   │   ├── Image.jsx
-│   │   │   │   ├── Input.jsx
-│   │   │   │   ├── Loading.jsx
-│   │   │   │   ├── Modal.jsx
-│   │   │   │   ├── PageSelector.jsx
-│   │   │   │   ├── Range.jsx
-│   │   │   │   ├── SearchBar.jsx
-│   │   │   │   ├── Select.jsx
-│   │   │   │   └── TextArea.jsx
-│   │   │   │
-│   │   │   ├── orders/                             # Order-related components
-│   │   │   │   └── OrderCard.jsx
-│   │   │   │
-│   │   │   ├── products/                           # Product-related components
-│   │   │   │   ├── PreviewImage.jsx
-│   │   │   │   ├── ProductCard.jsx
-│   │   │   │   ├── ProductGrid.jsx
-│   │   │   │   ├── ProductImageSelect.jsx
-│   │   │   │   ├── SearchFilterModal.jsx
-│   │   │   │   ├── TagField.jsx
-│   │   │   │   ├── TagFields.jsx
-│   │   │   │   ├── TagList.jsx
-│   │   │   │   └── UploadProduct.jsx
-│   │   │   │
-│   │   │   ├── reviews/                            # Review-related components
-│   │   │   │   ├── ReviewInput.jsx
-│   │   │   │   ├── ReviewItem.jsx
-│   │   │   │   ├── ReviewList.jsx
-│   │   │   │   └── ReviewStarSelect.jsx
-│   │   │   │
-│   │   │   ├── structure/                          # Layout components (Header, Footer)
-│   │   │   │   ├── Footer.jsx
-│   │   │   │   └── Header.jsx
-│   │   │   │
-│   │   │   └── user/                               # User-related components
-│   │   │       ├── AuthModal.jsx
-│   │   │       └── SettingsModal.jsx
-│   │   │
-│   │   ├── hooks/                                  # Custom React hooks
-│   │   │   ├── useDocumentTitle.jsx
-│   │   │   └── useOnClickOutside.jsx
-│   │   │
-│   │   ├── layouts/                                # Page layouts
-│   │   │   ├── Main.layout.jsx
-│   │   │   └── ProtectedRoute.layout.jsx
-│   │   │
-│   │   ├── pages/                                  # Pages
-│   │   │   ├── About.page.jsx
-│   │   │   ├── Checkout.page.jsx
-│   │   │   ├── Dashboard.page.jsx
-│   │   │   ├── Home.page.jsx
-│   │   │   ├── Orders.page.jsx
-│   │   │   ├── PageNotFound.page.jsx
-│   │   │   ├── ProductDetails.page.jsx
-│   │   │   ├── Profile.page.jsx
-│   │   │   ├── Search.page.jsx
-│   │   │   │
-│   │   │   └── dashboard/                          # Admin dashboard pages
-│   │   │       ├── AddProduct.dashboard.page.jsx
-│   │   │       ├── EditProduct.dashboard.page.jsx
-│   │   │       ├── Orders.dashboard.page.jsx
-│   │   │       ├── Sales.dashboard.page.jsx
-│   │   │       └── Users.dashboard.page.jsx
-│   │   │
-│   │   ├── store/                                  # Zustand state management
-│   │   │   ├── useAuthStore.js
-│   │   │   ├── useConfirmModalStore.js
-│   │   │   └── useModalStore.js
-│   │   │
-│   │   └── util/                                   # Utility functions
-│   │       └── convertToBase64.js
-│   │
-│   └── public/                                     # Static assets
-│       │
-│       └── images/                                 # Product and component images
-│
-└── server/                                         # Node.js backend
-    ├── src/
-    │   ├── config/                                 # Configuration files
-    │   │   ├── cloudinary.js
-    │   │   └── db.js
-    │   │
-    │   ├── controllers/                            # Route controllers
-    │   │   ├── auth.controller.js
-    │   │   ├── cart.controller.js
-    │   │   ├── order.controller.js
-    │   │   ├── products.controller.js
-    │   │   ├── sale.controller.js
-    │   │   ├── user.controller.js
-    │   │   └── wishlist.controller.js
-    │   │
-    │   ├── middleware/                             # Custom middleware
-    │   │   └── authMiddleware.js
-    │   │
-    │   ├── routes/                                 # API routes
-    │   │   ├── auth.routes.js
-    │   │   ├── cart.routes.js
-    │   │   ├── order.routes.js
-    │   │   ├── products.routes.js
-    │   │   ├── sale.routes.js
-    │   │   ├── user.routes.js
-    │   │   └── wishlist.routes.js
-    │   │
-    │   └── utils/                                  # Utility functions
-    │       └── uploadImage.js
-    │
-    └── prisma/                                     # Database schema and migrations
-        │
-        ├── migrations/                             # Database migration files
-        └── schema.prisma                           # Database schema
-```
-
 ## Key Features
 
 ### Performance Optimizations
@@ -347,15 +240,21 @@ ecom-app/
 
 ## Possible Improvements
 
+- **Tests**:
+- **JWT Token Expiration**: Right now its infinite
+- **Move Zod schemas into a shared folder, or even better create an internal npm package**: Right now there are 2 zod-schemas folders, one on a client another on server
+- **Place backend routes more logically**: Review functions are inside product controller
 - **Payment Integration**: Stripe payment processing
 - **Email Notifications**: Order confirmations and status updates
 - **Inventory Management**: Real-time stock tracking
 - **Multi-language Support**: Internationalization (i18n)
 - **PWA**: Offline support and app-like experience
 - **Advanced Analytics**: Detailed sales and user behavior insights
-- **Log in With**: Google, Facebook authentication
+- **Log in with functionality**: Google, Facebook authentication
 
-<!-- ## Known bugs -->
+## Known bugs -->
+
+- On dashboard page, when adding product tags, tag can be set as search tag only after this tag is saved
 
 ---
 

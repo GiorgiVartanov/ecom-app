@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react"
+import { useRef } from "react"
 import { Link, useNavigate } from "react-router"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -33,22 +33,22 @@ const ProductCard = ({
   const prefetchTimerRef = useRef(null)
 
   // prefetches product data using createQuery for consistent query key and function
-  const handlePrefetch = useCallback(() => {
+  const handlePrefetch = () => {
     queryClient.prefetchQuery(createQuery(data.id))
-  }, [queryClient, data.id])
+  }
 
-  const handleMouseEnter = useCallback(() => {
+  const handleMouseEnter = () => {
     prefetchTimerRef.current = setTimeout(() => {
       handlePrefetch()
     }, 200)
-  }, [handlePrefetch])
+  }
 
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseLeave = () => {
     if (prefetchTimerRef.current) {
       clearTimeout(prefetchTimerRef.current)
       prefetchTimerRef.current = null
     }
-  }, [])
+  }
 
   const handleEdit = (e) => {
     e.preventDefault()
@@ -197,7 +197,7 @@ const ProductCard = ({
         {renderCardButtons()}
       </div>
       <img
-        src={data.images?.[0]?.imageURL ? data.images[0].imageURL : "/images/noImage.png"}
+        src={data.images?.[0]?.imageURL ? data.images[0].imageURL : "/images/noImage.webp"}
         className="w-full h-full object-contain rounded"
       />
       <p className="text-sm -mb-2 pl-1">

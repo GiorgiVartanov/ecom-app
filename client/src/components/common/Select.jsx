@@ -8,6 +8,7 @@ const tooltipPositionMap = {
 const Select = ({
   name,
   options,
+  optionLabels,
   value,
   onChange,
   tooltip,
@@ -44,12 +45,15 @@ const Select = ({
         {...rest}
       >
         {includeDefaultOption ? <option value="">all</option> : ""}
-        {options.map((option) => (
+        {options.map((option, index) => (
           <option
             key={option}
             value={option}
           >
-            {option.charAt(0).toUpperCase() + option.slice(1).toLowerCase()}
+            {optionLabels
+              ? optionLabels[index].charAt(0).toUpperCase() +
+                optionLabels[index].slice(1).toLowerCase()
+              : option.charAt(0).toUpperCase() + option.slice(1).toLowerCase()}
           </option>
         ))}
       </select>

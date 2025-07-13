@@ -170,7 +170,7 @@ const PERIPHERALS = [
   {
     id: "scanner",
     title: "Scanner",
-    image: "/images/noImage.webp",
+    image: "/images/peripheral-images/scanner.webp",
     search: { category: "scanner" },
   },
   {
@@ -235,7 +235,7 @@ const Home = () => {
             key={item.id}
             title={item.title}
             image={item.image}
-            imageLoading={index < 5 ? "eager" : "lazy"}
+            imageLoading={index < 9 ? "eager" : "lazy"}
             onMouseEnter={() => handlePrefetchCategory(filed, value)}
             onMouseLeave={handleMouseLeaveCategory}
             onClick={() => navigate(`/search?${filed}=${value}`)}

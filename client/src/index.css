@@ -29,6 +29,7 @@
 }
 
 :root {
+  /* light theme (default) */
   --color-background: #ffffff;
   --color-background-secondary: #f2f2f2;
   --color-foreground: #101011;
@@ -36,20 +37,15 @@
   --color-primary: #47ccf5;
   --color-complementary: #96a3a2;
 
-  --color-red: #df6255;
-  --color-red-hover: #e23724;
-  --color-red-disabled: #f5c6cb;
+  --color-red: #dc2626;
+  --color-red-hover: #b91c1c;
+  --color-red-disabled: #fca5a5;
+  --color-error-text: #7f1d1d;
 
-  --color-green: #38c974;
-  --color-green-hover: rgb(38, 197, 104);
-  --color-green-disabled: rgb(75, 196, 125);
-
-  --color-success-text: #155724;
-
-  --color-error-text: #78281f;
-
-  /* --shadow-light: 0 2px 8px -1px hsla(0, 0%, 100%, 0.08);
-  --shadow-dark: 0 4px 12px -2px hsla(0, 0%, 0%, 0.25); */
+  --color-green: #16a34a;
+  --color-green-hover: #15803d;
+  --color-green-disabled: #86efac;
+  --color-success-text: #14532d;
 
   --toastify-toast-bd-radius: 0.25rem;
 }
@@ -58,19 +54,21 @@
   --color-background: var(--color-background);
   --color-background-secondary: var(--color-background-secondary);
   --color-foreground: var(--color-foreground);
+
   --color-primary: var(--color-primary);
   --color-complementary: var(--color-complementary);
 
   --color-red: var(--color-red);
   --color-red-hover: var(--color-red-hover);
   --color-red-disabled: var(--color-red-disabled);
+
   --color-error-text: var(--color-error-text);
 
   --color-green: var(--color-green);
   --color-green-hover: var(--color-green-hover);
   --color-green-disabled: var(--color-green-disabled);
 
-  --font-sans: var(--font-sans);
+  --font-sans: "Poppins", sans-serif;
 
   --ease-kinetic: cubic-bezier(0.43, 0.24, 0.45, 1.06);
 

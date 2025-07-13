@@ -25,10 +25,12 @@ const SearchBar = ({ inputValue, setInputValue, searchParams, setSearchParams })
     setSearchParams({ query: query, page: page, limit: limit })
   }
 
+  // updates the search query parameter with debounce when inputValue changes
   useEffect(() => {
-    const handler = setTimeout(() => {
+    const debounceHandler = setTimeout(() => {
       setSearchParams(
         (params) => {
+          // sets the "query" parameter to the current input value after delay
           params.set("query", inputValue)
           return params
         },
@@ -36,7 +38,8 @@ const SearchBar = ({ inputValue, setInputValue, searchParams, setSearchParams })
       )
     }, 300)
 
-    return () => clearTimeout(handler)
+    // clears the timeout if inputValue or setSearchParams changes before debounce completes
+    return () => clearTimeout(debounceHandler)
   }, [inputValue, setSearchParams])
 
   const entries = Array.from(searchParams.entries())

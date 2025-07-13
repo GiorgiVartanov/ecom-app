@@ -44,23 +44,33 @@ const CartItemList = ({ cartItemList, editItems, isEditable = true }) => {
     editItems({ id: itemId, newQuantity: quantity - 1 })
   }
 
+  // sets up scroll shadow effect for cart item list
   useEffect(() => {
     const element = scrollRef.current
+
     if (!element) return
 
+    // updates shadow visibility based on the scroll position
     const updateShadows = () => {
       const { scrollTop, scrollHeight, clientHeight } = element
 
+      // determines if content is scrollable
       const scrollable = scrollHeight > clientHeight
 
       setIsScrollable(scrollable)
+      // shows top shadow if not at the very top
       setShowTopShadow(scrollTop > 0)
+      // shows bottom shadow if not at the very bottom
       setShowBottomShadow(scrollTop + clientHeight < scrollHeight)
     }
 
+    // adds scroll event listener to update shadows on scroll
     element.addEventListener("scroll", updateShadows)
+
+    // initializes shadow state on mount or cart change
     updateShadows()
 
+    // cleans up event listener on unmount or cart change
     return () => {
       element.removeEventListener("scroll", updateShadows)
     }

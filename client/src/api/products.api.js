@@ -12,6 +12,9 @@ export const getProducts = async (filters, token) => {
 }
 
 export const getProduct = async (id, token) => {
+  // works differently for users and guests
+  // guest will only get product
+  // users will also get isInCart, isWishlisted and hasPurchased fields
   const res = await axios.get(`/products/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,

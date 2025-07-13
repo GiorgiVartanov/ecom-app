@@ -45,7 +45,7 @@ const ProductImageSelect = ({
     return images.slice(slideIndex, slideIndex + maxSimultaneousImages).map((image, index) => (
       <button
         key={index}
-        // onClick={() => handleSelectImage(index + slideIndex)}
+        onClick={() => handleSelectImage(index + slideIndex)}
         onMouseEnter={() => handleSelectImage(index + slideIndex)}
         className={`rounded overflow-hidden border-2 p-1 shadow ${
           index + slideIndex === currentIndex ? "border-primary" : "border-transparent"

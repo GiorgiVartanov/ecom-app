@@ -2,20 +2,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm, Controller } from "react-hook-form"
 import { toast } from "react-toastify"
 import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
 
 import { writeReview, deleteReview } from "../../api/products.api"
+import { reviewSchema } from "../../zod-schemas/review.schemas"
 import useAuthStore from "../../store/useAuthStore"
 import useConfirmModalStore from "../../store/useConfirmModalStore"
 
 import TextArea from "../common/TextArea"
 import Button from "../common/Button"
 import ReviewStarScoreSelect from "./ReviewStarSelect"
-
-const reviewSchema = z.object({
-  rating: z.number().min(0).max(5),
-  comment: z.string().min(1).max(1000),
-})
 
 const ReviewInput = ({ productId, defaultComment = "", defaultRating = 5, reviewId }) => {
   const user = useAuthStore((state) => state.user)

@@ -87,7 +87,7 @@ export const getOrderList = async (req, res) => {
 
     const orders = await prisma.order.findMany({
       where: { userId },
-      orderBy: { createdAt: "desc" },
+
       include: {
         orderItems: {
           include: {
@@ -99,6 +99,7 @@ export const getOrderList = async (req, res) => {
           },
         },
       },
+      orderBy: { createdAt: "desc" },
     })
 
     res.status(200).json(orders)
@@ -119,6 +120,7 @@ export const getUserOrderList = async (req, res) => {
       include: {
         user: true,
       },
+      orderBy: { createdAt: "desc" },
     })
 
     res.status(200).json(orders)

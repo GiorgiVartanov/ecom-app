@@ -36,7 +36,7 @@ const Product = () => {
   const navigate = useNavigate()
 
   const token = useAuthStore((state) => state.token)
-  const user = useAuthStore((state) => state.id)
+  const user = useAuthStore((state) => state.user)
 
   const { data: product, isLoading, error } = useQuery(createQuery(id, token))
 
@@ -111,7 +111,7 @@ const Product = () => {
     if (!product) return null
 
     return (
-      <div className="flex-5/10">
+      <div className="flex-5/10 mb-24 md:mb-0">
         {/* <div className="relative flex flex-col items-center justify-center rounded-2xl shadow p-4 bg-gray-50 h-96"> */}
         <div className="relative flex flex-col items-center justify-center rounded-2xl shadow p-4 h-96">
           {product.images.length > 1 ? (
@@ -256,7 +256,10 @@ const Product = () => {
     if (!product) return null
 
     // reviews are fetched together with a product, and without pagination
-    const currentUsersComment = product.reviews.find((review) => review.user.id)
+    const currentUsersComment = product.reviews.find((review) => review.user.id === user?.id)
+
+    // console.log({ reviews: product.reviews })
+    // console.log({ user: user })
 
     return (
       <div className="mt-6 w-full col-span-2">

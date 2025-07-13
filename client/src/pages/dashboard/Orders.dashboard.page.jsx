@@ -5,6 +5,7 @@ import { getAllOrders, updateOrderStatus } from "../../api/orders.api"
 import useAuthStore from "../../store/useAuthStore"
 
 import OrderCard from "../../components/orders/OrderCard"
+import Loading from "../../components/common/Loading"
 
 const OrdersDashboardPage = () => {
   const user = useAuthStore((store) => store.user)
@@ -28,7 +29,7 @@ const OrdersDashboardPage = () => {
     },
   })
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <Loading />
 
   if (error) return <div>Something went wrong</div>
 

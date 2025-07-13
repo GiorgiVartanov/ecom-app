@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react"
-
 import FullStar from "../../assets/icons/full-star.svg?react"
 import HalfStar from "../../assets/icons/half-star.svg?react"
 import EmptyStar from "../../assets/icons/empty-star.svg?react"
@@ -17,16 +15,10 @@ const ReviewStarScoreSelect = ({
   starSize = "medium",
   isEditable = true,
 }) => {
-  const [score, setScore] = useState(value)
-
-  useEffect(() => {
-    setScore(value)
-  }, [value])
-
   const getStarType = (index) => {
-    const value = index + 1
-    if (score >= value) return "full"
-    if (score >= value - 0.5) return "half"
+    const starValue = index + 1
+    if (value >= starValue) return "full"
+    if (value >= starValue - 0.5) return "half"
     return "empty"
   }
 
@@ -35,7 +27,6 @@ const ReviewStarScoreSelect = ({
 
     // calculates new score from slider and sends it with onChange function
     const newScore = parseFloat(event.target.value)
-    setScore(newScore)
     onChange?.(newScore)
   }
 
@@ -65,7 +56,7 @@ const ReviewStarScoreSelect = ({
           min={0}
           max={totalStars}
           step={0.5}
-          value={score}
+          value={value}
           onChange={handleSliderChange}
           className={`absolute inset-0 w-full h-full opacity-0 ${
             isEditable ? "cursor-pointer" : "cursor-default"

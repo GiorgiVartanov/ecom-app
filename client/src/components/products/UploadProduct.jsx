@@ -3,45 +3,18 @@ import { useForm } from "react-hook-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router"
 import { toast } from "react-toastify"
-
-import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { createProduct, updateProduct } from "../../api/products.api"
+import { productSchema } from "../../zod-schemas/product.schemas"
 import convertToBase64 from "../../util/convertToBase64"
 import useAuthStore from "../../store/useAuthStore"
+
 import Input from "../common/Input"
 import TextArea from "../common/TextArea"
 import Button from "../common/Button"
 import PreviewImage from "./PreviewImage"
 import TagFields from "./TagFields"
-
-// zod schemas for product upload
-
-const tagSchema = z.object({
-  key: z.string().nonempty("tag key is required"),
-  value: z.string().optional(),
-})
-
-const productSchema = z.object({
-  name: z.string().nonempty("name is required"),
-  description: z.string().optional(),
-  price: z
-    .string()
-    .nonempty("price is required")
-    .refine(
-      (val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0 && /^\d+(\.\d{1,2})?$/.test(val),
-      { message: "price must be a positive number with up to 2 decimals" }
-    ),
-  stock: z
-    .string()
-    .nonempty("stock is required")
-    .refine(
-      (val) => !isNaN(parseInt(val, 10)) && Number.isInteger(Number(val)) && parseInt(val, 10) >= 0,
-      { message: "stock must be a non-negative integer" }
-    ),
-  tags: z.array(tagSchema),
-})
 
 // renders a form for uploading a product, accepts default data and id for editing
 const UploadProduct = ({ defaultData, isEditing = false, id }) => {
@@ -239,8 +212,8 @@ const UploadProduct = ({ defaultData, isEditing = false, id }) => {
       reset({
         name: defaultData.name,
         description: defaultData.description,
-        price: defaultData.price,
-        stock: defaultData.stock,
+        price: String(defaultData.price),
+        stock: String(defaultData.stock),
         tags: defaultData.tags,
       })
 

@@ -4,6 +4,9 @@ import prisma from "../config/db"
 
 import uploadImage from "../utils/uploadImage"
 
+import { productSchema } from "../zod-schemas/product.schemas"
+import { reviewSchema } from "../zod-schemas/review.schemas"
+
 // fetches product by id and includes related data
 export const getProduct = async (req, res) => {
   try {
@@ -111,7 +114,6 @@ export const getProducts = async (req, res) => {
       priceTo,
       minScore,
       orderBy,
-      orderDirection = "asc",
       limit = 20,
       page = 1,
       ...restFilters
@@ -127,11 +129,28 @@ export const getProducts = async (req, res) => {
       "priceTo",
       "minScore",
       "orderBy",
-      "orderDirection",
     ]
 
     const orderFields = ["price", "name", "createdAt", "updatedAt"]
     const orderDirections = ["asc", "desc"]
+
+    // parses orderBy parameter which comes as "field:direction" (e.g., "price:asc")
+
+    let parsedOrderBy = "createdAt"
+    let parsedOrderDirection = "desc"
+
+    if (orderBy && typeof orderBy === "string") {
+      if (orderBy === "default") {
+        parsedOrderBy = "createdAt"
+        parsedOrderDirection = "desc"
+      } else {
+        const [field, direction] = orderBy.split(":")
+        if (orderFields.includes(field)) {
+          parsedOrderBy = field
+          parsedOrderDirection = orderDirections.includes(direction) ? direction : "asc"
+        }
+      }
+    }
 
     // builds base where clause
     const where = { status: "ACTIVE" }
@@ -159,7 +178,7 @@ export const getProducts = async (req, res) => {
     }
 
     // filters by price range
-    if (priceFrom || priceTo) {
+    if ((priceFrom || priceTo) && !isNaN(priceFrom) && !isNaN(priceTo)) {
       where.price = {}
       if (priceFrom) where.price.gte = parseFloat(priceFrom)
       if (priceTo) where.price.lte = parseFloat(priceTo)
@@ -208,9 +227,7 @@ export const getProducts = async (req, res) => {
       where,
       skip,
       take,
-      orderBy: orderFields.includes(orderBy)
-        ? { [orderBy]: orderDirections.includes(orderDirection) ? orderDirection : "asc" }
-        : { createdAt: "asc" },
+      orderBy: { [parsedOrderBy]: parsedOrderDirection },
       include: {
         sale: true,
         tags: {
@@ -290,6 +307,12 @@ export const getProducts = async (req, res) => {
 // PROTECTED [USER]
 export const writeReview = async (req, res) => {
   try {
+    const result = reviewSchema.safeParse(req.body)
+
+    if (!result.success) {
+      return res.status(400).json({ error: "Validation failed", details: result.error.errors })
+    }
+
     const { id: productId } = req.params
     const { rating, comment, reviewId } = req.body
     const { id: userId } = req.user
@@ -394,6 +417,12 @@ export const deleteReview = async (req, res) => {
 // PROTECTED [ADMIN]
 export const createProduct = async (req, res) => {
   try {
+    const result = productSchema.safeParse(req.body)
+
+    if (!result.success) {
+      return res.status(400).json({ error: "Validation failed", details: result.error.errors })
+    }
+
     const { name, description, price, stock = 0, tags = [], images = [] } = req.body
 
     // returns bad request if missing name or price
@@ -465,13 +494,15 @@ export const createProduct = async (req, res) => {
     // uploads and saves images if provided
     if (images.length > 0) {
       const uploaded = await Promise.all(
-        images.map((image) => uploadImage(image.base64, "product", newProduct.id))
+        images.map((image) => uploadImage(image.base64, "product", newProduct.id, true))
       )
+
       const imageData = uploaded.map((uploadedImage, imageIndex) => ({
         imageURL: uploadedImage.secure_url,
         position: imageIndex,
         productId: newProduct.id,
       }))
+
       await prisma.productImage.createMany({ data: imageData })
     }
 
@@ -558,7 +589,7 @@ export const editProduct = async (req, res) => {
     // uploads and creates new images
     if (newImages.length > 0) {
       const uploaded = await Promise.all(
-        newImages.map((image) => uploadImage(image.base64, "product", id))
+        newImages.map((image) => uploadImage(image.base64, "product", id, true))
       )
       const toCreate = uploaded.map((uploadedImage, imageIndex) => ({
         imageURL: uploadedImage.secure_url,
@@ -721,7 +752,7 @@ export const delistProduct = async (req, res) => {
   }
 }
 
-// gets searchable tag keys and values
+// gets searchable tag keys and values with price range
 // PUBLIC
 export const getSearchTags = async (req, res) => {
   try {
@@ -735,14 +766,27 @@ export const getSearchTags = async (req, res) => {
       },
     })
 
-    const result = tagKeys
+    // fetches price range from active products
+    const priceRange = await prisma.product.aggregate({
+      where: { status: "ACTIVE" },
+      _min: { price: true },
+      _max: { price: true },
+    })
+
+    const tags = tagKeys
       .map((tagKey) => ({
         key: tagKey.name,
         values: tagKey.tags.map((tag) => tag.value).sort((a, b) => a.localeCompare(b)),
       }))
       .sort((a, b) => a.key.localeCompare(b.key))
 
-    res.status(200).json(result)
+    res.status(200).json({
+      tags: tags,
+      priceRange: {
+        min: priceRange._min.price || 0,
+        max: priceRange._max.price || 0,
+      },
+    })
   } catch (error) {
     res.status(500).json({ error: "internal server error" })
   }

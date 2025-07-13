@@ -5,6 +5,8 @@ import { useEffect } from "react"
 import { getUser } from "../api/user.api"
 import { useDocumentTitle } from "../hooks/useDocumentTitle"
 
+import Loading from "../components/common/Loading"
+
 const createQuery = (id) => ({
   queryKey: ["user", id],
   queryFn: async () => getUser(id),
@@ -24,7 +26,7 @@ const Profile = () => {
     }
   }, [user?.name, setDocumentTitle])
 
-  if (isLoading) return <div>loading...</div>
+  if (isLoading) return <Loading />
 
   if (error) return <div>something went wrong</div>
 

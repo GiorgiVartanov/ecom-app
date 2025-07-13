@@ -41,23 +41,27 @@ const PageSelector = ({
     }
   }
 
+  // updates the list of visible page numbers whenever currentPage, totalPages, or maximumPages changes
+  // so if maximum amount of shown pages is 5, and current page is 3, it will show 1, 2, 3, 4, 5
+  // if current page is 4, it will show 2, 3, 4, 5, 6
   useEffect(() => {
+    // calculates the first page number to display
     const startPage = Math.max(
       1,
       Math.min(Number(currentPage) - Math.floor(maximumPages / 2), totalPages - maximumPages + 1)
     )
+
+    // calculates the last page number to display
     const endPage = Math.min(totalPages, startPage + maximumPages - 1)
 
+    // generates the array of page numbers to display
     const newPageNumbers = []
     for (let pageIndex = startPage; pageIndex <= endPage; pageIndex++) {
       newPageNumbers.push(pageIndex)
     }
+    // sets the pageNumbers state with the new array
     setPageNumbers(newPageNumbers)
   }, [currentPage, totalPages, maximumPages])
-
-  // if (totalPages === 1) {
-  //   return ""
-  // }
 
   const renderGoToFirstPageButton = () => {
     return (

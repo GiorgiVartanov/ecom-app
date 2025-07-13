@@ -1,4 +1,3 @@
-import ReviewStarScoreSelect from "./ReviewStarSelect"
 import ReviewItem from "./ReviewItem"
 
 const ReviewList = ({ reviews }) => {
@@ -13,4 +12,5 @@ const ReviewList = ({ reviews }) => {
     </div>
   )
 }
+
 export default ReviewList

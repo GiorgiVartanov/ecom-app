@@ -36,7 +36,7 @@ const CartItem = ({
         className="aspect-square bg-white h-72 my-2 flex flex-col place-content-center shadow py-3 px-15 overflow-hidden rounded-lg"
       >
         <img
-          src={images?.[0]?.imageURL || "/images/noImage.png"}
+          src={images?.[0]?.imageURL || "/images/noImage.webp"}
           alt=""
           className="object-contain max-w-full max-h-full block"
         />

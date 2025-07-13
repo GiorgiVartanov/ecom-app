@@ -5,6 +5,8 @@ import prisma from "../config/db"
 
 const JWT_SECRET = process.env.JWT_SECRET
 
+import { signUpSchema, signInSchema } from "../zod-schemas/auth.schemas"
+
 // generates jwt token
 function generateToken(user) {
   return jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET) // add expiresIn and logic for refreshToken latter
@@ -14,11 +16,18 @@ function generateToken(user) {
 // PUBLIC
 export const register = async (req, res) => {
   try {
-    const { email, password, name } = req.body
+    const result = signUpSchema.safeParse(req.body)
 
-    if (!email || !password || !name) {
-      return res.status(400).json({ error: "email, password, and name are required" })
+    if (!result.success) {
+      // if validation fails, send error details
+
+      return res.status(400).json({
+        error: "Validation failed",
+        details: result.error, // array of validation issues (right now its not shown anywhere on the client, because client cas the exact same validation logic)
+      })
     }
+
+    const { email, password, name } = req.body
 
     // checks if email is already in use
     const existingUser = await prisma.user.findUnique({ where: { email } })
@@ -64,6 +73,16 @@ export const register = async (req, res) => {
 // PUBLIC
 export const login = async (req, res) => {
   try {
+    const result = signInSchema.safeParse(req.body)
+
+    if (!result.success) {
+      // if validation fails, send error details
+      return res.status(400).json({
+        error: "Validation failed",
+        details: result.error.errors, // array of validation issues
+      })
+    }
+
     const { email, password } = req.body
 
     if (!email || !password) {

@@ -1,53 +1,26 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import useAuthStore from "../../store/useAuthStore"
-
+import { signUpSchema, signInSchema } from "../../zod-schemas/auth.schemas"
 import { signIn, signUp } from "../../api/auth.api"
 
 import Modal from "../common/Modal"
 import Input from "../common/Input"
 import Button from "../common/Button"
 
-// Famous tech people for placeholder
+// famous tech people for placeholder
 const famousNames = [
   "Alan Turing",
+  "Bill Gates",
   "Grace Hopper",
   "Linus Torvalds",
-  "Bill Gates",
   "Steve Wozniak",
   "Steve Jobs",
   "Mark Zuckerberg",
   "John Doe",
 ]
-
-// zod schemas for validation
-const signInSchema = z.object({
-  email: z.string().nonempty("Email is required").email("Invalid email address"),
-  password: z.string().nonempty("Password is required"),
-})
-
-const signUpSchema = z
-  .object({
-    name: z
-      .string()
-      .nonempty("Name is required")
-      .min(3, { message: "Name must be at least 3 characters" })
-      .max(20, { message: "Name must be at most 20 characters" }),
-    email: z.string().nonempty("Email is required").email("Invalid email address"),
-    password: z
-      .string()
-      .nonempty("Password is required")
-      .min(8, { message: "Password must be at least 8 characters" })
-      .max(50, { message: "Password must be at most 50 characters" }),
-    confirmPassword: z.string().nonempty("Password Confirmation is required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  })
 
 const AuthModal = ({ title, isOpen, onClose, className }) => {
   const [selectedTab, setSelectedTab] = useState("signUp")

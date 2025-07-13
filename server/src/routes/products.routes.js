@@ -27,7 +27,7 @@ router.get("/:id", optionalAuth, getProduct)
 // PUBLIC
 router.get("/", optionalAuth, getProducts)
 
-// posts review
+// posts review // will need to change to put
 // PROTECTED [USER]
 router.post("/:id/reviews", protect, writeReview)
 
