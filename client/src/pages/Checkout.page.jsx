@@ -12,7 +12,7 @@ import Button from "../components/common/Button"
 import Loading from "../components/common/Loading"
 
 const Checkout = () => {
-  useDocumentTitle("Checkout - PcPal")
+  useDocumentTitle("Checkout - PcPal", "Checkout your cart on PcPal")
 
   const user = useAuthStore((store) => store.user)
   const token = useAuthStore((store) => store.token)

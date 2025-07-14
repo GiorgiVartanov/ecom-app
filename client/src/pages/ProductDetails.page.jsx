@@ -27,7 +27,7 @@ export const createQuery = (id, token) => ({
 })
 
 const Product = () => {
-  const [, setDocumentTitle] = useDocumentTitle("Product Details")
+  const [, setDocumentTitle] = useDocumentTitle("Product Details", "View product details on PcPal")
 
   const { id } = useParams()
 
@@ -43,9 +43,9 @@ const Product = () => {
   useEffect(() => {
     if (product?.name) {
       // after product is fetched from a backend - sets page's title to its name
-      setDocumentTitle(`${product.name} - PcPal`)
+      setDocumentTitle(`${product.name} - PcPal`, product.description)
     }
-  }, [product?.name, setDocumentTitle])
+  }, [product?.name, product?.description, setDocumentTitle])
 
   const queryClient = useQueryClient()
 

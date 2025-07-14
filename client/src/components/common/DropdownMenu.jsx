@@ -45,6 +45,7 @@ const DropdownMenu = ({ isOpen, openMenu, onClose, children }) => {
         onClick={handleToggle}
         variant="secondary"
         className="link cursor-pointer flex flex-row items-center"
+        aria-label="Toggle dropdown menu"
       >
         <div className="flex flex-col gap-1">
           <div

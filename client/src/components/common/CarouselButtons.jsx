@@ -44,6 +44,7 @@ export const PrevButton = (props) => {
       type="button"
       className="appearance-none transition-smooth hover:opacity-70 bg-transparent inline-flex cursor-pointer border-0 w-[3.6rem] h-[3.6rem] z-[1] rounded-full text-[color:var(--text-body)] items-center justify-center disabled:text-[color:var(--detail-high-contrast)]"
       style={{ boxShadow: "inset 0 0 0 0.2rem var(--detail-medium-contrast)" }}
+      aria-label="scroll carousel to the left"
       {...restProps}
     >
       <svg
@@ -68,6 +69,7 @@ export const NextButton = (props) => {
       type="button"
       className="appearance-none transition-smooth hover:opacity-70 bg-transparent inline-flex cursor-pointer border-0 w-[3.6rem] h-[3.6rem] z-[1] rounded-full text-[color:var(--text-body)] items-center justify-center disabled:text-[color:var(--detail-high-contrast)]"
       style={{ boxShadow: "inset 0 0 0 0.2rem var(--detail-medium-contrast)" }}
+      aria-label="scroll carousel to the right"
       {...restProps}
     >
       <svg

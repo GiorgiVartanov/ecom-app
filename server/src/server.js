@@ -12,6 +12,8 @@ import wishlistRoutes from "./routes/wishlist.routes"
 
 const app = express()
 
+// app.set("trust proxy", 1)
+
 const PORT = process.env.PORT || 8000
 
 // daily rate limiting configuration (400 requests per day per IP)

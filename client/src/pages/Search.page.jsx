@@ -23,7 +23,7 @@ export const createQuery = (filters, token) => ({
 })
 
 const Search = () => {
-  useDocumentTitle("Search - PcPal")
+  useDocumentTitle("Search - PcPal", "Search for products on PcPal")
 
   const token = useAuthStore((state) => state.token)
   const queryClient = useQueryClient()
@@ -101,7 +101,7 @@ const Search = () => {
         goToPage={goToPage}
         className="mt-12"
         limit={searchParams.get("limit") || 20}
-        setLimit={handleSetLimit}
+        onLimitChange={handleSetLimit}
       />
     )
   }

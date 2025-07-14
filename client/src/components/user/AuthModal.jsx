@@ -71,12 +71,13 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
     } catch (error) {
       console.error("Sign In failed:", error)
       setSignInError("root", { message: error?.response?.data?.error || "sign in failed" })
+    } finally {
+      resetSignIn()
+      resetSignUp()
     }
   }
 
   const onSignUpSubmit = async (data) => {
-    // setIsLoading(true)
-
     try {
       const response = await signUp(data)
       const { token, user } = response.data
@@ -92,103 +93,108 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
     } catch (error) {
       console.error("Sign Up failed:", error)
       setSignUpError("root", { message: error?.response?.data?.error || "sign up failed" })
-      // } finally {
-      // setIsLoading(false)
+    } finally {
+      resetSignIn()
+      resetSignUp()
     }
   }
 
-  const renderSignIn = () => (
-    <form
-      onSubmit={handleSubmitSignIn(onSignInSubmit)}
-      className="gap-4 h-full flex flex-col"
-      noValidate // removes browser's native validation, so validation will be more consistent
-      key="signInForm"
-    >
-      <Input
-        label="Email"
-        type="email"
-        placeholder="example@email.com"
-        {...registerSignIn("email")}
-        error={signInError.email?.message}
-      />
-      <Input
-        label="Password"
-        type="password"
-        placeholder="password"
-        {...registerSignIn("password")}
-        error={signInError.password?.message}
-      />
-
-      {signInError.root?.message ? (
-        <span className="mt-1 text-xs text-red">{signInError.root.message}</span>
-      ) : (
-        ""
-      )}
-
-      <Button
-        isPending={isSignInSubmitting}
-        type="submit"
-        variant="primary"
-        className="w-full mt-4"
+  const renderSignIn = () => {
+    return (
+      <form
+        onSubmit={handleSubmitSignIn(onSignInSubmit)}
+        className="gap-4 h-full flex flex-col"
+        noValidate // removes browser's native validation, so validation will be more consistent
+        key="signInForm"
       >
-        Sign In
-      </Button>
-    </form>
-  )
+        <Input
+          label="Email"
+          type="email"
+          placeholder="example@email.com"
+          {...registerSignIn("email")}
+          error={signInError.email?.message}
+        />
+        <Input
+          label="Password"
+          type="password"
+          placeholder="password"
+          {...registerSignIn("password")}
+          error={signInError.password?.message}
+        />
 
-  const renderSignUp = () => (
-    <form
-      onSubmit={handleSubmitSignUp(onSignUpSubmit)}
-      className="gap-4 h-full flex flex-col"
-      noValidate
-      key="signUpForm"
-    >
-      <Input
-        label="Name"
-        type="text"
-        placeholder={randomName}
-        maxLength={20}
-        {...registerSignUp("name")}
-        error={signUpError.name?.message}
-      />
-      <Input
-        label="Email"
-        type="email"
-        placeholder="example@email.com"
-        {...registerSignUp("email")}
-        error={signUpError.email?.message}
-      />
-      <Input
-        label="Password"
-        type="password"
-        placeholder="password"
-        maxLength={50}
-        {...registerSignUp("password")}
-        error={signUpError.password?.message}
-      />
-      <Input
-        label="Confirm Password"
-        type="password"
-        placeholder="password"
-        maxLength={50}
-        {...registerSignUp("confirmPassword")}
-        error={signUpError.confirmPassword?.message}
-      />
-      {signUpError.root?.message ? (
-        <span className="mt-1 text-xs text-red">{signUpError.root.message}</span>
-      ) : (
-        ""
-      )}
-      <Button
-        isPending={isSignUpSubmitting}
-        type="submit"
-        variant="primary"
-        className="w-full mt-4"
+        {signInError.root?.message ? (
+          <span className="mt-1 text-xs text-red">{signInError.root.message}</span>
+        ) : (
+          ""
+        )}
+
+        <Button
+          isPending={isSignInSubmitting}
+          type="submit"
+          variant="primary"
+          className="w-full mt-4"
+        >
+          Sign In
+        </Button>
+      </form>
+    )
+  }
+
+  const renderSignUp = () => {
+    return (
+      <form
+        onSubmit={handleSubmitSignUp(onSignUpSubmit)}
+        className="gap-4 h-full flex flex-col"
+        noValidate
+        key="signUpForm"
       >
-        Sign Up
-      </Button>
-    </form>
-  )
+        <Input
+          label="Name"
+          type="text"
+          placeholder={randomName}
+          maxLength={20}
+          {...registerSignUp("name")}
+          error={signUpError.name?.message}
+        />
+        <Input
+          label="Email"
+          type="email"
+          placeholder="example@email.com"
+          {...registerSignUp("email")}
+          error={signUpError.email?.message}
+        />
+        <Input
+          label="Password"
+          type="password"
+          placeholder="password"
+          maxLength={50}
+          {...registerSignUp("password")}
+          error={signUpError.password?.message}
+        />
+        <Input
+          label="Confirm Password"
+          type="password"
+          placeholder="password"
+          maxLength={50}
+          {...registerSignUp("confirmPassword")}
+          error={signUpError.confirmPassword?.message}
+        />
+        {signUpError.root?.message ? (
+          <span className="mt-1 text-xs text-red">{signUpError.root.message}</span>
+        ) : (
+          ""
+        )}
+        <Button
+          isPending={isSignUpSubmitting}
+          type="submit"
+          variant="primary"
+          className="w-full mt-4"
+        >
+          Sign Up
+        </Button>
+      </form>
+    )
+  }
 
   const renderTabButtons = () => {
     return (

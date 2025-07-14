@@ -188,7 +188,10 @@ const PERIPHERALS = [
 ]
 
 const Home = () => {
-  useDocumentTitle("PcPal - Build a PC that will perform")
+  useDocumentTitle(
+    "PcPal - Build a PC that will perform",
+    "Build a PC that will perform with PcPal by your side"
+  )
 
   const navigate = useNavigate()
 

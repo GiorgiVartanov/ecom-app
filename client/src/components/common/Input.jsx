@@ -20,13 +20,13 @@ const Input = ({
     setIsVisible((prev) => !prev)
   }
 
-  // determine placeholder
+  // returns the appropriate password dot character based on browser
   const getPasswordDot = () => {
-    const ua = navigator.userAgent
-    if (ua.includes("Firefox")) {
+    const userAgent = navigator.userAgent
+    if (userAgent.includes("Firefox")) {
       return "\u25CF" // large black circle
     }
-    // Default to Chrome/Edge/Safari/others
+    // returns small bullet for Chrome, Edge, Safari, and others
     return "\u2022" // small bullet
   }
 

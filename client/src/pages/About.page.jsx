@@ -3,7 +3,7 @@ import { Link } from "react-router"
 import { useDocumentTitle } from "../hooks/useDocumentTitle"
 
 const About = () => {
-  useDocumentTitle("About - PcPal")
+  useDocumentTitle("About - PcPal", "Learn more about PcPal and our values")
 
   return (
     <div className="flex flex-col gap-4 max-w-6xl mx-auto h-[calc(100vh-10rem)] place-content-center">

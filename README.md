@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="https://main.d20nyzyalgus55.amplifyapp.com/">
-   Demo
+  <a href="https://www.pcpal-portfolio.store/">
+    https://www.pcpal-portfolio.store/
   </a>
 </p>
 
@@ -117,6 +117,8 @@
 
    **Server (.env)**
 
+   <span style="opacity: 0.6;">(If you do not have a Cloudinary account, contact me and I can provide temporary credentials for testing)</span>
+
    ```env
    DATABASE_URL="postgresql://username:password@localhost:5432/ecom-app"
    JWT_SECRET="your-jwt-secret"
@@ -157,32 +159,8 @@ The application will be available at:
 
 ## Deployment
 
-amplify build settings:
-
-```bash
-version: 1
-applications:
-    -
-        frontend:
-            phases:
-                preBuild:
-                    commands:
-                        - curl -fsSL https://bun.sh/install | bash
-                        - export PATH="$HOME/.bun/bin:$PATH"
-                        - bun install
-                build:
-                    commands:
-                        - export PATH="$HOME/.bun/bin:$PATH"
-                        - bun run build
-            artifacts:
-                baseDirectory: dist
-                files:
-                    - '**/*'
-            cache:
-                paths:
-                    - '.bun/**/*'
-        appRoot: client
-```
+- Frontend was deployed on AWS Amplify
+- Backend was deployed on AWS EC2 together <span style="opacity: 0.6;">(on a same instance)</span> with PostgreSQL
 
 ## API Endpoints
 
@@ -240,17 +218,22 @@ applications:
 
 ## Possible Improvements
 
-- **Tests**:
-- **JWT Token Expiration**: Right now its infinite
-- **Move Zod schemas into a shared folder, or even better create an internal npm package**: Right now there are 2 zod-schemas folders, one on a client another on server
-- **Place backend routes more logically**: Review functions are inside product controller
-- **Payment Integration**: Stripe payment processing
-- **Email Notifications**: Order confirmations and status updates
-- **Inventory Management**: Real-time stock tracking
-- **Multi-language Support**: Internationalization (i18n)
-- **PWA**: Offline support and app-like experience
-- **Advanced Analytics**: Detailed sales and user behavior insights
-- **Log in with functionality**: Google, Facebook authentication
+- Payment integration using Stripe payment processing
+- Email notifications on order status updates
+- Inventory Management Real-time stock tracking
+- Multi-language support Internationalization (i18n) using react-18next library
+- PWA with offline support and app-like experience
+- Advanced analytics with detailed sales and user behavior insights
+- Add log in with functionality like Google or Facebook authentication
+- Improve error handling on a client side
+- Implement tests using Jest, RTL or Cypress
+- JWT Token expiration with refresh token, right now its infinite
+- Move Zod schemas into a shared folder, or even better create an internal npm package, Right now there are 2 zod-schema folders, one on client another on server
+- Place backend routes more logically. for example functions are inside product controller
+- Implement functionally for discounts
+- Add profile pages
+- Add user management page
+- Add ability to restore delisted products
 
 ## Known bugs -->
 

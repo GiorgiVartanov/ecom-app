@@ -15,7 +15,7 @@ import Select from "../components/common/Select"
 const ORDERS_TO_SHOW_OPTIONS = ["ALL", "PENDING", "SHIPPED", "DELIVERED", "CANCELLED"]
 
 const Orders = () => {
-  useDocumentTitle("Orders - PcPal")
+  useDocumentTitle("Orders - PcPal", "View your orders on PcPal")
 
   const user = useAuthStore((store) => store.user)
   const token = useAuthStore((store) => store.token)

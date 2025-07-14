@@ -17,12 +17,12 @@ const Profile = () => {
 
   const { data: user, isLoading, error } = useQuery(createQuery(id))
 
-  const [, setDocumentTitle] = useDocumentTitle("Profile")
+  const [, setDocumentTitle] = useDocumentTitle("Profile", "View user's profile on PcPal")
 
   useEffect(() => {
     if (user?.name) {
       // after user is fetched from a backend - sets page's title to their username
-      setDocumentTitle(`${user.name} - PcPal`)
+      setDocumentTitle(`${user.name} - PcPal`, `View ${user.name}'s profile on PcPal`)
     }
   }, [user?.name, setDocumentTitle])
 
