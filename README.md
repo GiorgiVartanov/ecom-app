@@ -235,10 +235,18 @@ The application will be available at:
 - Add user management page
 - Add ability to restore delisted products
 
-## Known bugs -->
+## Known bugs
 
 - On dashboard page, when adding product tags, tag can be set as search tag only after this tag is saved
 
 ---
 
+## Other info
+
 **This project was built as a portfolio application to showcase my skills**
+
+<span style="opacity: 0.6;">Credits</span>
+
+- <span style="opacity: 0.6;">Hero image - <a href="https://www.freepik.com/free-photo/gaming-setup-arrangement-high-angle_31590136.htm#from_element=cross_selling__photo" target="_blank" rel="noopener noreferrer">freepik</a></span>
+- <span style="opacity: 0.6;">Icons - <a href="https://fontawesome.com/">font awesome</a></span>
+- <span style="opacity: 0.6;">Product images - </span>
