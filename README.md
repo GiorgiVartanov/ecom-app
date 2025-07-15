@@ -1,4 +1,4 @@
-<h1 align="center">PC Part Store - <span style="opacity: 0.6;">Portfolio Project</span></h1>
+<h1 align="center"><span style="opacity: 0.6;">PCPal</span> PC Part Store - <span style="opacity: 0.6;">Portfolio Project</span></h1>
 
 <p align="center">
   <strong>A full-stack ecommerce platform for PC parts and components</strong>
@@ -20,6 +20,7 @@
 
 ## Table of Contents
 
+- [TLDR](#tldr)
 - [Features](#features)
 - [Technologies](#technologies)
 - [Setup](#setup)
@@ -29,6 +30,10 @@
 - [Key Features](#key-features)
 - [Possible Improvements](#possible-improvements)
 - [Known Bugs](#known-bugs)
+
+## TLDR
+
+A full-stack ecommerce platform for PC parts, featuring product browsing, detailed product pages, product reviews, shopping cart, checkout, wishlist, and user management. Admins can manage products and orders. Built with React 19, React Router v7, TanStack Query, Zustand, Tailwind CSS, React Hook Form, Axios, and Zod on the frontend; Bun, Express, Prisma, PostgreSQL, JWT, and Cloudinary (for image hosting) on the backend. Includes rate limiting (400 requests per day per IP, 150 requests per 15 minutes per IP, and 25 requests per 15 minutes for authentication), image optimization (all images are in WebP format, during upload format is changed to WebP and they are resized to 1000x1000px), and performance enhancements (lazy loading, prefetching). Deployed on AWS (Amplify for frontend (domain is pcpal-portfolio.store), EC2 ubuntu for backend and database (both are on a same instance, database is on localhost:5432 (it could be possible to access it with database management tools that have SSH Tunnel) and backend is hosted with PM2 and Nginx on a domain api.pcpal-portfolio.store)). Domain was purchased on vercel. Some features like advanced analytics, and profile management are not yet implemented.
 
 ## Features
 
@@ -235,10 +240,6 @@ The application will be available at:
 - Add user management page
 - Add ability to restore delisted products
 
-## Known bugs
-
-- On dashboard page, when adding product tags, tag can be set as search tag only after this tag is saved
-
 ---
 
 ## Other info
@@ -249,4 +250,11 @@ The application will be available at:
 
 - <span style="opacity: 0.6;">Hero image - <a href="https://www.freepik.com/free-photo/gaming-setup-arrangement-high-angle_31590136.htm#from_element=cross_selling__photo" target="_blank" rel="noopener noreferrer">freepik</a></span>
 - <span style="opacity: 0.6;">Icons - <a href="https://fontawesome.com/">font awesome</a></span>
-- <span style="opacity: 0.6;">Product images - </span>
+- <span style="opacity: 0.6;">Company images - Taken from an official media kits from official webpages</span>
+- <span style="opacity: 0.6;">Product images - (they are just text on a gray background, created by me in gimp)</span>
+
+## Notes
+
+<span style="opacity: 0.6;">I used simple images as a placeholders because I couldn't find consistent product images, at first I was going to take them from amazon or microcenter, but then I thought that it would probably be copyright infringement</span>
+<span style="opacity: 0.6;">Company logo's are from an official media assets, and comply with usage terms (its not implied that this app is affiliated with them, and the only editing done to images is resizing)</span>
+<span style="opacity: 0.6;">Some pages and functionality are not yet implemented in this project, especially the Product Discounts and User/Profile Management.</span>

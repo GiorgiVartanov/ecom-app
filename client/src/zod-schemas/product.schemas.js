@@ -1,8 +1,11 @@
 import { z } from "zod"
 
 export const tagSchema = z.object({
-  key: z.string().nonempty("tag key is required"),
-  value: z.string().optional(),
+  key: z.string().nonempty(" "),
+  value: z.string().nonempty(" "),
+  isSearchable: z.boolean().optional(),
+  id: z.string().optional(),
+  keyId: z.string().optional(),
 })
 
 export const productSchema = z.object({

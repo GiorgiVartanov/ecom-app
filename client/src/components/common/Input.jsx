@@ -8,6 +8,7 @@ const Input = ({
   itemClassName,
   type = "text",
   error,
+  ref,
   disableSuggestions = true,
   placeholder,
   ...rest
@@ -47,6 +48,7 @@ const Input = ({
         )}
 
         <input
+          ref={ref}
           type={type === "password" && isVisible ? "text" : type}
           autoComplete={disableSuggestions ? "off" : rest.autoComplete}
           autoCorrect={disableSuggestions ? "off" : rest.autoCorrect}

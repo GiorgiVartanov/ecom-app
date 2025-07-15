@@ -4,7 +4,7 @@ import Autoplay from "embla-carousel-autoplay"
 import { PrevButton, NextButton, usePrevNextButtons } from "./CarouselButtons"
 
 // renders carousel with autoplay and arrow buttons
-const Carousel = ({ title, children, options = {}, className = "" }) => {
+const Carousel = ({ title, description, children, options = {}, className = "" }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [
     Autoplay({ delay: 10000, stopOnInteraction: true, stopOnMouseEnter: true }),
   ])
@@ -14,7 +14,10 @@ const Carousel = ({ title, children, options = {}, className = "" }) => {
 
   return (
     <section className={`mx-auto ${className}`}>
-      <h2 className="font-thin text-lg mt-4 ml-2 mb-1">{title}</h2>
+      <div>
+        <h2 className="font-thin text-lg mt-4 ml-2 mb-1">{title}</h2>
+        <p className="text-sm ml-2 mb-1 text-gray-500">{description}</p>
+      </div>
       <div className="relative">
         <div
           className="overflow-hidden"

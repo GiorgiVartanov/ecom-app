@@ -1,24 +1,22 @@
 import { useFieldArray } from "react-hook-form"
 
-import XMarkIcon from "../../assets/icons/xmark.svg?react"
-import SearchIcon from "../../assets/icons/search.svg?react"
+import useAdminStore from "../../store/useAdminStore"
 
 import Button from "../common/Button"
 import Input from "../common/Input"
 import TagField from "./TagField"
 
-// works incorrectly, need to fix
 const TagFields = ({
   control,
   register,
   setAsSearchTag,
   removeFromSearchTags,
-  searchTagIds,
-  removedSearchTagIds,
   errors,
   clearErrors,
   onRemove,
 }) => {
+  const existingTags = useAdminStore((state) => state.tags)
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tags",
@@ -29,25 +27,19 @@ const TagFields = ({
     <div className="py-4 border-b-2 border-t-2 border-gray-200">
       <label className="block mb-2 text-sm">Tags (key/value pairs)</label>
       {fields.map((field, index) => {
-        // Determine if this tag is a search tag and not removed
-        const isSearchTag =
-          (searchTagIds.includes(field.id) ||
-            searchTagIds.includes(field.key) ||
-            field.isSearchTag) &&
-          !removedSearchTagIds.includes(field.id)
-
         return (
           <TagField
             key={field.fieldKey}
+            existingTags={existingTags}
             index={index}
             field={field}
             register={register}
             errors={errors}
             clearErrors={clearErrors}
-            isSearchTag={isSearchTag}
-            onSetAsSearchTag={(idOrKey) => setAsSearchTag(idOrKey)}
-            onRemoveFromSearchTags={(idOrKey) => {
-              removeFromSearchTags(idOrKey)
+            isSearchable={field.isSearchable}
+            onSetAsSearchTag={() => setAsSearchTag(index)}
+            onRemoveFromSearchTags={() => {
+              removeFromSearchTags(index)
             }}
             onRemove={(id) => {
               onRemove(id)
@@ -56,7 +48,6 @@ const TagFields = ({
           />
         )
       })}
-      {/* {errors?.tags?.message && <p className="text-red">{errors.tags.message}</p>} */}
       <Button
         type="button"
         variant="primary"
@@ -64,7 +55,7 @@ const TagFields = ({
         className="bg-primary-gradient mt-1"
         tooltip="add key and value fields for a new category"
         tooltipPosition="right"
-        onClick={() => append({ key: "", value: "" })}
+        onClick={() => append({ key: "", value: "", isSearchable: false })}
       >
         Add tag
       </Button>

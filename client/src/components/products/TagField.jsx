@@ -10,7 +10,7 @@ const TagField = ({
   register,
   errors,
   clearErrors,
-  isSearchTag,
+  isSearchable,
   onSetAsSearchTag,
   onRemoveFromSearchTags,
   onRemove,
@@ -21,7 +21,7 @@ const TagField = ({
       <Input
         {...register(`tags.${index}.key`, {
           required: "key is required",
-          onChange: () => clearErrors && clearErrors(`tags.${index}.key`),
+          onChange: () => clearErrors && clearErrors(`tags.${field.id}.key`),
         })}
         label={index === 0 ? "key" : ""}
         disabled={disabled}
@@ -30,19 +30,19 @@ const TagField = ({
       <Input
         {...register(`tags.${index}.value`, {
           required: "value is required",
-          onChange: () => clearErrors && clearErrors(`tags.${index}.value`),
+          onChange: () => clearErrors && clearErrors(`tags.${field.id}.value`),
         })}
         label={index === 0 ? "value" : ""}
         disabled={disabled}
         error={errors?.tags?.[index]?.value?.message}
       />
-      {isSearchTag ? (
+      {isSearchable ? (
         <Button
           type="button"
           wrapperClassName="mt-auto my-1"
           className="h-8 w-8 grid place-content-center bg-blue-400 hover:bg-blue-500"
           tooltip="remove from search tags"
-          onClick={() => onRemoveFromSearchTags(field.id || field.key)}
+          onClick={onRemoveFromSearchTags}
           disabled={disabled}
         >
           <SearchIcon className="icon text-background" />
@@ -53,7 +53,7 @@ const TagField = ({
           wrapperClassName="mt-auto my-1"
           className="h-8 w-8 grid place-content-center bg-gray-500 hover:bg-gray-600"
           tooltip="set as search tag"
-          onClick={() => onSetAsSearchTag(field.id || field.key)}
+          onClick={onSetAsSearchTag}
           disabled={disabled}
         >
           <SearchIcon className="icon text-background" />

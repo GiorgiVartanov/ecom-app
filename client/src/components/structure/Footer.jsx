@@ -7,9 +7,9 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-around w-full max-w-6xl py-8 px-4 md:px-0">
           {/* Contact Us Section */}
           <div className="mb-8 md:mb-0 text-center md:text-left w-full md:w-auto">
-            <h4 className="text-lg font-semibold mb-3 border-b-2 border-complementary/50 pb-1 inline-block">
+            <h3 className="text-lg font-semibold mb-3 border-b-2 border-complementary/50 pb-1 inline-block">
               Contact Us
-            </h4>
+            </h3>
             <ul className="space-y-2 text-sm">
               <li>
                 Email:{" "}
@@ -45,9 +45,9 @@ const Footer = () => {
 
           {/* Information Section */}
           <div className="mb-8 md:mb-0 text-center md:text-left w-full md:w-auto">
-            <h4 className="text-lg font-semibold mb-3 border-b-2 border-complementary/50 pb-1 inline-block">
+            <h3 className="text-lg font-semibold mb-3 border-b-2 border-complementary/50 pb-1 inline-block">
               Information
-            </h4>
+            </h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
@@ -78,9 +78,9 @@ const Footer = () => {
 
           {/* Help Section */}
           <div className="mb-8 md:mb-0 text-center md:text-left w-full md:w-auto">
-            <h4 className="text-lg font-semibold mb-3 border-b-2 border-complementary/50 pb-1 inline-block">
+            <h3 className="text-lg font-semibold mb-3 border-b-2 border-complementary/50 pb-1 inline-block">
               Help
-            </h4>
+            </h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
@@ -111,9 +111,9 @@ const Footer = () => {
 
           {/* Follow Us Section */}
           <div className="text-center md:text-left w-full md:w-auto">
-            <h4 className="text-lg font-semibold mb-3 border-b-2 border-complementary/50 pb-1 inline-block">
+            <h3 className="text-lg font-semibold mb-3 border-b-2 border-complementary/50 pb-1 inline-block">
               Follow Us
-            </h4>
+            </h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <a
@@ -149,8 +149,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 pt-4 border-t border-complementary/50 text-center w-full text-xs text-complementary/70">
-          &copy; {new Date().getFullYear()} Build This Way. All rights reserved.
+        <div className="mt-8 pt-4 border-t border-gray-600 text-center w-full text-xs text-gray-400">
+          &copy; {new Date().getFullYear()} PcPal - portfolio project. All rights probably reserved.
         </div>
       </div>
     </footer>

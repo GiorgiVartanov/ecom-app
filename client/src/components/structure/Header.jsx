@@ -79,55 +79,15 @@ const Header = () => {
   const renderGuestLinks = () => {
     return (
       <>
-        <NavLink
-          to="/about"
-          className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
-        >
-          About Us
-        </NavLink>
-        <NavLink
-          to="/search?query="
-          onMouseEnter={handlePrefetchEverything}
-          className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
-        >
-          Search
-        </NavLink>
-        <Button
-          onClick={handleAuthModalOpen}
-          className="link button"
-          variant="empty"
-        >
-          Sign In
-        </Button>
-      </>
-    )
-  }
-
-  const renderUserLinks = () => {
-    return (
-      <>
-        <NavLink
-          to="/about"
-          className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
-        >
-          About Us
-        </NavLink>
-        <Button
-          onClick={handleCartModalOpen}
-          className="link ml-auto relative"
-        >
-          <CartIcon className="icon" />
-          <span className="absolute font-bold bg-foreground text-background text-xs rounded-full w-4 h-4 right-1.5 bottom-1.5 drop-shadow-[0_0_3px_rgba(255,255,255,1)]">
-            {cartItemList?.length}
-          </span>
-        </Button>
-        <DropdownMenu
-          username={user.name}
-          icon={user.icon}
-          openMenu={handleOpenDropdownMenu}
-          onClose={handleCloseDropdownMenu}
-          isOpen={isMenuOpen}
-        >
+        <li>
+          <NavLink
+            to="/about"
+            className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
+          >
+            About Us
+          </NavLink>
+        </li>
+        <li>
           <NavLink
             to="/search?query="
             onMouseEnter={handlePrefetchEverything}
@@ -135,26 +95,78 @@ const Header = () => {
           >
             Search
           </NavLink>
+        </li>
+        <li>
+          <Button
+            onClick={handleAuthModalOpen}
+            className="link button"
+            variant="empty"
+          >
+            Sign In
+          </Button>
+        </li>
+      </>
+    )
+  }
+
+  const renderUserLinks = () => {
+    return (
+      <>
+        <li>
           <NavLink
-            to="/orders"
-            className={({ isActive }) => `link ${isActive ? "text-primary" : ""}`}
+            to="/about"
+            className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
           >
-            Orders
+            About Us
           </NavLink>
+        </li>
+        <li>
           <Button
-            onClick={handleWishlistModalOpen}
-            variant="secondary"
-            className="link ml-auto"
+            onClick={handleCartModalOpen}
+            className="link ml-auto relative"
           >
-            Whish List
+            <CartIcon className="icon" />
+            <span className="absolute font-bold bg-foreground text-background text-xs rounded-full w-4 h-4 right-1.5 bottom-1.5 drop-shadow-[0_0_3px_rgba(255,255,255,1)]">
+              {cartItemList?.length}
+            </span>
           </Button>
-          <Button
-            onClick={handleLogout}
-            className="link hover:text-red-500"
+        </li>
+        <li>
+          <DropdownMenu
+            username={user.name}
+            icon={user.icon}
+            openMenu={handleOpenDropdownMenu}
+            onClose={handleCloseDropdownMenu}
+            isOpen={isMenuOpen}
           >
-            Log Out
-          </Button>
-        </DropdownMenu>
+            <NavLink
+              to="/search?query="
+              onMouseEnter={handlePrefetchEverything}
+              className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
+            >
+              Search
+            </NavLink>
+            <NavLink
+              to="/orders"
+              className={({ isActive }) => `link ${isActive ? "text-primary" : ""}`}
+            >
+              Orders
+            </NavLink>
+            <Button
+              onClick={handleWishlistModalOpen}
+              variant="secondary"
+              className="link ml-auto"
+            >
+              Whish List
+            </Button>
+            <Button
+              onClick={handleLogout}
+              className="link hover:text-red-500"
+            >
+              Log Out
+            </Button>
+          </DropdownMenu>
+        </li>
       </>
     )
   }
@@ -162,57 +174,63 @@ const Header = () => {
   const renderAdminLinks = () => {
     return (
       <>
-        <NavLink
-          to="/about"
-          className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
-        >
-          About Us
-        </NavLink>
-        <NavLink
-          to="/search"
-          onMouseEnter={handlePrefetchEverything}
-          className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
-        >
-          Search
-        </NavLink>
-        <DropdownMenu
-          username={user.name}
-          icon={user.icon}
-          openMenu={handleOpenDropdownMenu}
-          onClose={handleCloseDropdownMenu}
-          isOpen={isMenuOpen}
-        >
+        <li>
           <NavLink
-            to="/dashboard"
-            className={({ isActive }) => `link ${isActive ? "text-primary" : ""}`}
+            to="/about"
+            className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
           >
-            Dashboard
+            About Us
           </NavLink>
+        </li>
+        <li>
           <NavLink
-            to="/orders"
-            className={({ isActive }) => `link ${isActive ? "text-primary" : ""}`}
+            to="/search"
+            onMouseEnter={handlePrefetchEverything}
+            className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
           >
-            Orders
+            Search
           </NavLink>
-          <Button
-            onClick={handleCartModalOpen}
-            className="link ml-auto"
+        </li>
+        <li>
+          <DropdownMenu
+            username={user.name}
+            icon={user.icon}
+            openMenu={handleOpenDropdownMenu}
+            onClose={handleCloseDropdownMenu}
+            isOpen={isMenuOpen}
           >
-            Cart
-          </Button>
-          <Button
-            onClick={handleWishlistModalOpen}
-            className="link ml-auto"
-          >
-            Whish List
-          </Button>
-          <Button
-            onClick={handleLogout}
-            className="link hover:text-red-500"
-          >
-            Log Out
-          </Button>
-        </DropdownMenu>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) => `link ${isActive ? "text-primary" : ""}`}
+            >
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="/orders"
+              className={({ isActive }) => `link ${isActive ? "text-primary" : ""}`}
+            >
+              Orders
+            </NavLink>
+            <Button
+              onClick={handleCartModalOpen}
+              className="link ml-auto"
+            >
+              Cart
+            </Button>
+            <Button
+              onClick={handleWishlistModalOpen}
+              className="link ml-auto"
+            >
+              Whish List
+            </Button>
+            <Button
+              onClick={handleLogout}
+              className="link hover:text-red-500"
+            >
+              Log Out
+            </Button>
+          </DropdownMenu>
+        </li>
       </>
     )
   }

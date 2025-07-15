@@ -35,7 +35,7 @@ export const getProduct = async (req, res) => {
           select: {
             id: true,
             value: true,
-            tagKey: { select: { name: true, isSearchable: true } },
+            tagKey: { select: { name: true, id: true, isSearchable: true } },
           },
         },
         images: {
@@ -89,9 +89,10 @@ export const getProduct = async (req, res) => {
       ...product,
       tags: product.tags.map((tag) => ({
         id: tag.id,
+        keyId: tag.tagKey.id,
         key: tag.tagKey.name,
         value: tag.value,
-        isSearchTag: tag.tagKey.isSearchable,
+        isSearchable: tag.tagKey.isSearchable,
       })),
       isInCart,
       isWishlisted,
@@ -283,7 +284,7 @@ export const getProducts = async (req, res) => {
         id: tag.id,
         key: tag.tagKey.name,
         value: tag.value,
-        isSearchTag: tag.tagKey.isSearchable,
+        isSearchable: tag.tagKey.isSearchable,
       })),
       isInCart: userId ? inCartIds.includes(product.id) : false,
       isWishlisted: userId ? wishlistedIds.includes(product.id) : false,
@@ -310,7 +311,8 @@ export const writeReview = async (req, res) => {
     const result = reviewSchema.safeParse(req.body)
 
     if (!result.success) {
-      return res.status(400).json({ error: "Validation failed", details: result.error.errors })
+      console.error("Validation error:", result.error)
+      return res.status(400).json({ error: "Validation failed", details: result.error })
     }
 
     const { id: productId } = req.params
@@ -420,7 +422,8 @@ export const createProduct = async (req, res) => {
     const result = productSchema.safeParse(req.body)
 
     if (!result.success) {
-      return res.status(400).json({ error: "Validation failed", details: result.error.errors })
+      console.error("Validation error:", result.error)
+      return res.status(400).json({ error: "Validation failed", details: result.error })
     }
 
     const { name, description, price, stock = 0, tags = [], images = [] } = req.body
@@ -440,22 +443,30 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ message: "stock must be a non-negative number" })
     }
 
+    const tagKeysToAdd = [
+      ...new Set(tags.map((tag) => ({ name: tag.key, isSearchable: tag.isSearchable }))),
+    ]
+
     // fetches existing tag keys for provided tag names
-    const keyNames = [...new Set(tags.map((tag) => tag.key))]
-    const existingTagKeys = await prisma.tagKey.findMany({ where: { name: { in: keyNames } } })
+    const existingTagKeys = await prisma.tagKey.findMany({
+      where: { name: { in: tagKeysToAdd.map((tag) => tag.name) } },
+    })
+
     const existingKeyMap = new Map(existingTagKeys.map((key) => [key.name, key]))
 
     // creates missing tag keys
-    const newKeyData = keyNames
-      .filter((key) => !existingKeyMap.has(key))
-      .map((key) => ({ name: key, isSearchable: true }))
+    const newKeyData = tagKeysToAdd
+      .filter((tag) => !existingKeyMap.has(tag.name))
+      .map((tag) => ({ name: tag.name, isSearchable: tag.isSearchable }))
 
     if (newKeyData.length) {
       await prisma.tagKey.createMany({ data: newKeyData, skipDuplicates: true })
     }
 
     // reloads all tag keys
-    const allTagKeys = await prisma.tagKey.findMany({ where: { name: { in: keyNames } } })
+    const allTagKeys = await prisma.tagKey.findMany({
+      where: { name: { in: tagKeysToAdd.map((tag) => tag.name) } },
+    })
     const keyIdMap = new Map(allTagKeys.map((key) => [key.name, key.id]))
 
     // prepares tag entries (keyId + value)
@@ -494,7 +505,7 @@ export const createProduct = async (req, res) => {
     // uploads and saves images if provided
     if (images.length > 0) {
       const uploaded = await Promise.all(
-        images.map((image) => uploadImage(image.base64, "product", newProduct.id, true))
+        images.map((image) => uploadImage(image.base64, "product", newProduct.id))
       )
 
       const imageData = uploaded.map((uploadedImage, imageIndex) => ({
@@ -526,7 +537,6 @@ export const createProduct = async (req, res) => {
 }
 
 // edits product
-// works incorrectly, needs fixing, when update tag's isSearchable value before this tag was created, it will not be applied, and will throw an error
 // PROTECTED [ADMIN]
 export const editProduct = async (req, res) => {
   try {
@@ -540,8 +550,6 @@ export const editProduct = async (req, res) => {
       deletedTagIds = [],
       images = [],
       deletedImageIds = [],
-      searchTagIds = [],
-      removedSearchTagIds = [],
     } = req.body
 
     if (price !== undefined && (isNaN(price) || Number(price) <= 0)) {
@@ -563,6 +571,7 @@ export const editProduct = async (req, res) => {
     // splits images into new vs existing based on url presence
     const newImages = []
     const oldImages = []
+
     images.forEach((image, imageIndex) => {
       if (image?.url?.startsWith("https://") || image?.imageURL?.startsWith("https://")) {
         oldImages.push({ ...image, position: imageIndex })
@@ -589,7 +598,7 @@ export const editProduct = async (req, res) => {
     // uploads and creates new images
     if (newImages.length > 0) {
       const uploaded = await Promise.all(
-        newImages.map((image) => uploadImage(image.base64, "product", id, true))
+        newImages.map((image) => uploadImage(image.base64, "product", id))
       )
       const toCreate = uploaded.map((uploadedImage, imageIndex) => ({
         imageURL: uploadedImage.secure_url,
@@ -600,22 +609,35 @@ export const editProduct = async (req, res) => {
     }
 
     // splits incoming tags into those with an id (to update) vs new ones
+
     const tagsToUpdate = tags
       .filter((tag) => tag.id)
-      .map((tag) => ({ ...tag, key: tag.key?.trim(), value: tag.value?.trim() }))
+      .map((tag) => ({
+        ...tag,
+        key: tag.key?.trim(),
+        value: tag.value?.trim(),
+        isSearchable: tag.isSearchable,
+      }))
+
     const incomingNewTags = tags
       .filter((tag) => !tag.id)
-      .map((tag) => ({ ...tag, key: tag.key?.trim(), value: tag.value?.trim() }))
+      .map((tag) => ({
+        ...tag,
+        key: tag.key?.trim(),
+        value: tag.value?.trim(),
+        isSearchable: tag.isSearchable,
+      }))
 
-    // updates any renamed or re-keyed tags
+    // updates any renamed or had their keys changed
     const updatedTags = await Promise.all(
-      tagsToUpdate.map(async ({ id: tagId, key, value }) => {
+      tagsToUpdate.map(async ({ id: tagId, keyId, key, value, isSearchable }) => {
         const existingTag = await prisma.tag.findFirst({
           where: {
             tagKey: { name: key },
             value: value,
           },
         })
+
         if (existingTag) {
           return { id: existingTag.id }
         } else {
@@ -626,7 +648,7 @@ export const editProduct = async (req, res) => {
               tagKey: {
                 connectOrCreate: {
                   where: { name: key },
-                  create: { name: key },
+                  create: { name: key, isSearchable },
                 },
               },
             },
@@ -646,27 +668,37 @@ export const editProduct = async (req, res) => {
       },
       include: { tagKey: true },
     })
+
     const foundMap = new Map(found.map((tag) => [`${tag.tagKey.name}:${tag.value}`, tag]))
 
-    // creates any that still don’t exist
-    const createdTags = []
-    for (const { key, value } of incomingNewTags) {
-      const mapKey = `${key}:${value}`
-      if (!foundMap.has(mapKey)) {
-        const created = await prisma.tag.create({
-          data: {
-            value,
-            tagKey: {
-              connectOrCreate: {
-                where: { name: key },
-                create: { name: key },
+    // creates any that still does not exist
+    const createdTags = await Promise.all(
+      incomingNewTags
+        .filter(({ key, value }) => !foundMap.has(`${key}:${value}`))
+        .map(async ({ key, value, isSearchable }) => {
+          const created = await prisma.tag.create({
+            data: {
+              value,
+              tagKey: {
+                connectOrCreate: {
+                  where: { name: key },
+                  create: { name: key, isSearchable },
+                },
               },
             },
-          },
+          })
+          return { id: created.id }
         })
-        createdTags.push({ id: created.id })
-      }
-    }
+    )
+
+    await Promise.all(
+      tags.map(async (tag) => {
+        await prisma.tagKey.updateMany({
+          where: { name: tag.key },
+          data: { isSearchable: tag.isSearchable },
+        })
+      })
+    )
 
     // assembles final list of tag ids to connect
     const allToConnect = [...updatedTags, ...found.map((tag) => ({ id: tag.id })), ...createdTags]
@@ -686,26 +718,6 @@ export const editProduct = async (req, res) => {
     if (description) data.description = description
     if (price !== undefined) data.price = Number(price)
     if (stock !== undefined) data.stock = Number(stock)
-
-    // updates tagKeys as searchable
-    await prisma.tagKey.updateMany({
-      where: {
-        OR: [{ name: { in: searchTagIds } }, { tags: { some: { id: { in: searchTagIds } } } }],
-      },
-      data: { isSearchable: true },
-    })
-
-    if (removedSearchTagIds.length > 0) {
-      const tagsToUnmark = await prisma.tag.findMany({
-        where: { id: { in: removedSearchTagIds } },
-        select: { keyId: true },
-      })
-      const keyIds = tagsToUnmark.map((tag) => tag.keyId)
-      await prisma.tagKey.updateMany({
-        where: { id: { in: keyIds } },
-        data: { isSearchable: false },
-      })
-    }
 
     // updates product record including tags and images
     const updatedProduct = await prisma.product.update({

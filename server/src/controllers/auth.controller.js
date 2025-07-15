@@ -19,11 +19,10 @@ export const register = async (req, res) => {
     const result = signUpSchema.safeParse(req.body)
 
     if (!result.success) {
-      // if validation fails, send error details
-
+      console.error("Validation error:", result.error)
       return res.status(400).json({
         error: "Validation failed",
-        details: result.error, // array of validation issues (right now its not shown anywhere on the client, because client cas the exact same validation logic)
+        details: result.error,
       })
     }
 
@@ -62,7 +61,7 @@ export const register = async (req, res) => {
       reviews: user.reviews,
     }
 
-    res.status(201).json({ token, user: userToSend, message: "user registered successfully" })
+    res.status(201).json({ token, user: userToSend, message: "successfully registered" })
   } catch (error) {
     console.error("registration error:", error)
     res.status(500).json({ error: "failed to register user" })
@@ -77,9 +76,10 @@ export const login = async (req, res) => {
 
     if (!result.success) {
       // if validation fails, send error details
+      console.error("Validation error:", result.error)
       return res.status(400).json({
         error: "Validation failed",
-        details: result.error.errors, // array of validation issues
+        details: result.error,
       })
     }
 
@@ -120,7 +120,33 @@ export const login = async (req, res) => {
       reviews: user.reviews,
     }
 
-    res.status(201).json({ token, user: userToSend, message: "successfully registered" })
+    if (user.role === "ADMIN") {
+      // fetches tag keys with their tags (values)
+      const tagKeys = await prisma.tagKey.findMany({
+        include: {
+          tags: {
+            select: { value: true },
+            distinct: ["value"],
+          },
+        },
+      })
+
+      // formats tags as array of { key, values }
+      const tags = tagKeys
+        .map((tagKey) => ({
+          key: tagKey.name,
+          id: tagKey.id,
+          keyId: tagKey.keyId,
+          isSearchable: tagKey.isSearchable,
+          values: tagKey.tags.map((tag) => tag.value).sort((a, b) => a.localeCompare(b)),
+        }))
+        .sort((a, b) => a.key.localeCompare(b.key))
+
+      res.status(201).json({ token, user: userToSend, tags, message: "successfully logged in" })
+      return
+    }
+
+    res.status(201).json({ token, user: userToSend, message: "successfully logged in" })
   } catch (error) {
     console.error("login error:", error)
     res.status(500).json({ error: "failed to login" })

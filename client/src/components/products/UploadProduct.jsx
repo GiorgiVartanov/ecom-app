@@ -25,10 +25,12 @@ const UploadProduct = ({ defaultData, isEditing = false, id }) => {
   const queryClient = useQueryClient()
 
   const [images, setImages] = useState([])
+
   const [deletedImageIds, setDeletedImages] = useState([])
   const [deletedTagIds, setDeletedTagIds] = useState([])
-  const [searchTagIds, setSearchTagIds] = useState([])
-  const [removedSearchTagIds, setRemovedSearchTagIds] = useState([])
+
+  // const [searchTag, setSearchTag] = useState([])
+  // const [removedSearchTag, setRemovedSearchTag] = useState([])
 
   const fileInputRef = useRef(null)
 
@@ -39,6 +41,8 @@ const UploadProduct = ({ defaultData, isEditing = false, id }) => {
     reset,
     setError,
     clearErrors,
+    setValue,
+    getValues,
     formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(productSchema),
@@ -86,7 +90,13 @@ const UploadProduct = ({ defaultData, isEditing = false, id }) => {
       }
 
       const newId = data?.id
-      if (newId) navigate(`/dashboard/products/edit/${newId}`, { replace: true })
+
+      if (newId) {
+        navigate(`/dashboard/products/edit/${newId}`, { replace: true })
+        setTimeout(() => {
+          navigate(`/product/${newId}`)
+        }, 0)
+      }
     },
     onError: (error, variables, context) => {
       console.error("Error uploading product:", error)
@@ -101,6 +111,8 @@ const UploadProduct = ({ defaultData, isEditing = false, id }) => {
 
   const onSubmit = (formData) => {
     const { name, description, price, stock, tags } = formData
+
+    console.log(tags)
 
     const tagKeys = tags.map((tag) => tag.key.trim()).filter(Boolean)
 
@@ -119,7 +131,7 @@ const UploadProduct = ({ defaultData, isEditing = false, id }) => {
       const duplicatedArray = Array.from(duplicatedKeys)
 
       toast.error(
-        `each tag key should only be used once. duplicates: ${duplicatedArray.join(", ")}`
+        `each tag key should only be used once. duplicate keys: ${duplicatedArray.join(", ")}`
       )
       return
     }
@@ -133,8 +145,6 @@ const UploadProduct = ({ defaultData, isEditing = false, id }) => {
       deletedTagIds,
       images,
       deletedImageIds,
-      searchTagIds,
-      removedSearchTagIds,
     }
 
     mutation.mutate({ data })
@@ -195,16 +205,22 @@ const UploadProduct = ({ defaultData, isEditing = false, id }) => {
     setDeletedTagIds((prevState) => [...prevState, id])
   }
 
-  const handleSetAsSearchTag = (id) => {
-    // this implementation is terrible, I pass id, but if id does not exist (new item) I pass name
+  const handleSetAsSearchTag = (index) => {
+    const currentTags = getValues("tags")
 
-    setSearchTagIds((prevState) => [...prevState, id])
-    setRemovedSearchTagIds((prevState) => prevState.filter((tagId) => tagId !== id))
+    const tags = [...currentTags]
+    tags[index].isSearchable = true
+
+    setValue("tags", tags)
   }
 
-  const handleRemoveFromSearchTags = (id) => {
-    setSearchTagIds((prevState) => prevState.filter((tagId) => tagId !== id))
-    setRemovedSearchTagIds((prevState) => [...prevState, id])
+  const handleRemoveFromSearchTags = (index) => {
+    const currentTags = getValues("tags")
+
+    const tags = [...currentTags]
+    tags[index].isSearchable = false
+
+    setValue("tags", tags)
   }
 
   useEffect(() => {
@@ -325,8 +341,6 @@ const UploadProduct = ({ defaultData, isEditing = false, id }) => {
           register={register}
           setAsSearchTag={handleSetAsSearchTag}
           removeFromSearchTags={handleRemoveFromSearchTags}
-          searchTagIds={searchTagIds}
-          removedSearchTagIds={removedSearchTagIds}
           errors={errors}
           clearErrors={clearErrors}
           onRemove={handleTagRemove}

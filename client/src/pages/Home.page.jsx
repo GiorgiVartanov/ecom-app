@@ -14,14 +14,14 @@ const COMPONENTS = [
   {
     id: "gpu",
     title: "GPU",
-    image: "/images/component-images/gpu.webp",
-    search: { category: "gpu" },
+    image: "/images/component-images/GPU.webp",
+    search: { category: "GPU" },
   },
   {
     id: "cpu",
     title: "CPU",
-    image: "/images/component-images/cpu.webp",
-    search: { category: "cpu" },
+    image: "/images/component-images/CPU.webp",
+    search: { category: "CPU" },
   },
   {
     id: "motherboard",
@@ -30,10 +30,10 @@ const COMPONENTS = [
     search: { category: "motherboard" },
   },
   {
-    id: "memory",
-    title: "Memory",
-    image: "/images/component-images/memory.webp",
-    search: { category: "memory" },
+    id: "ram",
+    title: "RAM",
+    image: "/images/component-images/RAM.webp",
+    search: { category: "RAM" },
   },
   {
     id: "storage",
@@ -44,8 +44,8 @@ const COMPONENTS = [
   {
     id: "psu",
     title: "PSU",
-    image: "/images/component-images/psu.webp",
-    search: { category: "psu" },
+    image: "/images/component-images/PSU.webp",
+    search: { category: "PSU" },
   },
   {
     id: "case",
@@ -174,16 +174,10 @@ const PERIPHERALS = [
     search: { category: "scanner" },
   },
   {
-    id: "external-drive",
-    title: "External Drive",
-    image: "/images/peripheral-images/external-drive.webp",
-    search: { category: "external-drive" },
-  },
-  {
     id: "ups",
     title: "UPS",
     image: "/images/peripheral-images/ups.webp",
-    search: { category: "ups" },
+    search: { category: "UPS" },
   },
 ]
 
@@ -223,9 +217,10 @@ const Home = () => {
     queryClient.prefetchQuery({ queryKey, queryFn })
   }
 
-  const renderCarousel = (title, items) => (
+  const renderCarousel = (title, items, description) => (
     <Carousel
       title={title}
+      description={description}
       className="max-w-6xl w-full border-b-2 border-gray-200 pb-6" // ensures consistent width
       options={{ loop: true, slidesToScroll: 1, align: "start" }} // removed slidesToShow
     >
@@ -293,9 +288,21 @@ const Home = () => {
     <div className="">
       {renderHeroImage()}
       <div className="max-w-6xl mx-auto flex flex-col gap-8 mt-4">
-        {renderCarousel("Components", COMPONENTS)}
-        {renderCarousel("Companies", COMPANIES)}
-        {renderCarousel("Peripherals", PERIPHERALS)}
+        {renderCarousel(
+          "Components",
+          COMPONENTS,
+          "This is a fictional/demo project. Component names and images are for demonstration purposes only and do not represent real products."
+        )}
+        {renderCarousel(
+          "Peripherals",
+          PERIPHERALS,
+          "This is a fictional/demo project. Peripheral names and images are placeholders for illustrative purposes and are not actual products."
+        )}
+        {renderCarousel(
+          "Companies",
+          COMPANIES,
+          "This is a fictional/demo project. All brand names and logos are the property of their respective owners and are used here for illustrative purposes only."
+        )}
       </div>
     </div>
   )

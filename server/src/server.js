@@ -43,7 +43,7 @@ const limiter = rateLimit({
 // stricter rate limiting for auth routes
 const authLimiter = rateLimit({
   windowMs: 20 * 60 * 1000, // 15 minutes
-  max: 15, // 15 auth requests per windowMs time
+  max: 25, // 15 auth requests per windowMs time
   message: {
     error: "too many authentication attempts, please try again later",
     retryAfter: "20 minutes",

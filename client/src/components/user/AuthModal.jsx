@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import useAuthStore from "../../store/useAuthStore"
+import useAdminStore from "../../store/useAdminStore"
 import { signUpSchema, signInSchema } from "../../zod-schemas/auth.schemas"
 import { signIn, signUp } from "../../api/auth.api"
 
@@ -30,6 +31,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
 
   const setAuth = useAuthStore((state) => state.setAuth)
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const setTags = useAdminStore((state) => state.setTags)
 
   const {
     register: registerSignIn,
@@ -58,12 +60,18 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
   const onSignInSubmit = async (data) => {
     try {
       const response = await signIn(data)
-      const { token, user } = response.data
+      const { token, user, tags } = response.data
 
       setAuth({
         user,
         token,
       })
+
+      console.log({ tags })
+
+      if (user.role === "ADMIN") {
+        setTags(tags)
+      }
 
       resetSignIn()
 
@@ -159,6 +167,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
         <Input
           label="Email"
           type="email"
+          autoComplete="email"
           placeholder="example@email.com"
           {...registerSignUp("email")}
           error={signUpError.email?.message}
@@ -166,6 +175,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
         <Input
           label="Password"
           type="password"
+          autoComplete="new-password"
           placeholder="password"
           maxLength={50}
           {...registerSignUp("password")}
