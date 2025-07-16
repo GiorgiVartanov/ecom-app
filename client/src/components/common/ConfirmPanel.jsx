@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useRef, useLayoutEffect } from "react"
 import ReactMarkdown from "react-markdown"
 
 import useConfirmModalStore from "../../store/useConfirmModalStore"
@@ -15,6 +15,25 @@ const ConfirmPanel = () => {
   const backgroundRef = useRef()
 
   useOnClickOutside(modalRef, closeModal, backgroundRef)
+
+  useLayoutEffect(() => {
+    if (isOpen) {
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
+      document.body.classList.add("overflow-hidden")
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`
+      }
+    } else {
+      document.body.classList.remove("overflow-hidden")
+      document.body.style.paddingRight = ""
+    }
+
+    return () => {
+      // cleanup in case component unmounts while open
+      document.body.classList.remove("overflow-hidden")
+      document.body.style.paddingRight = ""
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 

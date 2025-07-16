@@ -67,8 +67,6 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
         token,
       })
 
-      console.log({ tags })
-
       if (user.role === "ADMIN") {
         setTags(tags)
       }

@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import useAuthStore from "../../store/useAuthStore"
 import useModalStore from "../../store/useModalStore"
+import useConfirmModalStore from "../../store/useConfirmModalStore"
 import { getCart } from "../../api/cart.api"
 import { createQuery } from "../../pages/Search.page"
 
@@ -26,6 +27,8 @@ const Header = () => {
   const openModal = useModalStore((state) => state.openModal)
   const closeModal = useModalStore((state) => state.closeModal)
 
+  const createConfirmationPanel = useConfirmModalStore((state) => state.createConfirmationPanel)
+
   const navigate = useNavigate()
 
   const queryClient = useQueryClient()
@@ -44,9 +47,17 @@ const Header = () => {
   }
 
   const handleLogout = () => {
-    logOut()
-    navigate("/")
-    setIsMenuOpen(false)
+    createConfirmationPanel(
+      "Are you sure you want to log out?",
+      () => {
+        logOut()
+        navigate("/")
+        setIsMenuOpen(false)
+      },
+      "Log Out",
+      "Cancel",
+      "danger"
+    )
   }
 
   const handleOpenDropdownMenu = () => {

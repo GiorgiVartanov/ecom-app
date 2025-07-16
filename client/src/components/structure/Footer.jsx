@@ -14,10 +14,10 @@ const Footer = () => {
               <li>
                 Email:{" "}
                 <a
-                  href="mailto:info@walkthisway.com"
+                  href="mailto:dont-email-here@pcpal-portfolio.com" // not a real email
                   className="hover:text-primary transition-colors duration-200"
                 >
-                  info@walkthisway.com
+                  dont-email-here@pcpal-portfolio.com
                 </a>
               </li>
               <li>

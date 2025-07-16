@@ -5,7 +5,7 @@ import { useOnClickOutside } from "../../hooks/useOnClickOutside"
 import Button from "./Button"
 
 // renders dropdown menu used in header
-const DropdownMenu = ({ isOpen, openMenu, onClose, children }) => {
+const DropdownMenu = ({ isOpen, openMenu, onClose, closeOnClick = true, children }) => {
   const ref = useRef(null)
 
   const handleToggle = () => {
@@ -19,19 +19,31 @@ const DropdownMenu = ({ isOpen, openMenu, onClose, children }) => {
   const styledChildren = Children.map(children, (child) => {
     const extraClasses =
       "link text-center sm:text-right w-full py-5 sm:py-3 w-full hover:bg-gray-100 hover:brightness-100"
-    const { className } = child.props
+
+    const { className, onClick: childOnClick } = child.props
 
     let newClassName
+
     if (typeof className === "function") {
       newClassName = (...args) => {
         const result = className(...args)
-        return [result, extraClasses].filter(Boolean).join(" ")
+        return [result, extraClasses].filter(Boolean).join(" ") // filter(Boolean) removes undefined/empty values
       }
     } else {
       newClassName = [className, extraClasses].filter(Boolean).join(" ")
     }
 
-    return cloneElement(child, { className: newClassName })
+    // merges onClose with any existing onClick handler
+    const mergedOnClick = (...args) => {
+      if (typeof childOnClick === "function") {
+        childOnClick(...args)
+      }
+      if (typeof onClose === "function" && closeOnClick) {
+        onClose(...args)
+      }
+    }
+
+    return cloneElement(child, { className: newClassName, onClick: mergedOnClick })
   })
 
   useOnClickOutside(ref, onClose)

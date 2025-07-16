@@ -176,7 +176,7 @@ const PERIPHERALS = [
   {
     id: "ups",
     title: "UPS",
-    image: "/images/peripheral-images/ups.webp",
+    image: "/images/peripheral-images/UPS.webp",
     search: { category: "UPS" },
   },
 ]

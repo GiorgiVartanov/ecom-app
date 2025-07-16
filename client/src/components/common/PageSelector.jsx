@@ -156,7 +156,7 @@ const PageSelector = ({
           includeDefaultOption={false}
           showLabel={false}
           tooltipPosition="top"
-          className="button outline-none border-none py-0! font-normal h-8 px-2 rounded shadow-sm"
+          className="button outline-none border-none py-0! font-normal h-8 px-2 rounded shadow-sm mb-1"
         />
       </div>
     )
