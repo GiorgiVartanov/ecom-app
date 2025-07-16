@@ -10,7 +10,7 @@ const Layout = () => {
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
       <Header />
-      <main className="px-4 min-h-[calc(100vh-4rem)] overflow-x-hidden">
+      <main className="px-4 min-h-[calc(100vh-4rem)] overflow-x-hidden overflow-y-hidden">
         <Outlet />
       </main>
       <Footer />

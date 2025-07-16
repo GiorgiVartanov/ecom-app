@@ -185,14 +185,14 @@ The application will be available at:
 - `POST /api/products/:id` - Update product <span style="opacity: 0.6;">(admin)</span>
 - `DELETE /api/products/:id` - Mark product as delisted, its possible to restore it latter <span style="opacity: 0.6;">(admin)</span>
 
-### Cart & Orders
+### Cart
 
 - `POST /api/cart` - Add item to cart <span style="opacity: 0.6;">(user)</span>
 - `GET /api/cart` - Get cart <span style="opacity: 0.6;">(user)</span>
 - `PATCH /api/cart/:id` - Edit cart item <span style="opacity: 0.6;">(user)</span>
 - `DELETE /api/cart/:id` - Remove cart item <span style="opacity: 0.6;">(user)</span>
 
-## Order
+### Order
 
 - `POST /api/orders` - Create order <span style="opacity: 0.6;">(user)</span>
 - `GET /api/orders/all` - Get user orders <span style="opacity: 0.6;">(admin)</span>
