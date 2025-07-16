@@ -78,7 +78,7 @@ const Search = () => {
   const renderProductGrid = () => {
     if (isLoading) return <Loading />
 
-    if (error) return <div>error</div>
+    if (error) return <div>something went wrong</div>
 
     return (
       <ProductGrid

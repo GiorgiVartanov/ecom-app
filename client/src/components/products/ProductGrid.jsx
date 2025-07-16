@@ -59,7 +59,7 @@ const ProductGrid = ({ resetFilters, data, className }) => {
     <>
       {data?.length > 0 ? (
         <div
-          className={`grid max-w-6xl mx-auto grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 ${className}`}
+          className={`grid w-full max-w-6xl mx-auto grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 overflow-x-hidden ${className}`}
         >
           {data.map((product) => (
             <ProductCard

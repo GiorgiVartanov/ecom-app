@@ -90,7 +90,7 @@ const Header = () => {
   const renderGuestLinks = () => {
     return (
       <>
-        <li>
+        <li className="h-fit">
           <NavLink
             to="/about"
             className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
@@ -98,7 +98,7 @@ const Header = () => {
             About Us
           </NavLink>
         </li>
-        <li>
+        <li className="h-fit">
           <NavLink
             to="/search?query="
             onMouseEnter={handlePrefetchEverything}
@@ -107,7 +107,7 @@ const Header = () => {
             Search
           </NavLink>
         </li>
-        <li>
+        <li className="h-fit">
           <Button
             onClick={handleAuthModalOpen}
             className="link button"
@@ -123,7 +123,7 @@ const Header = () => {
   const renderUserLinks = () => {
     return (
       <>
-        <li>
+        <li className="h-fit">
           <NavLink
             to="/about"
             className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
@@ -131,7 +131,7 @@ const Header = () => {
             About Us
           </NavLink>
         </li>
-        <li>
+        <li className="h-fit">
           <Button
             onClick={handleCartModalOpen}
             className="link ml-auto relative"
@@ -142,7 +142,7 @@ const Header = () => {
             </span>
           </Button>
         </li>
-        <li>
+        <li className="h-fit">
           <DropdownMenu
             username={user.name}
             icon={user.icon}
@@ -185,7 +185,7 @@ const Header = () => {
   const renderAdminLinks = () => {
     return (
       <>
-        <li>
+        <li className="h-fit">
           <NavLink
             to="/about"
             className={({ isActive }) => `link button ${isActive ? "text-primary" : ""}`}
@@ -193,7 +193,7 @@ const Header = () => {
             About Us
           </NavLink>
         </li>
-        <li>
+        <li className="h-fit">
           <NavLink
             to="/search"
             onMouseEnter={handlePrefetchEverything}
@@ -202,7 +202,7 @@ const Header = () => {
             Search
           </NavLink>
         </li>
-        <li>
+        <li className="h-fit">
           <DropdownMenu
             username={user.name}
             icon={user.icon}
@@ -291,10 +291,10 @@ const Header = () => {
   }
 
   return (
-    <header className="flex flex-row items-center justify-between px-2 py-2 border-b-2 border-gray-100 mb-2 text-nowrap">
+    <header className="flex flex-row items-center justify-between px-2 py-2 border-b-2 shadow-xs border-gray-100 mb-2 text-nowrap">
       {renderTitle()}
       <nav>
-        <ul className="flex flex-row gap-2 px-2">{renderLinks()}</ul>
+        <ul className="flex flex-row items-center gap-2 px-2">{renderLinks()}</ul>
       </nav>
       <AuthModal
         isOpen={openedModal === "auth"}

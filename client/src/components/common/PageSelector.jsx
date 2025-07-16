@@ -147,7 +147,7 @@ const PageSelector = ({
 
   const renderLimitSelector = () => {
     return (
-      <div className="absolute -right-20 h-fit">
+      <div className="absolute -bottom-12 md:-right-20 h-fit">
         <Select
           options={["10", "20", "30", "40", "50"]}
           value={limit}
@@ -163,7 +163,9 @@ const PageSelector = ({
   }
 
   return (
-    <div className={`flex gap-3 relative justify-center items-center w-fit mx-auto ${className}`}>
+    <div
+      className={`flex gap-1 sm:gap-3 relative justify-center items-center w-fit mx-auto ${className}`}
+    >
       {totalPages > 1 ? (
         <>
           {renderGoToFirstPageButton()}
