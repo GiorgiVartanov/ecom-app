@@ -57,7 +57,10 @@ const Search = () => {
 
   const goToPage = (page) => {
     // setCurrentPage(page)
-    setSearchParams({ page: page.toString(), query: "" }, { replace: true })
+    setSearchParams(
+      { page: page.toString(), query: "", limit: searchParams.get("limit") || 20 },
+      { replace: true }
+    )
   }
 
   const handleSetLimit = (limit) => {

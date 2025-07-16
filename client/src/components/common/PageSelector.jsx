@@ -147,16 +147,18 @@ const PageSelector = ({
 
   const renderLimitSelector = () => {
     return (
-      <div className="absolute -bottom-12 md:-right-20 h-fit">
+      <div className="absolute z-100 -bottom-12 h-fit">
         <Select
           options={["10", "20", "30", "40", "50"]}
           value={limit}
           onChange={(e) => onLimitChange(e.target.value)}
           tooltip="Number of items per page"
           includeDefaultOption={false}
+          isControlled={true}
           showLabel={false}
           tooltipPosition="top"
-          className="button outline-none border-none py-0! font-normal h-8 px-2 rounded shadow-sm mb-1"
+          className="button outline-none border-none font-normal h-9 px-2 rounded shadow-sm mb-1"
+          wrapperClassName="w-18"
         />
       </div>
     )

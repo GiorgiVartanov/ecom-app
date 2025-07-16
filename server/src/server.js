@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 8000
 // daily rate limiting configuration (400 requests per day per IP)
 const dailyLimiter = rateLimit({
   windowMs: 24 * 60 * 60 * 1000, // 24 hours
-  max: 400, // limits each ip to 400 requests per day
+  max: 1500, // limits each ip to 1500 requests per day
   message: {
     error: "daily request limit exceeded, please try again tomorrow",
     retryAfter: "24 hours",
@@ -55,10 +55,10 @@ const authLimiter = rateLimit({
 app.use(cors())
 
 // daily rate limiting first (400 requests per day per IP)
-app.use(dailyLimiter)
+// app.use(dailyLimiter)
 
 // 15-minute rate limiting to all routes
-app.use(limiter)
+// app.use(limiter)
 
 // middleware
 app.use(express.json({ limit: "15mb" }))
