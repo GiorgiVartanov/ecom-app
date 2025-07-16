@@ -161,7 +161,11 @@ const Checkout = () => {
       <h2 className="text-lg mb-4 font-semibold text-gray-700">checkout</h2>
       <div className="flex flex-col md:flex-row gap-4">
         {renderPaySection()}
-        {cartItemList?.length > 0 ? renderCartItemList() : renderEmptyCartItemList()}
+        {cartItemList?.length > 0 ? (
+          <div className="flex flex-col">{renderCartItemList()}</div>
+        ) : (
+          renderEmptyCartItemList()
+        )}
       </div>
     </div>
   )
