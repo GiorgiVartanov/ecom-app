@@ -38,7 +38,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
     handleSubmit: handleSubmitSignIn,
     reset: resetSignIn,
     setError: setSignInError,
-    formState: { errors: signInError, isSubmitting: isSignInSubmitting },
+    formState: { errors: signInError, isSubmitting: isSignInSubmitting, isValid: isSignInValid },
   } = useForm({
     resolver: zodResolver(signInSchema),
     mode: "onSubmit",
@@ -50,7 +50,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
     handleSubmit: handleSubmitSignUp,
     reset: resetSignUp,
     setError: setSignUpError,
-    formState: { errors: signUpError, isSubmitting: isSignUpSubmitting },
+    formState: { errors: signUpError, isSubmitting: isSignUpSubmitting, isValid: isSignUpValid },
   } = useForm({
     resolver: zodResolver(signUpSchema),
     mode: "onSubmit",
@@ -72,14 +72,12 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
       }
 
       resetSignIn()
+      resetSignUp()
 
       onClose()
     } catch (error) {
       console.error("Sign In failed:", error)
       setSignInError("root", { message: error?.response?.data?.error || "sign in failed" })
-    } finally {
-      resetSignIn()
-      resetSignUp()
     }
   }
 
@@ -93,15 +91,13 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
         token,
       })
 
+      resetSignIn()
       resetSignUp()
 
       onClose()
     } catch (error) {
       console.error("Sign Up failed:", error)
       setSignUpError("root", { message: error?.response?.data?.error || "sign up failed" })
-    } finally {
-      resetSignIn()
-      resetSignUp()
     }
   }
 
@@ -137,6 +133,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
         <Button
           isPending={isSignInSubmitting}
           type="submit"
+          disabled={!isSignInValid}
           variant="primary"
           className="w-full mt-4"
         >
@@ -194,6 +191,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
         )}
         <Button
           isPending={isSignUpSubmitting}
+          disabled={!isSignUpValid}
           type="submit"
           variant="primary"
           className="w-full mt-4"

@@ -84,25 +84,25 @@ const COMPANIES = [
     id: "asus",
     title: "ASUS",
     image: "/images/company-logos/asus-logo.webp",
-    search: { brand: "asus" },
+    search: { manufacturer: "asus" },
   },
   {
     id: "corsair",
     title: "Corsair",
     image: "/images/company-logos/corsair-logo.webp",
-    search: { brand: "corsair" },
+    search: { manufacturer: "corsair" },
   },
   {
     id: "msi",
     title: "MSI",
     image: "/images/company-logos/msi-logo.webp",
-    search: { brand: "msi" },
+    search: { manufacturer: "msi" },
   },
   {
     id: "gigabyte",
     title: "Gigabyte",
     image: "/images/company-logos/gigabyte-logo.webp",
-    search: { brand: "gigabyte" },
+    search: { manufacturer: "gigabyte" },
   },
 ]
 

@@ -298,14 +298,14 @@ const Product = () => {
 
   if (error || !product) {
     return (
-      <div className="mt-20 mx-auto max-w-5xl flex flex-col gap-6">
+      <div className="mt-6 md:mt-20 mx-auto max-w-5xl flex flex-col gap-6">
         <div className="text-center text-red-500">something went wrong</div>
       </div>
     )
   }
 
   return (
-    <div className="mt-20 mx-auto max-w-5xl flex flex-col gap-6">
+    <div className="mt-6 md:mt-20 mx-auto max-w-5xl flex flex-col gap-6">
       <div className="flex w-full gap-6 flex-col md:flex-row">
         {renderImage()}
         {renderInfo()}

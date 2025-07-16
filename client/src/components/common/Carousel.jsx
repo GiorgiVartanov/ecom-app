@@ -13,7 +13,7 @@ const Carousel = ({ title, description, children, options = {}, className = "" }
     usePrevNextButtons(emblaApi)
 
   return (
-    <section className={`mx-auto ${className}`}>
+    <section className={`mx-auto px-6 ${className}`}>
       <div>
         <h2 className="font-thin text-lg mt-4 ml-2 mb-1">{title}</h2>
         <p className="text-sm ml-2 mb-1 text-gray-500">{description}</p>
@@ -34,13 +34,13 @@ const Carousel = ({ title, description, children, options = {}, className = "" }
             ))}
           </div>
         </div>
-        <div className="absolute -left-8 top-1/2 -translate-y-1/2 z-10">
+        <div className="absolute -left-6 top-1/2 -translate-y-1/2 l:z-10">
           <PrevButton
             onClick={onPrevButtonClick}
             disabled={prevBtnDisabled}
           />
         </div>
-        <div className="absolute -right-8 top-1/2 -translate-y-1/2 z-10">
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2 z-10">
           <NextButton
             onClick={onNextButtonClick}
             disabled={nextBtnDisabled}
