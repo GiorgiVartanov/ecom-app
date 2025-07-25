@@ -1,4 +1,8 @@
-<h1 align="center"><span style="opacity: 0.6;">PCPal</span> PC Part Store - <span style="opacity: 0.6;">Portfolio Project</span></h1>
+<h1 align="center">PC Part Store</h1>
+
+<p align="center">
+  <strong>Portfolio project</strong>
+</p>
 
 <p align="center">
   <strong>A full-stack ecommerce platform for PC parts and components</strong>
@@ -6,17 +10,9 @@
 
 <p align="center">
   <a href="https://www.pcpal-portfolio.store/">
-    https://www.pcpal-portfolio.store/
+    <img src="https://res.cloudinary.com/dfac5lkeh/image/upload/image_zypvyr.webp" alt="pcpal portfolio" width="300" style="border: 1px solid black;" />
   </a>
 </p>
-
-## Screenshots
-
-[WIP]
-
-<!-- ## Video Demonstration -->
-
-<!-- [WIP] -->
 
 ## Table of Contents
 
@@ -29,7 +25,7 @@
 - [Project Structure](#project-structure)
 - [Key Features](#key-features)
 - [Possible Improvements](#possible-improvements)
-- [Known Bugs](#known-bugs)
+- [Credits](#credits)
 
 ## TLDR
 
@@ -49,7 +45,7 @@ A full-stack ecommerce platform for PC parts, featuring product browsing, detail
 
 ### Admin Features
 
-- **Dashboard**: Admin dashboard with ability to start a discount[WIP] and review <span style="opacity: 0.6;">(see/change status)</span> user's orders
+- **Dashboard**: Admin dashboard with ability to start a discount[WIP] and change user's orders status
 - **Product Management**: Add, edit, and manage products
 - **Order Management**: Update order statuses, and track fulfillment
 - **User Management**: View and manage customer accounts
@@ -57,15 +53,15 @@ A full-stack ecommerce platform for PC parts, featuring product browsing, detail
 
 ## Other features
 
-- **Dynamic page title** Page title changes with a useDocumentTitle hook
-- **Rate limiting** Rate limiting with express-rate-limit (150 requests per 20 minutes per IP, 15 auth attempts per 20 minutes per IP)
+- **Dynamic page title**: Page title changes with a useDocumentTitle hook
+- **Rate limiting**: Rate limiting with express-rate-limit (150 requests per 20 minutes per IP, 15 auth attempts per 20 minutes per IP)
 
 ## Technologies
 
 ### Frontend
 
 - **[React 19](https://react.dev/)** - The library for web user interfaces
-- **[React Router v7](https://reactrouter.com/)** - Routing <span style="opacity: 0.6;">(using Declarative mode, not newer Data mode or FrameWork mode)</span>
+- **[React Router v7](https://reactrouter.com/)** - Routing _(using Declarative mode, not newer Data mode or FrameWork mode)_
 - **[TanStack Query](https://tanstack.com/query/latest)** - Data-fetching library
 - **[React Hook Form](https://react-hook-form.com/)** - Form library
 - **[Zod](https://zod.dev/)** - Schema validation
@@ -75,7 +71,7 @@ A full-stack ecommerce platform for PC parts, featuring product browsing, detail
 
 ### Backend
 
-- **[Bun](https://bun.sh/)** – JavaScript runtime and package manager <span style="opacity: 0.6;">(Node.js-compatible)</span>
+- **[Bun](https://bun.sh/)** – JavaScript runtime and package manager _(Node.js-compatible)_
 - **[Express.js](https://expressjs.com/)** - Web application framework
 - **[Prisma](https://www.prisma.io/)** - Database ORM
 - **[PostgreSQL](https://www.postgresql.org/)** - Relational database
@@ -89,11 +85,13 @@ A full-stack ecommerce platform for PC parts, featuring product browsing, detail
 
 ## Setup
 
+_if you want to fun this app locally_
+
 ### Prerequisites
 
 - Node.js or Bun
 - PostgreSQL database
-- Cloudinary account (for image uploads) <span style="opacity: 0.05;">(or you can contact me for my cloudinary API key)</span>
+- Cloudinary account (for image uploads) _(or you can contact me for my cloudinary API key)_
 
 ### Installation
 
@@ -126,10 +124,10 @@ A full-stack ecommerce platform for PC parts, featuring product browsing, detail
 
    ```env
    DATABASE_URL="postgresql://username:password@localhost:5432/ecom-app"
-   JWT_SECRET="your-jwt-secret"
-   CLOUDINARY_CLOUD_NAME="your-cloud-name"
-   CLOUDINARY_API_KEY="your-api-key"
-   CLOUDINARY_API_SECRET="your-api-secret"
+   JWT_SECRET="jwt-secret"
+   CLOUDINARY_CLOUD_NAME="cloud-name"
+   CLOUDINARY_API_KEY="api-key"
+   CLOUDINARY_API_SECRET="api-secret"
    PORT=8000
    ```
 
@@ -150,6 +148,11 @@ A full-stack ecommerce platform for PC parts, featuring product browsing, detail
 5. **Run the application**
 
    ```bash
+   # Start application (in a root directory)
+   bun run dev
+
+   # or
+
    # Start the server (in server directory)
    bun run dev
 
@@ -165,9 +168,13 @@ The application will be available at:
 ## Deployment
 
 - Frontend was deployed on AWS Amplify
-- Backend was deployed on AWS EC2 together <span style="opacity: 0.6;">(on a same instance)</span> with PostgreSQL
+- Backend was deployed on AWS EC2 together _(on a same instance)_ with PostgreSQL
 
 ## API Endpoints
+
+- _(guest)_ means that this endpoint is only accessible by guest, user and admin
+- _(user)_ means that this endpoint is only accessible by user and admin
+- _(admin)_ means that this endpoint is only accessible by admin
 
 ### Authentication
 
@@ -176,41 +183,41 @@ The application will be available at:
 
 ### Products
 
-- `GET /api/products/tags` - Get all search tags that have Searchable value set to true <span style="opacity: 0.6;">(guest)</span>
-- `GET /api/products/:id` - Get single product by ID <span style="opacity: 0.6;">(guest)</span>
-- `GET /api/products` - Get list of products <span style="opacity: 0.6;">(guest)</span>
-- `POST /api/products/:id/reviews` - Post a review <span style="opacity: 0.6;">(user)</span>
-- `DELETE /api/products/:id/reviews/:reviewId` - Delete a review <span style="opacity: 0.6;">(user)</span>
-- `POST /api/products` - Create product <span style="opacity: 0.6;">(admin)</span>
-- `POST /api/products/:id` - Update product <span style="opacity: 0.6;">(admin)</span>
-- `DELETE /api/products/:id` - Mark product as delisted, its possible to restore it latter <span style="opacity: 0.6;">(admin)</span>
+- `GET /api/products/tags` - Get all search tags that have Searchable value set to true _(guest)_
+- `GET /api/products/:id` - Get single product by ID _(guest)_
+- `GET /api/products` - Get list of products _(guest)_
+- `POST /api/products/:id/reviews` - Post a review _(user)_
+- `DELETE /api/products/:id/reviews/:reviewId` - _(user)_
+- `POST /api/products` - Create product _(admin)_
+- `POST /api/products/:id` - Update product _(admin)_
+- `DELETE /api/products/:id` - Mark product as delisted, its possible _(not yet)_ to restore it latter _(admin)_
 
 ### Cart
 
-- `POST /api/cart` - Add item to cart <span style="opacity: 0.6;">(user)</span>
-- `GET /api/cart` - Get cart <span style="opacity: 0.6;">(user)</span>
-- `PATCH /api/cart/:id` - Edit cart item <span style="opacity: 0.6;">(user)</span>
-- `DELETE /api/cart/:id` - Remove cart item <span style="opacity: 0.6;">(user)</span>
+- `POST /api/cart` - Add item to cart _(user)_
+- `GET /api/cart` - Get cart _(user)_
+- `PATCH /api/cart/:id` - Edit cart item _(user)_
+- `DELETE /api/cart/:id` - Remove cart item _(user)_
 
 ### Order
 
-- `POST /api/orders` - Create order <span style="opacity: 0.6;">(user)</span>
-- `GET /api/orders/all` - Get user orders <span style="opacity: 0.6;">(admin)</span>
-- `GET /api/orders/:orderId` - Get single order by ID <span style="opacity: 0.6;">(user)</span>
-- `GET /api/orders` - Get list of orders <span style="opacity: 0.6;">(user)</span>
-- `GET /api/orders/:orderId/admin` - Get user's order list <span style="opacity: 0.6;">(admin)</span>
-- `PATCH /api/orders/:orderId` - Edit order status <span style="opacity: 0.6;">(admin)</span>
+- `POST /api/orders` - Create order _(user)_
+- `GET /api/orders/all` - Get user orders _(admin)_
+- `GET /api/orders/:orderId` - Get single order by ID _(user)_
+- `GET /api/orders` - Get list of orders _(user)_
+- `GET /api/orders/:orderId/admin` - Get user's order list _(admin)_
+- `PATCH /api/orders/:orderId` - Edit order status _(admin)_
 
 ### Sale
 
-- `PUT /api/sale/start` - Starts sale (discount) <span style="opacity: 0.6;">(admin)</span>
-- `PUT /api/sale/end` - Ends sale <span style="opacity: 0.6;">(admin)</span>
+- `PUT /api/sale/start` - Starts sale (discount) _(admin)_
+- `PUT /api/sale/end` - Ends sale _(admin)_
 
 ### Wishlist
 
-- `POST /api/wishlist/:id` - Add item to wishlist <span style="opacity: 0.6;">(user)</span>
-- `DELETE /api/wishlist/:id` - Remove item from wishlist <span style="opacity: 0.6;">(user)</span>
-- `GET /api/wishlist/end` - Get wishlist <span style="opacity: 0.6;">(user)</span>
+- `POST /api/wishlist/:id` - Add item to wishlist _(user)_
+- `DELETE /api/wishlist/:id` - Remove item from wishlist _(user)_
+- `GET /api/wishlist/end` - Get wishlist _(user)_
 
 ## Key Features
 
@@ -223,13 +230,12 @@ The application will be available at:
 
 ## Possible Improvements
 
-- Payment integration using Stripe payment processing
-- Email notifications on order status updates
-- Inventory Management Real-time stock tracking
-- Multi-language support Internationalization (i18n) using react-18next library
-- PWA with offline support and app-like experience
-- Advanced analytics with detailed sales and user behavior insights
-- Add log in with functionality like Google or Facebook authentication
+- Payment integration using Stripe payment processing _(Stripe has a dev mode, without real transactions)_
+- Email notifications on order status updates _(I can use something like MailChimp with email that has same domain as this website)_
+- Inventory Management Real-time stock tracking _(Right now if a user orders something, and if admin changes this order's status, product's quantity isn't updated)_
+- Multi-language support Internationalization (i18n) using react-18next library _(Not that hard to implement, I had done it in a different project, it would just be a bit monotonous)_
+- PWA with offline support and app-like experience _(Could be done with vite-plugin-pwa vite plugin, I just think that this app will need some design changed to feel more like an app)_
+- Sign In With functionality like Google or Facebook or GitHub authentication
 - Improve error handling on a client side
 - Implement tests using Jest, RTL or Cypress
 - JWT Token expiration with refresh token, right now its infinite
@@ -246,15 +252,15 @@ The application will be available at:
 
 **This project was built as a portfolio application to showcase my skills**
 
-<span style="opacity: 0.6;">Credits</span>
+## Credits
 
-- <span style="opacity: 0.6;">Hero image - <a href="https://www.freepik.com/free-photo/gaming-setup-arrangement-high-angle_31590136.htm#from_element=cross_selling__photo" target="_blank" rel="noopener noreferrer">freepik</a></span>
-- <span style="opacity: 0.6;">Icons - <a href="https://fontawesome.com/">font awesome</a></span>
-- <span style="opacity: 0.6;">Company images - Taken from an official media kits from official webpages</span>
-- <span style="opacity: 0.6;">Product images - (they are just text on a gray background, created by me in gimp)</span>
+- _Hero image - <a href="https://www.freepik.com/free-photo/gaming-setup-arrangement-high-angle_31590136.htm#from_element=cross_selling__photo" target="_blank" rel="noopener noreferrer">freepik</a></span>_
+- _Icons - <a href="https://fontawesome.com/">font awesome</a>_
+- _Company images - Taken from an official media kits from official webpages_
+- _Product images - (they are just text on a gray background, created by me in gimp)_
 
 ## Notes
 
-<span style="opacity: 0.6;">I used simple images as a placeholders because I couldn't find consistent product images, at first I was going to take them from amazon or microcenter, but then I thought that it would probably be copyright infringement</span>
-<span style="opacity: 0.6;">Company logo's are from an official media assets, and comply with usage terms (its not implied that this app is affiliated with them, and the only editing done to images is resizing)</span>
-<span style="opacity: 0.6;">Some pages and functionality are not yet implemented in this project, especially the Product Discounts and User/Profile Management.</span>
+_I used simple images (grate background, white text) as a placeholders because I couldn't find consistent product images, at first I was going to take them from amazon or microcenter, but then I thought that it would probably be copyright infringement_
+_Company logo's are from an official media assets, and comply with usage terms (its not implied that this app is affiliated with them, and the only editing done to images is resizing)_
+_Some pages and functionality are not yet implemented in this project, especially the Product Discounts and User/Profile Management_

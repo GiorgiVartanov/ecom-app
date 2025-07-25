@@ -1,6 +1,7 @@
 import { useRef } from "react"
 import { Link, useNavigate } from "react-router"
 import { useQueryClient } from "@tanstack/react-query"
+import { toast } from "react-toastify"
 
 import useConfirmModalStore from "../../store/useConfirmModalStore"
 import { createQuery } from "../../pages/ProductDetails.page"
@@ -75,6 +76,7 @@ const ProductCard = ({
     e.stopPropagation()
 
     addToCart()
+    toast.success(`successfully added ${data.name} to cart`)
   }
 
   const handleRemoveFromCart = (e) => {
@@ -82,6 +84,7 @@ const ProductCard = ({
     e.stopPropagation()
 
     removeFromCart()
+    toast.success(`successfully removed ${data.name} from cart`)
   }
 
   const handleAddToWishlist = (e) => {
@@ -89,6 +92,7 @@ const ProductCard = ({
     e.stopPropagation()
 
     addToWishlist()
+    toast.success(`successfully added ${data.name} to wishlist`)
   }
 
   const handleRemoveFromWishlist = (e) => {
@@ -96,6 +100,7 @@ const ProductCard = ({
     e.stopPropagation()
 
     removeFromWishlist()
+    toast.success(`successfully removed ${data.name} from wishlist`)
   }
 
   const renderCardButtons = () => {
@@ -123,6 +128,8 @@ const ProductCard = ({
     }
 
     const renderUserButtons = () => {
+      console.log({ isInCart })
+
       return (
         <>
           {isInCart ? (
@@ -186,6 +193,8 @@ const ProductCard = ({
     }
   }
 
+  const { images, name, price } = data
+
   return (
     <Link
       to={`/product/${data.id}`}
@@ -197,15 +206,15 @@ const ProductCard = ({
         {renderCardButtons()}
       </div>
       <img
-        src={data.images?.[0]?.imageURL ? data.images[0].imageURL : "/images/noImage.webp"}
+        src={images?.[0]?.imageURL ? images[0].imageURL : "/images/noImage.webp"}
         className="w-full h-full object-contain rounded"
       />
       <p className="text-sm -mb-2 pl-1">
-        {data.price}
+        {price}
         <span className="ml-0.5">$</span>
       </p>
       <h3 className="px-1 pb-1 mt-3 line-clamp-3 leading-5 h-18 text-sm last:whitespace-pre-wrap break-keep !overflow-x-hidden">
-        {data.name}
+        {name}
       </h3>
     </Link>
   )

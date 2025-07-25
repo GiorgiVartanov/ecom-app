@@ -129,6 +129,7 @@ const App = () => {
         closeOnClick
         pauseOnHover
         draggable
+        limit={3}
       />
 
       <ReactQueryDevtools

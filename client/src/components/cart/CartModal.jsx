@@ -90,7 +90,7 @@ const CartModal = ({ title, isOpen, onClose, className }) => {
         </div>
         <Link
           to="/search"
-          className="text-link text-sm mt-auto pb-0 ml-2"
+          className="text-link text-sm mt-auto pb-0 ml-2 hidden sm:block"
           onClick={onClose}
         >
           Continue shopping
