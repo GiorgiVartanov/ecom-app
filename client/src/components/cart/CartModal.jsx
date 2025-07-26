@@ -66,10 +66,10 @@ const CartModal = ({ title, isOpen, onClose, className }) => {
         cartItemList={itemList}
         editItems={editCartItemMutation.mutate}
       />
-      <div className="flex gap-4 align-bottom pt-2">
+      <div className="flex flex-col-reverse xs:flex-row gap-1.5 xs:gap-4 align-bottom pt-2">
         <Link
           to="/checkout"
-          className="button-primary px-12"
+          className="button-primary px-12 text-center"
           onClick={onClose}
         >
           Go to checkout

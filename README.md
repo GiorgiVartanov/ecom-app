@@ -29,7 +29,7 @@
 
 ## TLDR
 
-A full-stack ecommerce platform for PC parts, featuring product browsing, detailed product pages, product reviews, shopping cart, checkout, wishlist, and user management. Admins can manage products and orders. Built with React 19, React Router v7, TanStack Query, Zustand, Tailwind CSS, React Hook Form, Axios, and Zod on the frontend; Bun, Express, Prisma, PostgreSQL, JWT, and Cloudinary (for image hosting) on the backend. Includes rate limiting (400 requests per day per IP, 150 requests per 15 minutes per IP, and 25 requests per 15 minutes for authentication), image optimization (all images are in WebP format, during upload format is changed to WebP and they are resized to 1000x1000px), and performance enhancements (lazy loading, prefetching). Deployed on AWS (Amplify for frontend (domain is pcpal-portfolio.store), EC2 ubuntu for backend and database (both are on a same instance, database is on localhost:5432 (it could be possible to access it with database management tools that have SSH Tunnel) and backend is hosted with PM2 and Nginx on a domain api.pcpal-portfolio.store)). Domain was purchased on vercel. Some features like advanced analytics, and profile management are not yet implemented.
+A full-stack ecommerce platform for PC parts, featuring product browsing, detailed product pages, product reviews, shopping cart, checkout, wishlist, and user management. Admins can manage products (add, remove) and orders (change status). Built with React, React Router v7, TanStack Query, Zustand, Tailwind CSS, React Hook Form, Axios, and Zod on the frontend and with Bun, Express, Prisma, PostgreSQL, JWT, and Cloudinary (for image hosting) on the backend. Includes rate limiting (400 requests per day per IP, 150 requests per 15 minutes per IP, and 25 requests per 15 minutes for authentication), image optimization (all images are in WebP format, during upload format is changed to WebP and they are resized to 1000x1000px), and performance enhancements (lazy loading, prefetching). Deployed on AWS (Amplify for frontend (domain is pcpal-portfolio.store), EC2 ubuntu for backend and database (both are on a same instance, database is on localhost:5432 (it could be possible to access it with database management tools that have SSH Tunnel) and backend is hosted with PM2 and Nginx on a domain api.pcpal-portfolio.store)). Domain was purchased on vercel. Some features like advanced analytics, and profile management are not yet implemented.
 
 ## Features
 
@@ -261,6 +261,7 @@ The application will be available at:
 
 ## Notes
 
-_I used simple images (grate background, white text) as a placeholders because I couldn't find consistent product images, at first I was going to take them from amazon or microcenter, but then I thought that it would probably be copyright infringement_
-_Company logo's are from an official media assets, and comply with usage terms (its not implied that this app is affiliated with them, and the only editing done to images is resizing)_
-_Some pages and functionality are not yet implemented in this project, especially the Product Discounts and User/Profile Management_
+- _I used simple images (grate background, white text) as a placeholders because I couldn't find consistent product images, at first I was going to take them from amazon or microcenter, but then I thought that it would probably be copyright infringement_
+- _Company logo's are from an official media assets, and comply with usage terms (its not implied that this app is affiliated with them, and the only editing done to images is resizing)_
+- _Some pages and functionality are not yet implemented in this project, especially the Product Discounts and User/Profile Management_
+- _admin credentials are email: admin@gmail.com password: password_

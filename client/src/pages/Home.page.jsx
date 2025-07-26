@@ -222,7 +222,7 @@ const Home = () => {
       title={title}
       description={description}
       className="max-w-6xl w-full border-b-2 border-gray-200 pb-6" // ensures consistent width
-      options={{ loop: true, slidesToScroll: 1, align: "start" }} // removed slidesToShow
+      options={{ loop: true, slidesToScroll: 1, align: "start", dragFree: true }} // removed slidesToShow
     >
       {items.map((item, index) => {
         const filed = Object.keys(item.search)[0]

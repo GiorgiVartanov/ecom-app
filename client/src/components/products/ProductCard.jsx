@@ -128,8 +128,6 @@ const ProductCard = ({
     }
 
     const renderUserButtons = () => {
-      console.log({ isInCart })
-
       return (
         <>
           {isInCart ? (

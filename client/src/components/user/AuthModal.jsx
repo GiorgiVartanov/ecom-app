@@ -162,7 +162,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
         <Input
           label="Email"
           type="email"
-          autoComplete="email"
+          autoComplete="new-password"
           placeholder="example@email.com"
           {...registerSignUp("email")}
           error={signUpError.email?.message}
@@ -170,7 +170,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
         <Input
           label="Password"
           type="password"
-          autoComplete="new-password"
+          autoComplete="off"
           placeholder="password"
           maxLength={50}
           {...registerSignUp("password")}
@@ -179,6 +179,7 @@ const AuthModal = ({ title, isOpen, onClose, className }) => {
         <Input
           label="Confirm Password"
           type="password"
+          autoComplete="new-password"
           placeholder="password"
           maxLength={50}
           {...registerSignUp("confirmPassword")}

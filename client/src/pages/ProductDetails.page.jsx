@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from "react-toastify"
 
 import { getProduct } from "../api/products.api"
 import { addItemToCart, removeItemFromCart } from "../api/cart.api"
@@ -70,21 +71,31 @@ const Product = () => {
     if (product && product.isInCart) {
       navigate("/checkout")
     } else {
-      addItemMutation.mutate()
+      addToCartMutation.mutate()
       navigate("/checkout")
     }
   }
 
-  const addItemMutation = useMutation({
+  const addToCartMutation = useMutation({
     mutationFn: () => addItemToCart(id, token),
+    onSuccess: () => {
+      if (!product) return
+
+      toast.success(`successfully added ${product.name} to the cart`)
+    },
     onSettled: () => {
       queryClient.invalidateQueries(createQuery(id, token).queryKey)
       queryClient.invalidateQueries(["cart", user.id])
     },
   })
 
-  const removeItemMutation = useMutation({
+  const removeFromCartMutation = useMutation({
     mutationFn: () => removeItemFromCart(id, token),
+    onSuccess: () => {
+      if (!product) return
+
+      toast.success(`successfully removed ${product.name} from the cart`)
+    },
     onSettled: () => {
       queryClient.invalidateQueries(createQuery(id, token).queryKey)
       queryClient.invalidateQueries(["cart", user.id])
@@ -93,6 +104,11 @@ const Product = () => {
 
   const addItemToWishlistMutation = useMutation({
     mutationFn: () => addItemToWishlist(id, token),
+    onSuccess: () => {
+      if (!product) return
+
+      toast.success(`successfully added ${product.name} to the wishlist`)
+    },
     onSettled: () => {
       queryClient.invalidateQueries(createQuery(id, token).queryKey)
       queryClient.invalidateQueries(["wishlist", user.id])
@@ -101,6 +117,11 @@ const Product = () => {
 
   const removeItemFromWishlistMutation = useMutation({
     mutationFn: () => removeItemFromWishList(id, token),
+    onSuccess: () => {
+      if (!product) return
+
+      toast.success(`successfully removed ${product.name} from the wishlist`)
+    },
     onSettled: () => {
       queryClient.invalidateQueries(createQuery(id, token).queryKey)
       queryClient.invalidateQueries(["wishlist", user.id])
@@ -138,7 +159,7 @@ const Product = () => {
             <Image
               src={product.images[currentImageIndex].imageURL}
               alt={product.name}
-              className="object-contain rounded-xl max-h-full"
+              className="object-contain max-h-full"
             />
           ) : (
             <div className="text-gray-400">image not found</div>
@@ -183,7 +204,7 @@ const Product = () => {
           </Button>
           {isInCart ? (
             <Button
-              onClick={removeItemMutation.mutate}
+              onClick={removeFromCartMutation.mutate}
               variant="primary"
               disabled={!token}
               tooltip="remove from cart"
@@ -192,7 +213,7 @@ const Product = () => {
             </Button>
           ) : (
             <Button
-              onClick={addItemMutation.mutate}
+              onClick={addToCartMutation.mutate}
               variant="primary"
               disabled={stock <= 0 || !token}
               tooltip={stock > 0 ? "add to cart" : "out of stock"}
