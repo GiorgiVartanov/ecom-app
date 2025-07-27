@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://www.pcpal-portfolio.store/">
-    <img src="https://res.cloudinary.com/dfac5lkeh/image/upload/image_zypvyr.webp" alt="pcpal portfolio" width="300" style="border: 1px solid black;" />
+    <img src="https://res.cloudinary.com/dfac5lkeh/image/upload/image_zypvyr.webp" alt="pcpal portfolio" width="500" style="border: 1px solid black;" />
   </a>
 </p>
 
@@ -23,7 +23,6 @@
 - [Deployment](#deployment)
 - [API Endpoints](#api-endpoints)
 - [Project Structure](#project-structure)
-- [Key Features](#key-features)
 - [Possible Improvements](#possible-improvements)
 - [Credits](#credits)
 
@@ -37,7 +36,7 @@ A full-stack ecommerce platform for PC parts, featuring product browsing, detail
 
 - **Product Browsing**: Browse and search PC parts by category, brand, price, and other attributes
 - **Product Details**: Detailed product pages with images, descriptions, attributes, and user reviews
-- **Review System**: Review and rate products <span style="opacity: 0.6;">(reviews can only be written if it is in a user's order list, and has its status set to DELIVERED, status can be set by admin from dashboard)</span>
+- **Review System**: Review and rate products _(reviews can only be written if it is in a user's order list, and has its status set to DELIVERED, status can be set by admin from dashboard)_
 - **Shopping Cart**: Add/remove items, update product quantity
 - **Checkout Process**: Checkout with order confirmation
 - **User Management**: Registration, login, and order history
@@ -45,13 +44,11 @@ A full-stack ecommerce platform for PC parts, featuring product browsing, detail
 
 ### Admin Features
 
-- **Dashboard**: Admin dashboard with ability to start a discount[WIP] and change user's orders status
+- **Dashboard**: Admin dashboard with ability to change user's orders status
 - **Product Management**: Add, edit, and manage products
 - **Order Management**: Update order statuses, and track fulfillment
-- **User Management**: View and manage customer accounts
-- **Sales Analytics**: Track sales performance and revenue
 
-## Other features
+### Other features
 
 - **Dynamic page title**: Page title changes with a useDocumentTitle hook
 - **Rate limiting**: Rate limiting with express-rate-limit (150 requests per 20 minutes per IP, 15 auth attempts per 20 minutes per IP)
@@ -219,15 +216,6 @@ The application will be available at:
 - `DELETE /api/wishlist/:id` - Remove item from wishlist _(user)_
 - `GET /api/wishlist/end` - Get wishlist _(user)_
 
-## Key Features
-
-### Performance Optimizations
-
-- React Query for efficient data fetching and caching
-- Images are in Webp format and are downscaled to 1000x1000 when uploaded
-- Data prefetching on link hover
-- Lazy loading for better initial load times
-
 ## Possible Improvements
 
 - Payment integration using Stripe payment processing _(Stripe has a dev mode, without real transactions)_
@@ -245,8 +233,7 @@ The application will be available at:
 - Add profile pages
 - Add user management page
 - Add ability to restore delisted products
-
----
+- Add token invalidation on logout
 
 ## Other info
 
@@ -264,4 +251,4 @@ The application will be available at:
 - _I used simple images (grate background, white text) as a placeholders because I couldn't find consistent product images, at first I was going to take them from amazon or microcenter, but then I thought that it would probably be copyright infringement_
 - _Company logo's are from an official media assets, and comply with usage terms (its not implied that this app is affiliated with them, and the only editing done to images is resizing)_
 - _Some pages and functionality are not yet implemented in this project, especially the Product Discounts and User/Profile Management_
-- _admin credentials are email: admin@gmail.com password: password_
+- _Admin credentials are email: admin@gmail.com password: password_
